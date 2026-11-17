@@ -1,1 +1,55 @@
-const categories=[['ones','Einser'],['twos','Zweier'],['threes','Dreier'],['fours','Vierer'],['fives','Fünfer'],['sixes','Sechser'],['three_kind','Dreierpasch'],['four_kind','Viererpasch'],['two_pairs','Zwei Paare'],['three_pairs','Drei Paare'],['two_triples','Zwei Dreier'],['full_house','Full-House'],['large_full_house','Großes Full-House'],['small_straight','Kleine Straße'],['large_straight','Große Straße'],['highway','Highway'],['kniffel','Kniffel'],['kniffel_extreme','Kniffel Extreme'],['ten_or_less','10 oder weniger'],['thirtythree_or_more','33 oder mehr'],['chance','Chance'],['super_chance','Super Chance']];const upper=new Set(categories.slice(0,6).map(c=>c[0]));const fixed={three_pairs:35,two_triples:45,full_house:25,large_full_house:45,small_straight:30,large_straight:40,highway:50,kniffel:50,kniffel_extreme:75,ten_or_less:40,thirtythree_or_more:40};let players=[{name:'Spieler 1',scores:{}},{name:'Spieler 2',scores:{}}],active=0,flash=null;const $=id=>document.getElementById(id);function cell(text,cls=''){const d=document.createElement('div');d.className='cell '+cls;d.textContent=text;return d}function sum(p,keys){return keys.reduce((n,k)=>n+(p.scores[k]??0),0)}function render(){const board=$('board');board.replaceChildren();board.style.setProperty('--players',players.map((_,i)=>i===active?'minmax(110px,1.3fr)':'minmax(64px,.7fr)').join(' '));board.append(cell('KATEGORIE','head category'));players.forEach((p,i)=>{const d=cell('','head '+(i===active?'active':''));const s=document.createElement('small');s.textContent=i===active?'● AM ZUG':'SPIELER';const b=document.createElement('strong');b.textContent=p.name;d.append(s,b);board.append(d)});function section(label){board.append(cell(label,'section'));players.forEach((_,i)=>board.append(cell('','section '+(i===active?'active':''))))}function summary(label,get){board.append(cell(label,'summary category'));players.forEach((p,i)=>board.append(cell(String(get(p)),'summary score '+(i===active?'active':''))))}section('OBERER BLOCK');categories.forEach(([key,label],idx)=>{if(idx===6){summary('Summe oben',p=>sum(p,[...upper]));summary('Bonus ab 73 (+45)',p=>sum(p,[...upper])>=73?45:0);section('UNTERER BLOCK')}board.append(cell(label,'category'));players.forEach((p,i)=>{const d=cell('','score '+(i===active?'active':''));const b=document.createElement('button');const val=p.scores[key];b.className=val===undefined?'empty':'filled';b.textContent=val===undefined?'–':String(val);b.disabled=i!==active||val!==undefined;b.setAttribute('aria-label',p.name+' '+label+(val===undefined?' eintragen':': '+val));if(flash?.player===i&&flash?.key===key)b.classList.add('flash');b.onclick=()=>score(i,key);d.append(b);board.append(d)})});summary('GESAMTPUNKTE',p=>sum(p,categories.map(c=>c[0]))+(sum(p,[...upper])>=73?45:0));$('turnName').textContent=players[active].name;$('progress').textContent=players.reduce((n,p)=>n+Object.keys(p.scores).length,0)+' / '+(players.length*22)}function score(i,key){if(i!==active||players[i].scores[key]!==undefined)return;const raw=prompt(fixed[key]!==undefined?'Punkte (0 zum Streichen; regulär '+fixed[key]+')':'Basispunkte eingeben (0 zum Streichen)');if(raw===null)return;if(!/^\\d+$/.test(raw.trim())){alert('Bitte eine ganze Zahl ab 0 eingeben.');return}const n=Number(raw);if(!Number.isSafeInteger(n)||n>999){alert('Bitte 0 bis 999 eingeben.');return}if(fixed[key]!==undefined&&n!==0&&n!==fixed[key]){alert('Hier sind nur 0 oder '+fixed[key]+' Punkte möglich.');return}players[i].scores[key]=n;flash={player:i,key};render();setTimeout(()=>{flash=null;render()},650)}$('next').onclick=()=>{active=(active+1)%players.length;render()};$('add').onclick=()=>{if(players.length>=8){alert('Maximal 8 Spieler in dieser Vorschau.');return}players.push({name:'Spieler '+(players.length+1),scores:{}});render()};$('reset').onclick=()=>{if(confirm('Spielstand wirklich zurücksetzen?')){players=players.map(p=>({...p,scores:{}}));active=0;render()}};render();
+import {CATEGORIES,UPPER,newGame,totals,scoreTurn,completed,validateSave,BONUS_THRESHOLD,BONUS_POINTS} from './game.js';
+const STORAGE='casino-kniffel-deluxe-v2';
+const $=id=>document.getElementById(id);
+let state=load(),flash=null;
+function load(){try{const s=JSON.parse(localStorage.getItem(STORAGE));if(validateSave(s))return s}catch{}return newGame()}
+function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state));$('storage').textContent='Lokal gespeichert'}catch{$('storage').textContent='Speichern nicht möglich'}}
+function node(tag,cls='',text=''){const e=document.createElement(tag);e.className=cls;e.textContent=text;return e}
+function render(){
+ const board=$('board');board.replaceChildren();
+ board.style.setProperty('--players',state.players.map((_,i)=>i===state.active?'minmax(124px,1.55fr)':'minmax(60px,.65fr)').join(' '));
+ const add=(label,cls='')=>board.append(node('div','cell '+cls,label));
+ add('KATEGORIE','head category');
+ state.players.forEach((p,i)=>{const h=node('div','cell head '+(i===state.active?'active':''));h.append(node('small','',i===state.active?'● AM ZUG':'SPIELER'),node('strong','',p.name));board.append(h)});
+ const section=title=>{add(title,'section');state.players.forEach((_,i)=>add('','section '+(i===state.active?'active':'')))};
+ const summary=(title,fn)=>{add(title,'summary category');state.players.forEach((p,i)=>add(String(fn(p)),'summary score '+(i===state.active?'active':'')))};
+ section('OBERER BLOCK');
+ CATEGORIES.forEach(([key,label],index)=>{
+  if(index===6){summary('Summe oben',p=>totals(p).upper);summary('Bonus ab '+BONUS_THRESHOLD+' (+'+BONUS_POINTS+')',p=>totals(p).bonus);section('UNTERER BLOCK')}
+  add(label,'category');
+  state.players.forEach((p,i)=>{
+   const wrapper=node('div','cell score '+(i===state.active?'active':''));const button=node('button',Object.hasOwn(p.scores,key)?'filled':'empty',Object.hasOwn(p.scores,key)?String(p.scores[key]):'–');
+   button.disabled=i!==state.active||Object.hasOwn(p.scores,key)||completed(state);
+   button.setAttribute('aria-label',p.name+': '+label+(button.disabled?'':' Punkte eintragen'));
+   if(flash&&flash.playerId===p.id&&flash.key===key)button.classList.add('flash');
+   button.addEventListener('click',()=>openScore(p.id,key,label));wrapper.append(button);board.append(wrapper)
+  })
+ });
+ summary('GESAMTPUNKTE',p=>totals(p).total);
+ $('turnName').textContent=completed(state)?'Spiel beendet':state.players[state.active].name;
+ $('progress').textContent=state.players.reduce((n,p)=>n+Object.keys(p.scores).length,0)+' / '+(state.players.length*CATEGORIES.length);
+ $('next').disabled=true;
+ $('next').textContent=completed(state)?'Spiel beendet':'Zugwechsel nach Wertung';
+}
+let pending=null;
+function openScore(playerId,key,label){
+ const player=state.players[state.active];if(player.id!==playerId||Object.hasOwn(player.scores,key))return;
+ pending={playerId,key,revision:state.revision};$('scoreTitle').textContent=label;$('scorePlayer').textContent=player.name;
+ $('points').value='';$('scoreError').textContent='';$('scoreDialog').showModal();$('points').focus()
+}
+$('scoreForm').addEventListener('submit',e=>{
+ e.preventDefault();if(!pending)return;
+ const raw=$('points').value.trim();
+ if(!/^\d+$/.test(raw)){$('scoreError').textContent='Bitte eine ganze Punktzahl eingeben.';return}
+ try{
+  state=scoreTurn(state,{...pending,category:pending.key,points:Number(raw),expectedRevision:pending.revision});
+  flash={playerId:pending.playerId,key:pending.key};pending=null;$('scoreDialog').close();save();render();
+  setTimeout(()=>{flash=null;render()},650)
+ }catch(err){$('scoreError').textContent=err.message}
+});
+$('cancelScore').onclick=()=>{$('scoreDialog').close();pending=null};
+$('scoreDialog').addEventListener('close',()=>{pending=null});
+$('add').onclick=()=>{if(state.revision||state.players.some(p=>Object.keys(p.scores).length)){alert('Spieler können nur vor der ersten Wertung hinzugefügt werden.');return}if(state.players.length>=8){alert('Maximal 8 Spieler.');return}const name=prompt('Name des neuen Spielers','Spieler '+(state.players.length+1));if(name===null)return;if(!name.trim()||name.trim().length>32){alert('Bitte einen Namen mit maximal 32 Zeichen eingeben.');return}state=newGame([...state.players.map(p=>p.name),name.trim()]);save();render()};
+$('reset').onclick=()=>{if(confirm('Neues Spiel starten? Der bisherige Spielstand wird gelöscht.')){state=newGame(state.players.map(p=>p.name));flash=null;save();render()}};
+$('next').title='Der Zug wechselt automatisch nach jeder gültigen Wertung';
+render();save();

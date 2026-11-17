@@ -1,16 +1,21 @@
 # Casino Kniffel Deluxe
 
-Sauberer Neustart. Erster Meilenstein: interaktiver, gemeinsamer Spielblock als eigenständiger Frontend-Prototyp (noch ohne Supabase/Mehrspieler-Backend).
+Neuentwicklung als statische GitHub-Pages-Web-App. **Stand: lokaler Spielblock-Prototyp, kein Online-Multiplayer.**
 
-## Start
-Öffne `index.html` im Browser oder nutze einen lokalen statischen Server.
+## Bereits implementiert
+- Ein gemeinsamer Spielblock mit 22 Kategorien und allen Spielern
+- Aktive Spielerspalte breiter, übrige Spalten rechts kompakt
+- Punkteingabe per Dialog, 0 zum Streichen, dezente Aufblinkanimation
+- Automatischer Spielerwechsel nach jeder gültigen Eintragung
+- Bereits belegte Felder gesperrt; Revisionsprüfung bei Wertungen
+- Lokale Speicherung im Browser (localStorage), Zurücksetzen und 1–8 Spieler
+- Obere Summe, Bonus und Gesamtpunkte
 
-## Verbindliche UI-Regeln
-- Dunkles, hochwertiges Design.
-- Genau **ein** Gesamtspielblock mit 22 Wertungskategorien und allen Spielern.
-- Aktive Spielerspalte groß, andere Spalten rechts kompakt; automatischer Wechsel.
-- Dezente Animation bei neuen Punkten, kein Effekt bei bloßem Neuladen.
-- Multiplayer später mit echten sechsseitigen Würfeln, Solo mit digitalen Würfeln.
+## Start / Tests
+GitHub Pages kann die Dateien direkt aus dem Repository-Stamm ausliefern. Lokal `index.html` über einen statischen Webserver öffnen (ES-Module). Mit Node.js 20+ `npm test` ausführen.
 
-## Noch nicht implementiert
-Serverseitige Wertungsvalidierung, Räume, Realtime-Synchronisierung, Casino-Ereignisse und Mystery, Schutzschilde, Duelle, Bots. Dieser Prototyp behauptet keine fertige Multiplayer-Funktionalität.
+## Wichtige Grenzen
+**Punkte werden noch manuell eingegeben**, ohne Überprüfung der sechs Würfel. Die konkrete vollständige Wertungstabelle und alle Casino-Regeln müssen gegen den offiziellen Nutzer-Spielblock geprüft werden; bisherige Prototyp-Regeln sind nicht als verbindlich zu betrachten. **Keine Supabase-Verbindung, kein Realtime-Multiplayer, keine Server-Autorisierung.** Lokaler Spielstand gilt nur für denselben Browser. Browserdaten löschen entfernt ihn.
+
+## Geplante Architektur
+Reine Spielregeln in `game.js`; UI in `main.js`; für echten Multiplayer später serverseitige transaktionale Spielzüge mit Authentifizierung, Revisionskontrolle, idempotenten Aktionen und Realtime-Updates.
