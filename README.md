@@ -1,24 +1,24 @@
-# Casino Kniffel Deluxe
+# Casino Kniffel Deluxe — sauberer Neustart
 
-Neuentwicklung als statische GitHub-Pages-Web-App. **Stand: lokaler Spielblock-Prototyp, kein Online-Multiplayer.**
+**Status:** Projekt neu aufgesetzt. Der alte Prototyp ist aus dem aktuellen Stand entfernt. Es gibt bewusst noch keine spielbare Oberfläche.
 
-## Bereits implementiert
-- Ein gemeinsamer Spielblock mit 22 Kategorien und allen Spielern
-- Aktive Spielerspalte breiter, übrige Spalten rechts kompakt
-- Punkteingabe per Dialog, 0 zum Streichen, dezente Aufblinkanimation
-- Automatischer Spielerwechsel nach jeder gültigen Eintragung
-- Bereits belegte Felder gesperrt; Revisionsprüfung bei Wertungen
-- Lokale Speicherung im Browser (localStorage), Zurücksetzen und 1–8 Spieler
-- Obere Summe, Bonus und Gesamtpunkte
+## Vorgehensweise
+1. Originale Fragen-und-Antworten-Planung vollständig rekonstruieren und auf Widersprüche prüfen.
+2. Verbindliches Regelwerk mit konkreten Akzeptanztests festhalten.
+3. Spiel-Engine von Grund auf neu schreiben und automatisiert testen.
+4. Multiplayer mit serverseitigen, atomaren Spielzügen entwickeln.
+5. Casino-Ereignisse, Mystery, Duelle, Schilde und Bots nach Spezifikation integrieren.
+6. Erst danach Premium-Dark-UI und gemeinsamer interaktiver Spielblock.
 
-## Start / Tests
-GitHub Pages kann die Dateien direkt aus dem Repository-Stamm ausliefern. Lokal `index.html` über einen statischen Webserver öffnen (ES-Module). Mit Node.js 20+ `npm test` ausführen.
+## Bestätigte Eckpunkte (noch keine vollständige Spezifikation)
+- 6 normale W6; 22 Wertungskategorien.
+- Oberer Bonus: +45 ab 73 Punkten.
+- Ein gemeinsamer Spielblock: aktive Spielerspalte groß, andere kompakt rechts.
+- Multiplayer: echte Würfel, digitale Punkteingabe. Solo: digitale Würfel und Bots.
+- Klassisch ohne Casino; Light 50 % ein Ereignis; Extrem mindestens eins, 20 % zweites; Chaos mindestens eins, 20 % zweites, 10 % drittes.
+- Moduswechsel nur mit Zustimmung aller Spieler.
+- Multiplikatoren kombiniert höchstens ×10; Jackpot-Sonderfall bis ×27 ohne weitere Multiplikatoren.
+- Mystery- und Überraschungsereignisse benötigen definierte geheime Auflösung.
+- Ereigniszeitpunkte hängen von der Mechanik ab (Zugbeginn, zwischen Würfen, nach letztem Wurf).
 
-## Wichtige Grenzen
-**Punkte werden noch manuell eingegeben**, ohne Überprüfung der sechs Würfel. Die konkrete vollständige Wertungstabelle und alle Casino-Regeln müssen gegen den offiziellen Nutzer-Spielblock geprüft werden; bisherige Prototyp-Regeln sind nicht als verbindlich zu betrachten. **Keine Supabase-Verbindung, kein Realtime-Multiplayer, keine Server-Autorisierung.** Lokaler Spielstand gilt nur für denselben Browser. Browserdaten löschen entfernt ihn.
-
-## Geplante Architektur
-Reine Spielregeln in `game.js`; UI in `main.js`; für echten Multiplayer später serverseitige transaktionale Spielzüge mit Authentifizierung, Revisionskontrolle, idempotenten Aktionen und Realtime-Updates.
-
-## Casino-Testkarten
-Vier ausdrücklich vorläufige Karten können einmal pro Wertung gezogen werden. Sie verändern die nächste Punkteingabe. Das ist **nicht** der vollständige offizielle Ereigniskatalog; eine gezogene Karte wird derzeit nicht über Seitenneuladen gespeichert.
+**Offen:** Die gesamte ursprüngliche Fragerunde mit allen Einzelentscheidungen und die vollständigen Casino-Ereignisse müssen vor Implementierung verifiziert werden. Keine Regeln hinzuerfinden.
