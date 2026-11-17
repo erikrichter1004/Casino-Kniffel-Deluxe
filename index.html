@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Casino Kniffel Deluxe – Wertungsblock Vorschau</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#0d101b;color:#f7f8ff}
+*{box-sizing:border-box}body{margin:0;padding:24px 12px 60px;background:radial-gradient(ellipse at 60% 0%,#263251,#0d101b 60%)}
+main{max-width:980px;margin:auto}h1{font-size:clamp(1.5rem,5vw,2.5rem);margin:0 0 8px}
+p{color:#aeb9d2;line-height:1.5}.tag{color:#a5efcf;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.toolbar button{background:#222d46;border:1px solid #485879;color:white;border-radius:12px;padding:12px 16px;cursor:pointer;transition:transform .2s,background .2s}.toolbar button:active{transform:scale(.95)}.toolbar button[aria-pressed=true]{background:#346c66;border-color:#86f5ca}
+.viewport{overflow-x:auto;overscroll-behavior-x:contain;border:1px solid #34415d;border-radius:18px;background:#141c2c;scroll-behavior:smooth}
+.board{min-width:580px;display:grid;grid-template-columns:minmax(150px,1.4fr) repeat(3,minmax(90px,1fr));gap:3px;padding:10px;transition:grid-template-columns .45s cubic-bezier(.2,.8,.2,1)}
+.board[data-active="0"]{grid-template-columns:minmax(150px,1.4fr) minmax(148px,1.4fr) repeat(2,minmax(80px,.75fr))}
+.board[data-active="1"]{grid-template-columns:minmax(150px,1.4fr) minmax(80px,.75fr) minmax(148px,1.4fr) minmax(80px,.75fr)}
+.board[data-active="2"]{grid-template-columns:minmax(150px,1.4fr) repeat(2,minmax(80px,.75fr)) minmax(148px,1.4fr)}
+.cell{min-height:38px;display:flex;align-items:center;padding:9px 10px;background:#1d2940;border-radius:7px;transition:background .4s,padding .4s,font-size .4s,transform .4s}
+.category{font-size:.86rem;color:#d8e2f6}.heading{position:sticky;top:0;z-index:2;background:#293954;font-weight:700}
+.score{justify-content:center;font-size:.84rem;font-weight:500;color:#9aa8c4}
+.score.active{background:#294b4c;color:#edfff8;font-size:1.15rem;font-weight:850;box-shadow:inset 0 0 0 1px #4c9b83}
+.heading.active{background:#3a7168;transform:translateY(-2px)}
+.section{background:#32405b;color:#c3d4f2;font-size:.78rem;font-weight:800;letter-spacing:.04em}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style></head><body><main>
+<div class="tag">Interaktive Layout-Vorschau · Frage 19</div><h1>Casino Kniffel Deluxe</h1>
+<p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Mit den Buttons kannst du einen Zugwechsel simulieren. Dies ist noch keine spielbare Partie.</p>
+<div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div>
+<div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
+<div class="board" id="board" data-active="0"></div></div>
+<p>Auf dem Smartphone kannst du die Tabelle seitlich wischen. Die Eingabe von Wertungen, echte Partien und Synchronisation folgen später.</p>
+</main><script type="module">
+import {BASE_CATEGORY_NAMES} from "./src/rounds.js";
+import {createPlayerColumns} from "./src/player-columns.js";
+const players=[{id:"a",name:"Anna"},{id:"b",name:"Ben"},{id:"c",name:"Chris"}];
+const scores=[{}, {}, {}];scores[0]["Einser"]=3;scores[1]["Einser"]=5;scores[2]["Einser"]=2;
+scores[0]["Dreier"]=12;scores[1]["Dreier"]=9;scores[2]["Dreier"]=15;
+const board=document.querySelector("#board"),controls=document.querySelector("#controls");
+let active=0;
+function draw(){
+ const ordered=createPlayerColumns(players,players[active].id);
+ // DOM order is kept stable so CSS grid tracks animate without abrupt column reordering.
+ board.dataset.active=String(active);board.replaceChildren();
+ const add=(value,cls)=>{const el=document.createElement("div");el.className="cell "+cls;el.textContent=value;board.append(el);};
+ add("Kategorie","heading category");
+ players.forEach((p,i)=>add(p.name+(i===active?" · am Zug":""),"heading score"+(i===active?" active":"")));
+ BASE_CATEGORY_NAMES.forEach((name,index)=>{
+  if(index===0||index===6){
+   add(index===0?"OBERER BLOCK":"UNTERER BLOCK","section");
+   players.forEach((_,i)=>add(i===active?"●":"", "section score"+(i===active?" active":"")));
+  }
+  add(name,"category");
+  players.forEach((p,i)=>add(scores[i][name]??"–","score"+(i===active?" active":"")));
+ });
+ controls.replaceChildren();players.forEach((p,i)=>{
+  const b=document.createElement("button");b.textContent=p.name+(i===active?" · am Zug":"");b.setAttribute("aria-pressed",String(i===active));b.addEventListener("click",()=>{active=i;draw()});controls.append(b);
+ });
+}
+draw();
+</script></body></html>

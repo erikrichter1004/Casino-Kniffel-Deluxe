@@ -134,5 +134,14 @@
 - `src/scorecard.js` liefert das Datenmodell für die vertikale Darstellung samt Eingabetyp je Zeile. `tests/scorecard.test.mjs` enthält Strukturtests.
 - **Noch keine Browser-Oberfläche**; das Layout ist bislang als Datenmodell implementiert.
 
-## Frage 19 — offen
-Soll der klassische Block alle Spieler nebeneinander als Spalten zeigen oder jeweils nur das Wertungsblatt des ausgewählten Spielers?
+## Frage 19 — Variante A mit lebendigem Zugfokus
+- Standardmäßig **alle Spieler nebeneinander**, eine Spalte je Spieler, Kategorien links.
+- Der **aktuelle Spieler steht visuell im Fokus**: breitere Spalte, größere und fettere Punktzahlen, deutliche Hervorhebung.
+- Inaktive Spalten werden **schmaler** und bleiben sichtbar; Übergänge erfolgen weich mit CSS-Animationen.
+- Auf schmalen Bildschirmen ist die Tabelle **horizontal wisch-/scrollbar**.
+- Beim Zugwechsel verschiebt sich der Fokus sanft; keine sofortige Umsortierung der DOM-Spalten, um Sprünge zu vermeiden.
+- `src/player-columns.js` enthält die Fokus-/Spielerlogik; `index.html` ist eine **interaktive Layout-Vorschau** mit simuliertem Zugwechsel, noch kein vollständiges Spiel.
+- Bewegung wird bei `prefers-reduced-motion` deaktiviert.
+
+## Frage 20 — offen
+Soll der aktive Spieler beim Zugwechsel automatisch in die Mitte des sichtbaren Bereichs scrollen oder soll die Tabelle ihre horizontale Scrollposition behalten?

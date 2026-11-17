@@ -30,8 +30,10 @@
 - `src/dice.js`: sechs Würfel, konfigurierbare Wurfgrenze, Halten und Freigeben
 - `src/entry.js`: interaktive Wertungseingabe als Datenmodell (Augenzahl-Anzahl, Festwertung oder Punktefeld); elf Original-Festwerte aus der früheren Casino-Kniffel-Projektdatei hinterlegt (noch nicht erneut am Foto geprüft)
 - `src/scorecard.js`: klassischer vertikaler Kniffelblock (Einser–Sechser oben, übrige Kategorien unten), mit separaten Feldern bei Wiederholungen
+- `src/player-columns.js`: Spieler-Spalten und Zugfokus
+- `index.html`: interaktive Layout-Vorschau mit weichen Fokusübergängen und horizontalem Wischen (noch keine vollständige Partie)
 - `tests/`: Node-Tests (`npm test`)
 
-**Noch keine neue spielbare Website.**
+**Eine interaktive Layout-Vorschau ist vorhanden; noch keine vollständig spielbare Partie.**
 
 [Entscheidungsprotokoll](docs/decisions.md)
