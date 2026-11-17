@@ -1,56 +1,54 @@
-/** Question 4: deterministic game-plan construction with injectable randomness.
- * The official 22-category catalog is deliberately supplied by the caller until verified.
+/** One scorecard per game; repeated categories occupy separate slots.
+ * The exact 22 base categories are known, but scoring formulas and long-mode
+ * extra-category selection require separate confirmation.
  */
-export const SIX_DICE_EXTRAS=Object.freeze([
- {id:"extra_six_kind",label:"Sechserpasch",rule:"six_kind"},
- {id:"extra_three_pairs",label:"Drei Paare Plus",rule:"three_pairs"},
- {id:"extra_two_triples",label:"Doppelter Dreierpasch",rule:"two_triples"},
- {id:"extra_five_kind",label:"Fünferpasch Plus",rule:"five_kind"},
- {id:"extra_even_six",label:"Sechs gerade",rule:"all_even"},
- {id:"extra_odd_six",label:"Sechs ungerade",rule:"all_odd"}
+export const BASE_CATEGORY_NAMES=Object.freeze([
+ "Einser","Zweier","Dreier","Vierer","Fünfer","Sechser",
+ "Dreierpasch","Viererpasch","Zwei Paare","Drei Paare","Zwei Dreier",
+ "Full-House","Großes Full-House","Kleine Straße","Große Straße","Highway",
+ "Kniffel","Kniffel Extrem","10 oder weniger","33 oder mehr","Chance","Super Chance"
 ]);
-export function scoreExtra(rule,dice){
- if(!Array.isArray(dice)||dice.length!==6||dice.some(n=>!Number.isInteger(n)||n<1||n>6))throw new RangeError("Genau sechs W6 erforderlich");
- const counts=Array.from({length:6},(_,i)=>dice.filter(d=>d===i+1).length);
- const sum=dice.reduce((a,b)=>a+b,0);
- const matched={
-  six_kind:counts.includes(6),
-  three_pairs:counts.filter(c=>c===2).length===3,
-  two_triples:counts.filter(c=>c===3).length===2,
-  five_kind:counts.some(c=>c>=5),
-  all_even:dice.every(d=>d%2===0),
-  all_odd:dice.every(d=>d%2===1)
- };
- if(!Object.hasOwn(matched,rule))throw new RangeError("Unbekannte Zusatzregel");
- return matched[rule]?sum:0;
-}
+export const PROPOSED_EXTRAS=Object.freeze([
+ Object.freeze({id:"street_pair",label:"Kleine Straße + Paar",status:"proposal"}),
+ Object.freeze({id:"three_distinct_pairs",label:"Drei unterschiedliche Paare",status:"proposal"}),
+ Object.freeze({id:"all_even",label:"Sechs gerade",status:"proposal"}),
+ Object.freeze({id:"all_odd",label:"Sechs ungerade",status:"proposal"})
+]);
 function shuffle(values,random){
- const arr=[...values];
- for(let i=arr.length-1;i>0;i--){
-  const r=random();if(typeof r!=="number"||!Number.isFinite(r)||r<0||r>=1)throw new RangeError("Zufallsquelle muss Zahl zwischen 0 und 1 liefern");
-  const j=Math.floor(r*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];
+ const a=[...values];
+ for(let i=a.length-1;i>0;i--){
+  const n=random();if(!Number.isFinite(n)||n<0||n>=1)throw new RangeError("Ungültige Zufallsquelle");
+  const j=Math.floor(n*(i+1));[a[i],a[j]]=[a[j],a[i]];
  }
- return arr;
+ return a;
 }
-function catalog(base){
- if(!Array.isArray(base)||base.length!==22)throw new RangeError("Der bestätigte 22-Kategorien-Katalog fehlt");
- if(base.some(x=>!x||typeof x.id!=="string"||!x.id.trim()||typeof x.label!=="string"||!x.label.trim()))throw new TypeError("Ungültige Kategorie");
- if(new Set(base.map(x=>x.id)).size!==22)throw new Error("Kategorie-IDs müssen eindeutig sein");
- if(base.some(x=>SIX_DICE_EXTRAS.some(e=>e.id===x.id)))throw new Error("Kollision mit Zusatzkategorien");
- return base;
+function validateBase(categories){
+ if(!Array.isArray(categories)||categories.length!==22)throw new RangeError("22 Grundkategorien erforderlich");
+ if(categories.some(c=>!c||typeof c.id!=="string"||!c.id||typeof c.label!=="string"||!c.label))throw new TypeError("Ungültige Kategorie");
+ if(new Set(categories.map(c=>c.id)).size!==22)throw new Error("Doppelte Kategorie-ID");
+ return categories;
 }
-function slot(category,round,index){return {slotId:`r${round}-s${index}`,categoryId:category.id,label:category.label,round,rule:category.rule??null};}
-export function createRoundPlan({mode,baseCategories,random=Math.random}){
- const base=catalog(baseCategories);
+function makeSlot(category,index){
+ return {slotId:`slot-${index+1}`,categoryId:category.id,label:category.label,position:index+1};
+}
+export function createRoundPlan({mode,baseCategories,random=Math.random,longExtras,longRepeatIds}){
+ const base=validateBase(baseCategories);
  if(mode==="short"){
-  const picked=shuffle(base,random).slice(0,11);
-  return {mode,upperBonusEnabled:false,slots:picked.map((c,i)=>slot(c,1,i+1)),rounds:1};
+  return {mode,upperBonusEnabled:false,slots:shuffle(base,random).slice(0,11).map(makeSlot),blockCount:1};
  }
- if(mode==="standard")return {mode,upperBonusEnabled:true,slots:base.map((c,i)=>slot(c,1,i+1)),rounds:1};
+ if(mode==="standard"){
+  return {mode,upperBonusEnabled:true,slots:base.map(makeSlot),blockCount:1};
+ }
  if(mode==="long"){
-  // 22 original slots in round 1; round 2 has 16 random repeated categories and 6 new six-dice categories.
-  const second=shuffle([...shuffle(base,random).slice(0,16),...SIX_DICE_EXTRAS],random);
-  return {mode,upperBonusEnabled:true,slots:[...base.map((c,i)=>slot(c,1,i+1)),...second.map((c,i)=>slot(c,2,i+1))],rounds:2};
+  // Never silently invent the number of repeats or approve draft categories.
+  if(!Array.isArray(longExtras)||!Array.isArray(longRepeatIds))throw new Error("Lang-Zusatzkategorien und Wiederholungsanzahl sind noch nicht bestätigt");
+  const byId=new Map(base.map(c=>[c.id,c]));
+  if(longRepeatIds.some(id=>!byId.has(id)))throw new Error("Unbekannte Wiederholungskategorie");
+  if(longExtras.some(c=>!c||typeof c.id!=="string"||!c.id||typeof c.label!=="string"||!c.label))throw new Error("Ungültige Zusatzkategorie");
+  if(22+longRepeatIds.length+longExtras.length!==44)throw new Error("Lang muss genau 44 Felder haben");
+  const categories=[...base,...longRepeatIds.map(id=>byId.get(id)),...longExtras];
+  if(new Set([...base,...longExtras].map(c=>c.id)).size!==22+longExtras.length)throw new Error("Zusatzkategorie-ID ist bereits belegt");
+  return {mode,upperBonusEnabled:true,slots:shuffle(categories,random).map(makeSlot),blockCount:1};
  }
- throw new RangeError("Unbekannte Spieldauer");
+ throw new RangeError("Unbekannter Spielmodus");
 }

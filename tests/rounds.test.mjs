@@ -1,33 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {createRoundPlan,scoreExtra,SIX_DICE_EXTRAS} from "../src/rounds.js";
-const base=Array.from({length:22},(_,i)=>({id:"cat"+i,label:"Kategorie "+i}));
-const random=()=>0.4;
-test("Kurz: elf unterschiedliche Zufallskategorien ohne oberen Bonus",()=>{
- const p=createRoundPlan({mode:"short",baseCategories:base,random});
- assert.equal(p.slots.length,11);assert.equal(new Set(p.slots.map(s=>s.categoryId)).size,11);assert.equal(p.upperBonusEnabled,false);
-});
-test("Standard: alle 22 Kategorien unverändert",()=>{
- const p=createRoundPlan({mode:"standard",baseCategories:base,random});
- assert.equal(p.slots.length,22);assert.equal(p.upperBonusEnabled,true);assert.deepEqual(p.slots.map(s=>s.categoryId),base.map(x=>x.id));
-});
-test("Lang: 22 original plus 16 Wiederholungen plus 6 neue Regeln",()=>{
- const p=createRoundPlan({mode:"long",baseCategories:base,random});
- assert.equal(p.slots.length,44);assert.equal(p.rounds,2);
- assert.equal(p.slots.filter(s=>s.round===2&&s.categoryId.startsWith("cat")).length,16);
- assert.equal(p.slots.filter(s=>s.round===2&&s.categoryId.startsWith("extra_")).length,6);
+import {BASE_CATEGORY_NAMES,PROPOSED_EXTRAS,createRoundPlan} from "../src/rounds.js";
+const base=BASE_CATEGORY_NAMES.map((label,i)=>({id:"c"+i,label}));
+const random=()=>0.42;
+test("22 Originalkategorien einschließlich Kniffel Extrem und Zwei Dreier",()=>{assert.equal(BASE_CATEGORY_NAMES.length,22);assert.ok(BASE_CATEGORY_NAMES.includes("Zwei Dreier"));assert.ok(BASE_CATEGORY_NAMES.includes("Kniffel Extrem"))});
+test("Kurz 11 verschiedene Felder ohne oberen Bonus",()=>{const p=createRoundPlan({mode:"short",baseCategories:base,random});assert.equal(p.slots.length,11);assert.equal(new Set(p.slots.map(s=>s.categoryId)).size,11);assert.equal(p.upperBonusEnabled,false)});
+test("Standard alle 22 Felder",()=>{const p=createRoundPlan({mode:"standard",baseCategories:base,random});assert.deepEqual(p.slots.map(s=>s.categoryId),base.map(c=>c.id));assert.equal(p.blockCount,1)});
+test("Lang ist ein einziger Block mit 44 separaten Feldern",()=>{
+ const repeats=Array.from({length:18},(_,i)=>base[i%9].id);
+ const extras=Array.from({length:4},(_,i)=>({id:"extra"+i,label:"Neue Kategorie "+i}));
+ const p=createRoundPlan({mode:"long",baseCategories:base,random,longRepeatIds:repeats,longExtras:extras});
+ assert.equal(p.blockCount,1);assert.equal(p.slots.length,44);
  assert.equal(new Set(p.slots.map(s=>s.slotId)).size,44);
+ assert.equal(p.slots.filter(s=>s.categoryId==="c0").length,3);
 });
-test("Sechs-Würfel-Sonderkategorien werden aus Würfeln berechnet",()=>{
- assert.equal(scoreExtra("six_kind",[3,3,3,3,3,3]),18);
- assert.equal(scoreExtra("six_kind",[3,3,3,3,3,2]),0);
- assert.equal(scoreExtra("three_pairs",[1,1,2,2,6,6]),18);
- assert.equal(scoreExtra("two_triples",[2,2,2,5,5,5]),21);
- assert.equal(scoreExtra("all_even",[2,4,6,2,4,6]),24);
- assert.equal(scoreExtra("all_odd",[1,3,5,1,3,5]),18);
- assert.throws(()=>scoreExtra("six_kind",[1,2]),/sechs/);
-});
-test("Offizieller Katalog wird nicht erfunden",()=>{
- assert.throws(()=>createRoundPlan({mode:"standard",baseCategories:[]}),/22/);
- assert.equal(SIX_DICE_EXTRAS.length,6);
-});
+test("Lang verlangt ausdrücklich festgelegte neue Kategorien",()=>assert.throws(()=>createRoundPlan({mode:"long",baseCategories:base,random}),/nicht bestätigt/));
+test("Entwürfe sind nicht als genehmigte Regeln markiert",()=>assert.ok(PROPOSED_EXTRAS.every(c=>c.status==="proposal")));
