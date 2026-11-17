@@ -153,6 +153,8 @@ body{overflow-x:hidden}
 @media(prefers-reduced-motion:reduce){.droplet{will-change:auto}}
 /* Prevent sharp slanted edges on iOS during liquid deformation. */
 .droplet{transform-origin:center!important;clip-path:none!important;overflow:hidden;transition:none!important}
+/* Keep the morph clipped to a smooth water profile instead of a full-height bar. */
+.droplet{border-radius:999px!important;overflow:hidden;transition:none!important}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -183,13 +185,24 @@ function bubbleTarget(i){
 function renderBubble(x,w,shape=0,direction=1){
  const d=Math.max(0,Math.min(1,shape));
  droplet.style.width=w+"px";
- // No skew/scale: those transforms produced visible hard corners on iOS.
  droplet.style.transform="translate3d("+x+"px,0,0)";
- // Elliptical corners make a rounded tail and a noticeably tapered nose.
- const front=Math.round(50-d*39);
- droplet.style.borderRadius=direction>0
-  ? "50% "+front+"% "+front+"% 50% / 50% 50% 50% 50%"
-  : front+"% 50% 50% "+front+"% / 50% 50% 50% 50%";
+ droplet.style.borderRadius="999px";
+ if(d<.005){droplet.style.clipPath="none";return;}
+ // Build a smooth, rounded water silhouette: full rear bulb, slim flowing neck,
+ // and a rounded leading tip. The long part is narrow rather than a thick bar.
+ const steps=32,upper=[],lower=[];
+ for(let i=0;i<=steps;i++){
+  const u=i/steps;
+  const along=direction>0?u:1-u;
+  const endCap=Math.sqrt(Math.max(0,1-Math.pow(2*u-1,2)));
+  const rearBulb=Math.exp(-Math.pow((along-.19)/.24,2));
+  const frontBulb=Math.exp(-Math.pow((along-.91)/.13,2));
+  const neck=0.23+0.77*Math.max(rearBulb,frontBulb*.68);
+  const half=endCap*(1-d*(1-neck))*.49;
+  upper.push((u*100).toFixed(2)+"% "+((.5-half)*100).toFixed(2)+"%");
+  lower.push((u*100).toFixed(2)+"% "+((.5+half)*100).toFixed(2)+"%");
+ }
+ droplet.style.clipPath="polygon("+upper.concat(lower.reverse()).join(",")+")";
 }
 function animateBubble(fromX,fromW,toX,toW){
  cancelAnimationFrame(animationFrame);
