@@ -11,7 +11,7 @@
 - **Sechs ungerade: 35 Punkte**.
 - Ungültige Würfe ergeben jeweils 0 Punkte.
 - **Drei unterschiedliche Paare** ist noch zurückgestellt (mögliche Dopplung mit Drei Paare).
-- Drei weitere Kandidaten haben jetzt Würfelprüfungen, aber noch keine Punktwerte: Doppelte Mini-Straße, Nur niedrige Zahlen, Nur hohe Zahlen. Mindestens fünf weitere bestätigte Kategorien werden für Lang benötigt.
+- Drei weitere Kandidaten haben Würfelprüfungen, aber noch keine Punktwerte: Doppelte Mini-Straße (**zwei beliebige Dreier-Straßen, ausdrücklich auch identische wie 1-2-3 + 1-2-3**), Nur niedrige Zahlen, Nur hohe Zahlen. Mindestens fünf weitere bestätigte Kategorien werden für Lang benötigt.
 
 ## Code
 - `src/lobby.js`: Lobby-Modell

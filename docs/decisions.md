@@ -37,7 +37,7 @@
 - Für Kleine Straße + Paar gilt vorläufig die oben präzisierte Würfeldefinition; falls der Nutzer eine andere meint, muss sie geändert werden.
 
 ## Frage 9 — neue Kategorien (grundsätzlich ausgewählt, Punkte noch offen)
-- **Doppelte Mini-Straße:** Zwei disjunkte Dreier-Straßen mit sechs Würfeln. Beispiel 1-2-3 und 4-5-6. Die technische Prüfung akzeptiert auch 1-2-3 + 2-3-4 sowie 1-2-3 + 1-2-3. **Ob identische Straßen erlaubt sind, ist noch nicht ausdrücklich bestätigt.**
+- **Doppelte Mini-Straße:** Zwei disjunkte Dreier-Straßen mit sechs Würfeln. Beispiel 1-2-3 und 4-5-6. Die technische Prüfung akzeptiert auch 1-2-3 + 2-3-4 sowie 1-2-3 + 1-2-3. **Frage 10 bestätigt ausdrücklich, dass identische Dreier-Straßen erlaubt sind.**
 - **Nur niedrige Zahlen:** Alle sechs Würfel zeigen 1, 2 oder 3.
 - **Nur hohe Zahlen:** Alle sechs Würfel zeigen 4, 5 oder 6.
 - Alle drei Kombinationen sind mit sechs W6 möglich. Sie sind nicht identisch mit den bereits bestätigten drei neuen Kategorien; es gibt jedoch Überschneidungen einzelner erfolgreicher Würfe.
@@ -46,5 +46,12 @@
 - `src/extras.js` prüft die drei Vorschläge, aber `scoreExtraCategory` vergibt für sie absichtlich noch keine Punkte. Sie zählen bis zur endgültigen Freigabe nicht zum bestätigten Lang-Pool.
 - Bestätigter Pool derzeit: drei Kategorien. Drei neue Vorschläge ohne Punktewerte. "Drei unterschiedliche Paare" bleibt zurückgestellt.
 
-## Frage 10 — offen
-Welche festen Punkte sollen die drei neuen Kategorien bei erfolgreichem Wurf erhalten?
+## Frage 10 — Doppelte Mini-Straße (bestätigt)
+- **Variante A:** Zwei beliebige Dreier-Straßen aus sechs W6.
+- Identische Straßen sind erlaubt: **1-2-3 + 1-2-3** ist gültig.
+- Auch unterschiedliche und überlappende Zahlenfolgen sind gültig, sofern jeder der sechs Würfel genau einer der beiden Dreier-Straßen zugeordnet werden kann.
+- Die vorhandene Prüfmechanik `doubleMiniStraight` entspricht dieser Regel; Kommentar und Regressionstests wurden angepasst.
+- **Punktewert ist weiterhin offen**; die Kategorie bleibt bis dahin ein Vorschlag, keine wertbare Kategorie.
+
+## Frage 11 — offen
+Welche festen Punkte sollen Doppelte Mini-Straße, Nur niedrige Zahlen und Nur hohe Zahlen bei einem gültigen Wurf erhalten?

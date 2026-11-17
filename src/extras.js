@@ -29,7 +29,7 @@ function streetAndPair(dice){
 }
 function doubleMiniStraight(dice){
  // Two disjoint groups of three dice, each forming a consecutive triple.
- // Identical triples are currently permitted; confirm final rule before approval.
+ // Confirmed Q10: identical triples are explicitly allowed (e.g. 1-2-3 + 1-2-3).
  for(let a=1;a<=4;a++){
   const rest=[...dice];let first=true;
   for(let n=a;n<a+3;n++){

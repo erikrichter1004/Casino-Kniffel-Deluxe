@@ -28,9 +28,12 @@ test("Ungültige Würfel und unbestätigte Kategorie abweisen",()=>{
 test("Doppelte Mini-Straße: zwei disjunkte Dreierfolgen",()=>{
  assert.equal(match("double_mini_straight",[1,2,3,4,5,6]),true);
  assert.equal(match("double_mini_straight",[1,2,3,2,3,4]),true);
- assert.equal(match("double_mini_straight",[1,2,3,1,2,3]),true);
+ assert.equal(match("double_mini_straight",[1,2,3,1,2,3]),true); // Q10: identische Straßen erlaubt
+ assert.equal(match("double_mini_straight",[2,3,4,2,3,4]),true);
+ assert.equal(match("double_mini_straight",[4,3,2,4,3,2]),true);
  assert.equal(match("double_mini_straight",[1,1,1,2,3,4]),false);
  assert.equal(match("double_mini_straight",[1,2,3,3,5,6]),false);
+ assert.equal(match("double_mini_straight",[1,1,2,2,4,4]),false);
 });
 test("Niedrige und hohe Zahlen mit genau sechs Würfeln",()=>{
  assert.equal(match("all_low",[1,1,2,2,3,3]),true);
