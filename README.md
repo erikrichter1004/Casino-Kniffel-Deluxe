@@ -2,6 +2,7 @@
 
 ## Bestätigte Spielregeln
 - Host/Beitreten/Solo, Host wählt Spieldauer und Casino-Aktionsgrad.
+- **Sechs W6, standardmäßig maximal drei Würfe pro Zug**; der Host kann optional **zwei, drei oder vier** einstellen. Würfel lassen sich zwischen Würfen festhalten und freigeben.
 - Kurz 11 zufällige Kategorien ohne oberen Bonus; Standard 22 Grundkategorien.
 - Lang ein einzelner 44-Felder-Block: 22 Originalfelder + 14 Wiederholungen + 8 zufällig aus dem gesamten bestätigten Zusatzkatalog gezogene neue Kategorien.
 
@@ -25,6 +26,7 @@
 - `src/duration.js`: Spieldauern
 - `src/rounds.js`: Wertungsblock und Zufallsauswahl
 - `src/extras.js`: Würfelbedingungen und feste Punkte für zehn bestätigte Kategorien
+- `src/dice.js`: sechs Würfel, konfigurierbare Wurfgrenze, Halten und Freigeben
 - `tests/`: Node-Tests (`npm test`)
 
 **Noch keine neue spielbare Website.**

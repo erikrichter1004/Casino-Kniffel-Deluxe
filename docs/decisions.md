@@ -93,5 +93,14 @@
 - Die alten Vorschlagslisten sind leer; insbesondere bleibt „Drei unterschiedliche Paare“ **außerhalb** des bestätigten Pools.
 - Die Wertungslogik und bereits bestätigten Punktwerte bleiben unverändert.
 
-## Frage 15 — offen
-Wie sollen die sechs Würfel pro Zug geworfen und erneut geworfen werden (Anzahl Würfe und Festhalten einzelner Würfel)?
+## Frage 15 — Variante C mit klassischem Standard
+- **Immer sechs normale W6**.
+- **Standard: maximal drei Würfe pro Zug**; ohne Änderung der Einstellung spielt man klassisch.
+- **Optional kann der Host vor Spielbeginn zwei, drei oder vier Würfe pro Zug auswählen**.
+- Zwischen Würfen können einzelne Würfel festgehalten und wieder freigegeben werden; festgehaltene Würfel werden nicht erneut geworfen.
+- `src/dice.js` implementiert Würfelzug, Halten/Freigeben und konfigurierbare Wurfgrenze.
+- `src/lobby.js` speichert die Wurfgrenze mit dem Standardwert drei in den Lobby-Einstellungen.
+- Testfälle für Standard, Optionen, Würfe und Festhalten ergänzt.
+
+## Frage 16 — offen
+Sollen Würfe ausschließlich durch Tippen auf einen Würfel-Button ausgelöst werden oder zusätzlich durch Schütteln des Smartphones?
