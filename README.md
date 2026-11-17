@@ -28,6 +28,7 @@
 - `src/rounds.js`: Wertungsblock und Zufallsauswahl
 - `src/extras.js`: Würfelbedingungen und feste Punkte für zehn bestätigte Kategorien
 - `src/dice.js`: sechs Würfel, konfigurierbare Wurfgrenze, Halten und Freigeben
+- `src/entry.js`: interaktive Wertungseingabe als Datenmodell (Augenzahl-Anzahl, Festwertung oder Punktefeld); Original-Festwerte bis zur Prüfung gesperrt
 - `tests/`: Node-Tests (`npm test`)
 
 **Noch keine neue spielbare Website.**

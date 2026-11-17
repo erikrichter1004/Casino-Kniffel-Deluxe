@@ -110,5 +110,13 @@
 - Die Lobby-Konfiguration speichert `diceMode: "physical" | "digital"`, standardmäßig `physical`; Wechsel nur durch Host während der Konfiguration.
 - Die bisherige digitale Würfelzug-Logik bleibt für spätere Nutzung vorhanden, aber eine Oberfläche dafür wird zurückgestellt.
 
-## Frage 17 — offen
-Wie sollen Spieler bei echten Würfeln ihre Ergebnisse in die Website eintragen: sechs Augenzahlen auswählen oder nur die gewünschte Wertungskategorie samt Punkten bestätigen?
+## Frage 17 — Interaktive Ergebniseingabe für echte Würfel
+- **Einser bis Sechser:** Kategorie antippen, aus **1 bis 6** gewürfelten Exemplaren wählen, Augensumme automatisch als Anzahl × Augenzahl.
+- **Festkategorien:** ausschließlich **Geschafft** (fest hinterlegte Punkte) oder **Streichen** (0 Punkte). Für alle zehn bestätigten Zusatzkategorien sind die festen Werte bereits hinterlegt.
+- **Variable Kategorien:** Dreierpasch, Viererpasch, Zwei Paare, Drei Paare, Zwei Dreier, Chance und Super Chance erhalten ein direktes numerisches Punktefeld.
+- Original-Festkategorien sind im Eingabemodell als `fixed_pending` gekennzeichnet, bis ihre exakten Punktwerte mit dem Originalspielblock abgeglichen wurden; keine geratenen Punktwerte.
+- `src/entry.js` implementiert die Eingabetypen, Berechnung, Streichen und Validierung; Tests in `tests/entry.test.mjs`.
+- Visuelle Animation und echte interaktive Website folgen später.
+
+## Frage 18 — offen
+Sollen die festen Punktwerte der Originalkategorien zunächst anhand eines Fotos des Original-Spielblocks abgeglichen werden, bevor wir die Wertungseingabe-Oberfläche bauen?
