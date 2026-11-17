@@ -156,5 +156,10 @@
 - CSS-Keyframes und Federkurve ergänzen die bestehende Transform-Animation; `prefers-reduced-motion` bleibt berücksichtigt.
 - **Wichtiger Hinweis:** Die GitHub-Pages-Adresse wurde nicht erfolgreich als funktionierende Vorschau verifiziert. Das Vorhandensein von `index.html` im Repository beweist keine aktivierte Pages-Veröffentlichung. Nicht als live verifiziert ausgeben.
 
-## Frage 22 — offen
-Soll die Vorschau zuerst als echte öffentliche GitHub-Pages-Website erreichbar gemacht werden, bevor weitere Animationen hinzukommen?
+## Frage 22 — Veröffentlichung zuerst (Variante A)
+- Priorität: **öffentliche, tatsächlich funktionierende interaktive Vorschau** statt weiterer Effekte.
+- `index.html` liegt im Root auf `main`; das Repository meldet `has_pages: true`.
+- Eine GitHub-Actions-Deployment-Konfiguration unter `.github/workflows/deploy-pages.yml` wurde hinzugefügt.
+- **Veröffentlichung und Abruf sind noch nicht bestätigt**; die öffentliche URL ließ sich in der verfügbaren Umgebung nicht zuverlässig aufrufen.
+- Bei ausbleibender Veröffentlichung unter Repository → Settings → Pages die Quelle **GitHub Actions** wählen und im Actions-Tab den Deploy-Workflow überprüfen.
+- Weitere Designfragen erst nach verifizierter Vorschau fortsetzen.
