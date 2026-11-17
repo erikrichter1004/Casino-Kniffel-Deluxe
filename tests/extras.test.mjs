@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {APPROVED_EXTRAS,EXTRA_PROPOSALS,HELD_FOR_REVIEW,matchesExtraCategory as match,scoreExtraCategory as score} from "../src/extras.js";
-test("Drei bestätigte Zusatzkategorien mit festen Punkten",()=>{
- assert.deepEqual(APPROVED_EXTRAS.map(c=>c.points),[45,35,35]);
+test("Sechs bestätigte Zusatzkategorien mit festen Punkten",()=>{
+ assert.deepEqual(APPROVED_EXTRAS.map(c=>c.points),[45,35,35,45,35,35]);
  assert.ok(APPROVED_EXTRAS.every(c=>c.status==="approved"));
  assert.equal(HELD_FOR_REVIEW.id,"three_distinct_pairs");
 });
@@ -41,10 +41,15 @@ test("Niedrige und hohe Zahlen mit genau sechs Würfeln",()=>{
  assert.equal(match("all_high",[4,4,5,5,6,6]),true);
  assert.equal(match("all_high",[3,4,5,5,6,6]),false);
 });
-test("Vorschläge dürfen noch keine Punkte erhalten",()=>{
- assert.equal(EXTRA_PROPOSALS.length,3);
- assert.ok(EXTRA_PROPOSALS.every(c=>c.status==="proposal"&&c.points===null));
- assert.throws(()=>score("all_low",[1,1,2,2,3,3]),/Keine bestätigte/);
+test("Frage 11: feste Punkte für drei neu bestätigte Kategorien",()=>{
+ assert.equal(EXTRA_PROPOSALS.length,0);
+ assert.equal(score("double_mini_straight",[1,2,3,1,2,3]),45);
+ assert.equal(score("double_mini_straight",[1,2,3,4,5,6]),45);
+ assert.equal(score("double_mini_straight",[1,1,1,2,3,4]),0);
+ assert.equal(score("all_low",[1,1,2,2,3,3]),35);
+ assert.equal(score("all_low",[1,1,2,2,3,4]),0);
+ assert.equal(score("all_high",[4,4,5,5,6,6]),35);
+ assert.equal(score("all_high",[3,4,5,5,6,6]),0);
 });
 
 test("Frage 10: alle 10 ungeordneten Kombinationen aus vier möglichen Dreier-Straßen",()=>{
@@ -53,6 +58,7 @@ test("Frage 10: alle 10 ungeordneten Kombinationen aus vier möglichen Dreier-St
  for(let i=0;i<straights.length;i++)for(let j=i;j<straights.length;j++){
   const dice=[...straights[i],...straights[j]];
   assert.equal(match("double_mini_straight",dice),true,`Kombination ${i+1} + ${j+1}`);
+  assert.equal(score("double_mini_straight",dice),45);
   assert.equal(match("double_mini_straight",[...dice].reverse()),true,"Würfelreihenfolge darf keine Rolle spielen");
   count++;
  }

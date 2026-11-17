@@ -36,22 +36,22 @@
 - Der lange Spielblock benötigt acht verschiedene bestätigte Zusatzkategorien; derzeit existieren erst drei.
 - Für Kleine Straße + Paar gilt vorläufig die oben präzisierte Würfeldefinition; falls der Nutzer eine andere meint, muss sie geändert werden.
 
-## Frage 9 — neue Kategorien (grundsätzlich ausgewählt, Punkte noch offen)
+## Frage 9 — neue Kategorien (ausgewählt; Punkte in Frage 11 bestätigt)
 - **Doppelte Mini-Straße:** Zwei disjunkte Dreier-Straßen mit sechs Würfeln. Beispiel 1-2-3 und 4-5-6. Die technische Prüfung akzeptiert auch 1-2-3 + 2-3-4 sowie 1-2-3 + 1-2-3. **Frage 10 bestätigt ausdrücklich, dass identische Dreier-Straßen erlaubt sind.**
 - **Nur niedrige Zahlen:** Alle sechs Würfel zeigen 1, 2 oder 3.
 - **Nur hohe Zahlen:** Alle sechs Würfel zeigen 4, 5 oder 6.
 - Alle drei Kombinationen sind mit sechs W6 möglich. Sie sind nicht identisch mit den bereits bestätigten drei neuen Kategorien; es gibt jedoch Überschneidungen einzelner erfolgreicher Würfe.
-- Die doppelte Mini-Straße enthält 1-2-3-4-5-6 als gültigen Fall und überschneidet sich somit mit der bestehenden Straßen-/Highway-Kombination. **Die genaue Highway-Regel ist aus den bisher wiedergefundenen Quellen nicht eindeutig ableitbar.** Deshalb noch keine endgültige Freigabe.
+- Die doppelte Mini-Straße enthält 1-2-3-4-5-6 als gültigen Fall und überschneidet sich somit mit der bestehenden Straßen-/Highway-Kombination. **Die genaue Highway-Regel ist aus den bisher wiedergefundenen Quellen nicht eindeutig ableitbar.** Die Überschneidung wurde vom Nutzer ausdrücklich zugelassen.
 - Die ursprünglichen 22 Kategorien werden nicht aus dem Namen allein als vollständig regelgeprüft behandelt.
-- `src/extras.js` prüft die drei Vorschläge, aber `scoreExtraCategory` vergibt für sie absichtlich noch keine Punkte. Sie zählen bis zur endgültigen Freigabe nicht zum bestätigten Lang-Pool.
-- Bestätigter Pool derzeit: drei Kategorien. Drei neue Vorschläge ohne Punktewerte. "Drei unterschiedliche Paare" bleibt zurückgestellt.
+- Die drei neuen Kategorien sind nach Frage 11 mit festen Punkten implementiert und Teil des bestätigten Zusatzpools.
+- Bestätigter Pool derzeit: sechs Kategorien. "Drei unterschiedliche Paare" bleibt zurückgestellt.
 
 ## Frage 10 — Doppelte Mini-Straße (bestätigt)
 - **Variante A:** Zwei beliebige Dreier-Straßen aus sechs W6.
 - Identische Straßen sind erlaubt: **1-2-3 + 1-2-3** ist gültig.
 - Auch unterschiedliche und überlappende Zahlenfolgen sind gültig, sofern jeder der sechs Würfel genau einer der beiden Dreier-Straßen zugeordnet werden kann.
 - Die vorhandene Prüfmechanik `doubleMiniStraight` entspricht dieser Regel; Kommentar und Regressionstests wurden angepasst.
-- **Punktewert ist weiterhin offen**; die Kategorie bleibt bis dahin ein Vorschlag, keine wertbare Kategorie.
+- **Punktewert 45** wurde in Frage 11 bestätigt; die Kategorie ist nun wertbar.
 
 ### Ergänzung zu Frage 10 — sämtliche Kombinationen
 - Die vier möglichen Dreier-Straßen sind **1-2-3**, **2-3-4**, **3-4-5** und **4-5-6**.
@@ -61,5 +61,13 @@
 - Automatisierte Tests prüfen jetzt alle zehn Fälle und die umgekehrte Würfelreihenfolge.
 - Die Überschneidung mit Highway ist ausdrücklich erlaubt; die Felder bleiben eigenständige Wertungsoptionen.
 
-## Frage 11 — offen
-Welche festen Punkte sollen Doppelte Mini-Straße, Nur niedrige Zahlen und Nur hohe Zahlen bei einem gültigen Wurf erhalten?
+## Frage 11 — Punkte bestätigt und implementiert
+- **Doppelte Mini-Straße: 45 Punkte** bei gültigem Wurf, sonst 0.
+- **Nur niedrige Zahlen: 35 Punkte** bei sechs Zahlen aus 1, 2, 3; sonst 0.
+- **Nur hohe Zahlen: 35 Punkte** bei sechs Zahlen aus 4, 5, 6; sonst 0.
+- `APPROVED_EXTRAS` enthält jetzt sechs bestätigte Kategorien; `scoreExtraCategory` berechnet alle sechs festen Punktwerte.
+- Lang erfordert mindestens acht bestätigte Zusatzkategorien: **es fehlen noch zwei**.
+- Die Testfälle prüfen gültige und ungültige Würfe sowie alle zehn Kombinationen der doppelten Mini-Straße.
+
+## Frage 12 — offen
+Welche weiteren mindestens zwei eigenständigen Spezialkategorien sollen wir in den Zusatzpool aufnehmen?
