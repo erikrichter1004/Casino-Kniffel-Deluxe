@@ -53,7 +53,7 @@ function activate(i){
  if(active===i)return;
  active=i;
  board.dataset.active=String(active);
- board.querySelectorAll(".score").forEach(cell=>cell.classList.toggle("active",Number(cell.dataset.player)===active));
+ board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);if(cell.classList.contains("heading"))cell.textContent=players[index].name+(index===active?" · am Zug":"");if(cell.classList.contains("section"))cell.textContent=index===active?"●":"";});
  controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.textContent=players[j].name+(j===active?" · am Zug":"");});
  moveDroplet();
  // Follow the moving column after the CSS grid transition has reached its destination.
