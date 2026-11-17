@@ -1,23 +1,25 @@
 # Casino Kniffel Deluxe — Neuentwicklung
 
-## Bestätigt
+## Bestätigte Spielregeln
 - Host/Beitreten/Solo, Host wählt Spieldauer und Casino-Aktionsgrad.
-- Kurz 11, Standard 22, Lang 44, zusätzlich individuell.
-- Kurz 11 zufällige Originalkategorien ohne oberen Bonus; Standard alle 22.
-- Lang ein 44-Felder-Block: 22 Originalfelder, 14 Wiederholungen, acht zufällige neue Kategorien aus dem bestätigten Gesamtpool.
+- Kurz 11 zufällige Kategorien ohne oberen Bonus; Standard 22 Grundkategorien.
+- Lang ein einzelner 44-Felder-Block: 22 Originalfelder + 14 Wiederholungen + 8 zufällig aus dem gesamten bestätigten Zusatzkatalog gezogene neue Kategorien.
 
-## Frage 7
-- Drei neue Kandidaten mit Würfelprüfungen: **Kleine Straße + Paar**, **Sechs gerade**, **Sechs ungerade**.
-- **Drei unterschiedliche Paare** vorerst zurückgestellt: Überschneidung mit der Originalkategorie Drei Paare.
-- Noch keine bestätigten Punktewerte oder vollständiger Zusatzkatalog.
+## Bestätigte Zusatzkategorien
+- **Kleine Straße + Paar: 45 Punkte** (vier aufeinanderfolgende Zahlen und Paar aus den zwei übrigen Würfeln).
+- **Sechs gerade: 35 Punkte**.
+- **Sechs ungerade: 35 Punkte**.
+- Ungültige Würfe ergeben jeweils 0 Punkte.
+- **Drei unterschiedliche Paare** ist noch zurückgestellt (mögliche Dopplung mit Drei Paare).
+- Mindestens fünf weitere bestätigte Kategorien werden für Lang benötigt.
 
 ## Code
 - `src/lobby.js`: Lobby-Modell
 - `src/duration.js`: Spieldauern
 - `src/rounds.js`: Wertungsblock und Zufallsauswahl
-- `src/extras.js`: Prüfmechaniken für Spezialkandidaten
+- `src/extras.js`: geprüfte Würfelbedingungen und feste Punktwertung
 - `tests/`: Node-Tests (`npm test`)
 
-**Es gibt noch keine neue spielbare Webseite.**
+**Noch keine neue spielbare Website.**
 
 [Entscheidungsprotokoll](docs/decisions.md)

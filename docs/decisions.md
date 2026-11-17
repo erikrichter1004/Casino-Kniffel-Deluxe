@@ -23,13 +23,18 @@
 - Mindestens acht bestätigte Kategorien erforderlich.
 
 ## Frage 7 — Kandidaten und Doppelungsprüfung
-- Nutzer mag grundsätzlich: Kleine Straße + Paar, Drei unterschiedliche Paare, Sechs gerade, Sechs ungerade.
-- **Kleine Straße + Paar:** als präziser technischer Kandidat vier aufeinanderfolgende Würfelzahlen plus ein Paar aus den zwei übrigen Würfeln. Muss hinsichtlich endgültiger Definition/Punkte noch bestätigt werden.
-- **Sechs gerade:** alle sechs Würfel gerade; **Sechs ungerade:** alle sechs Würfel ungerade. Beide Kandidaten sind technisch prüfbar; Punkte offen.
-- **Drei unterschiedliche Paare:** wegen möglicher inhaltlicher Dopplung mit Originalkategorie **Drei Paare** zurückgestellt. Das vorhandene SQL bestätigt, dass Drei Paare ein Originalfeld mit 35 Punkten ist, legt aber dessen Würfelbedingung nicht eindeutig fest.
-- `src/extras.js` enthält nur die drei nicht offensichtlich doppelten Kandidaten und ihre Würfel-Prüfmechaniken; **noch nicht als endgültig genehmigter Pool** markiert.
-- Keine festen Punktwerte für diese Kandidaten erfunden.
-- Die 22 Grundkategorien sind in `src/rounds.js` bekannt, ihre vollständigen offiziellen Wertungsbedingungen bleiben zu prüfen.
+- Nutzer wählte: Kleine Straße + Paar, Drei unterschiedliche Paare, Sechs gerade, Sechs ungerade.
+- **Drei unterschiedliche Paare** bleibt zurückgestellt wegen möglicher Dopplung mit Originalfeld **Drei Paare**.
+- Für **Kleine Straße + Paar** wurde die technische Definition vorgeschlagen: vier aufeinanderfolgende Werte plus ein Paar aus den zwei übrigen Würfeln.
+- **Sechs gerade:** sechs gerade Augenzahlen. **Sechs ungerade:** sechs ungerade Augenzahlen.
 
-## Frage 8 — offen
-Wie sollen die drei Kandidaten bei Erfolg gewertet werden (feste Punkte, Augensumme, andere Regel)?
+## Frage 8 — Punktwerte (bestätigt und implementiert)
+- **Kleine Straße + Paar: 45 Punkte** bei erfüllter Bedingung, sonst 0.
+- **Sechs gerade: 35 Punkte** bei erfüllter Bedingung, sonst 0.
+- **Sechs ungerade: 35 Punkte** bei erfüllter Bedingung, sonst 0.
+- `src/extras.js` enthält bestätigte Kategorien und `scoreExtraCategory(id,dice)`.
+- Der lange Spielblock benötigt acht verschiedene bestätigte Zusatzkategorien; derzeit existieren erst drei.
+- Für Kleine Straße + Paar gilt vorläufig die oben präzisierte Würfeldefinition; falls der Nutzer eine andere meint, muss sie geändert werden.
+
+## Frage 9 — offen
+Welche weiteren fünf (oder mehr) neuen Kategorien sollen wir für den Zusatzkatalog entwickeln?
