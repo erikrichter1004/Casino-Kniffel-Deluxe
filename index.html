@@ -46,6 +46,19 @@ p{color:#aeb9d2;line-height:1.5}.tag{color:#a5efcf;font-size:.85rem;letter-spaci
 .board[data-active="2"]{grid-template-columns:minmax(165px,1.4fr) repeat(2,minmax(80px,.75fr)) minmax(148px,1.4fr)}
 .droplet{background:linear-gradient(115deg,rgba(116,224,168,.48),rgba(35,117,89,.37) 38%,rgba(39,132,99,.42) 70%,rgba(128,242,179,.46));border:1px solid rgba(140,236,188,.78);box-shadow:inset 2px 2px 3px rgba(225,255,235,.46),inset -3px -3px 5px rgba(22,90,68,.35),0 5px 14px rgba(8,34,23,.23)}
 .liquid-bridge path{fill:rgba(50,143,105,.34);stroke:rgba(144,238,188,.65)}
+/* Compact mobile scorecard: visible labels, narrow inactive columns, prominent turn. */
+.board{min-width:0;width:max-content;min-width:100%;grid-template-columns:116px repeat(3,minmax(54px,1fr));gap:3px;padding:7px}
+.board[data-active="0"]{grid-template-columns:116px minmax(158px,1fr) 54px 54px}
+.board[data-active="1"]{grid-template-columns:116px 54px minmax(158px,1fr) 54px}
+.board[data-active="2"]{grid-template-columns:116px 54px 54px minmax(158px,1fr)}
+.board>.category{font-size:.77rem;padding:8px 6px;overflow-wrap:normal;hyphens:auto;word-break:normal}
+.board>.score{padding:8px 3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.board>.heading.score{font-size:.73rem}
+.board>.heading.score.active{font-size:1.05rem}
+.board>.subtotal{background:#263750;color:#bcd9ce;font-weight:650}
+.board>.subtotal.active{background:#25493d;color:#f1fff5}
+.droplet{background:linear-gradient(125deg,rgba(89,197,157,.75),rgba(37,111,92,.70) 45%,rgba(47,143,109,.78) 80%,rgba(118,218,170,.74));border-color:rgba(137,245,192,.86);box-shadow:inset 2px 2px 3px rgba(215,255,232,.5),inset -3px -3px 6px rgba(18,74,55,.4),0 4px 15px rgba(14,69,46,.32)}
+@media(max-width:450px){body{padding-inline:8px}.board{grid-template-columns:112px repeat(3,minmax(48px,1fr))}.board[data-active="0"]{grid-template-columns:112px minmax(150px,1fr) 48px 48px}.board[data-active="1"]{grid-template-columns:112px 48px minmax(150px,1fr) 48px}.board[data-active="2"]{grid-template-columns:112px 48px 48px minmax(150px,1fr)}}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -129,7 +142,7 @@ function activate(i){
  if(active===i)return;
  active=i;
  board.dataset.active=String(active);
- board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);if(cell.classList.contains("heading"))cell.textContent=players[index].name;if(cell.classList.contains("section"))cell.textContent=index===active?"●":"";});
+ board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);if(cell.classList.contains("heading"))cell.textContent=players[index].name;});
  controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.querySelector("span").textContent=players[j].name;});
  moveDroplet();
  // Follow the moving column after the CSS grid transition has reached its destination.
@@ -142,9 +155,11 @@ function draw(){
  add("Kategorie","heading category");
  players.forEach((p,i)=>add(p.name,"heading score"+(i===active?" active":""),i));
  BASE_CATEGORY_NAMES.forEach((name,index)=>{
-  if(index===0||index===6){
-   add(index===0?"OBERER BLOCK":"UNTERER BLOCK","section");
-   players.forEach((_,i)=>add(i===active?"●":"", "section score"+(i===active?" active":""),i));
+  if(index===6){
+   for(const label of ["Summe oben","Bonus","Gesamt oben"]){
+    add(label,"category subtotal");
+    players.forEach((_,i)=>add("–","score subtotal"+(i===active?" active":""),i));
+   }
   }
   add(name,"category");
   players.forEach((p,i)=>add(scores[i][name]??"–","score"+(i===active?" active":""),i));
