@@ -140,6 +140,12 @@ body{overflow-x:hidden}
 .dice-category .p7{left:25%;top:75%;bottom:auto}.dice-category .p8{left:50%;top:75%;bottom:auto}.dice-category .p9{left:75%;top:75%;right:auto;bottom:auto}
 .dice-category .p3,.dice-category .p6{right:auto}
 @media(max-width:450px){.viewport{border-radius:24px}}
+/* Compositor-friendly movement; browser refresh rate remains adaptive. */
+.droplet{will-change:transform,width;transform:translateZ(0);backface-visibility:hidden}
+.glass-die{will-change:transform;backface-visibility:hidden}
+.glass-symbol{will-change:filter}
+.board>.score{backface-visibility:hidden}
+@media(prefers-reduced-motion:reduce){.droplet,.glass-die,.glass-symbol{will-change:auto}}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -168,7 +174,6 @@ function bubbleTarget(i){
  return {x:button.offsetLeft+(button.offsetWidth-w)/2,w};
 }
 function renderBubble(x,w){
- bridge.setAttribute("viewBox",`0 0 ${controls.clientWidth} ${controls.clientHeight}`);
  droplet.style.width=w+"px";
  droplet.style.transform="translate3d("+x+"px,0,0)";
 }
@@ -177,7 +182,7 @@ function animateBubble(fromX,fromW,toX,toW){
  if(reduced.matches){position=toX;width=toW;velocity=0;widthVelocity=0;bridgePath.setAttribute("d","");renderBubble(position,width);return;}
  const startTime=performance.now(),duration=390;
  const startCenter=fromX+fromW/2,endCenter=toX+toW/2;
- const direction=Math.sign(endCenter-startCenter)||1;
+ 
  function frame(now){
   const t=Math.min(1,(now-startTime)/duration);
   // Smooth position, small elastic overshoot and settling.
@@ -188,14 +193,6 @@ function animateBubble(fromX,fromW,toX,toW){
   const x=center-currentWidth/2;
   position=x;width=currentWidth;
   renderBubble(x,currentWidth);
-  // The liquid filament grows from the middle of the leading edge, never from the bottom.
-  if(t>.04&&t<.75){
-   const edge=center+direction*currentWidth/2;
-   const reach=edge+direction*Math.max(0,Math.abs(endCenter-center)-toW*.28)*Math.sin(Math.PI*t/.75);
-   const y=controls.clientHeight/2;
-   const r=5.5*stretch;
-   bridgePath.setAttribute("d","");
-  }else bridgePath.setAttribute("d","");
   if(t<1)animationFrame=requestAnimationFrame(frame);
   else{position=toX;width=toW;renderBubble(position,width);bridgePath.setAttribute("d","");}
  }
@@ -228,7 +225,7 @@ function activate(i){
  moveDroplet();
  if(!reduced.matches){board.querySelectorAll(".category").forEach((cell,index)=>{const dice=cell.querySelectorAll(".glass-die");dice.forEach(die=>{die.style.animation="none";void die.offsetWidth;die.style.animation=`die-turn .48s cubic-bezier(.2,.75,.3,1) ${index*42}ms both`;});const symbol=cell.querySelector(".glass-symbol");if(symbol){symbol.style.animation="none";void symbol.offsetWidth;symbol.style.animation=`symbol-flash .5s ease-out ${index*42}ms both`;}});}
  // Follow the moving column after the CSS grid transition has reached its destination.
- if(reduced.matches)focusColumn();else{requestAnimationFrame(focusColumn);setTimeout(focusColumn,480);}
+ if(reduced.matches)focusColumn();else{setTimeout(focusColumn,470);}
 }
 function draw(){
  // DOM order is kept stable so CSS grid tracks animate without abrupt column reordering.
