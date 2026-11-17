@@ -77,6 +77,15 @@ p{color:#aeb9d2;line-height:1.5}.tag{color:#a5efcf;font-size:.85rem;letter-spaci
 .board>.category.subtotal{background:#243144}
 .board>.heading.category{background:#28364b}
 @media(prefers-reduced-motion:no-preference){.board>.score{transition:background .45s,border-color .45s,color .4s,font-size .45s,text-shadow .45s}}
+/* Three-dimensional glass dice for the upper scoring categories. */
+.dice-category{justify-content:flex-start;padding-left:16px!important}
+.glass-die{width:34px;height:34px;position:relative;display:block;border-radius:9px;transform:perspective(140px) rotateX(-12deg) rotateY(-15deg);background:linear-gradient(138deg,rgba(220,244,255,.52),rgba(99,148,174,.28) 24%,rgba(23,41,59,.86) 60%,rgba(94,167,160,.48));border:1px solid rgba(222,250,255,.72);box-shadow:inset 2px 2px 3px rgba(255,255,255,.48),inset -3px -4px 7px rgba(5,17,28,.7),3px 5px 7px rgba(0,0,0,.45),0 0 10px rgba(107,211,184,.12);transition:transform .65s cubic-bezier(.2,.8,.2,1),box-shadow .65s}
+.glass-die:before{content:"";position:absolute;inset:2px;border-radius:7px;background:linear-gradient(145deg,rgba(255,255,255,.26),transparent 43%,rgba(108,233,191,.09));pointer-events:none}
+.glass-die:after{content:"";position:absolute;left:3px;right:3px;top:2px;height:4px;border-radius:100%;background:rgba(242,255,255,.4);filter:blur(2px)}
+.pip{position:absolute;width:5px;height:5px;border-radius:50%;background:#f4fffc;box-shadow:0 0 4px rgba(234,255,255,.72),inset 0 1px 1px white;display:none}
+.p1{left:6px;top:6px}.p2{left:14px;top:6px}.p3{right:6px;top:6px}.p4{left:6px;top:14px}.p5{left:14px;top:14px}.p6{right:6px;top:14px}.p7{left:6px;bottom:6px}.p8{left:14px;bottom:6px}.p9{right:6px;bottom:6px}
+.face-1 .p5,.face-2 .p1,.face-2 .p9,.face-3 .p1,.face-3 .p5,.face-3 .p9,.face-4 .p1,.face-4 .p3,.face-4 .p7,.face-4 .p9,.face-5 .p1,.face-5 .p3,.face-5 .p5,.face-5 .p7,.face-5 .p9,.face-6 .p1,.face-6 .p3,.face-6 .p4,.face-6 .p6,.face-6 .p7,.face-6 .p9{display:block}
+@media(prefers-reduced-motion:no-preference){.board[data-active="1"] .glass-die{transform:perspective(140px) rotateX(-8deg) rotateY(9deg)}.board[data-active="2"] .glass-die{transform:perspective(140px) rotateX(-13deg) rotateY(-9deg)}.board>.score.active{transition:background .65s,border-color .65s,color .65s,font-size .65s,text-shadow .65s,box-shadow .65s}}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -169,7 +178,7 @@ function activate(i){
 function draw(){
  // DOM order is kept stable so CSS grid tracks animate without abrupt column reordering.
  board.dataset.active=String(active);board.replaceChildren();
- const add=(value,cls,playerIndex=null)=>{const el=document.createElement("div");el.className="cell "+cls;el.textContent=value;if(playerIndex!==null)el.dataset.player=String(playerIndex);if(cls.includes("score")&&!cls.includes("heading")){const numeric=typeof value==="number"?value:(typeof value==="string"&&value.trim()!==""&&value!=="–"&&!Number.isNaN(Number(value))?Number(value):null);el.classList.add(numeric===null?"empty":numeric>0?"positive":"nonpositive");}board.append(el);};
+ const add=(value,cls,playerIndex=null)=>{const el=document.createElement("div");el.className="cell "+cls;el.textContent=value;if(playerIndex!==null)el.dataset.player=String(playerIndex);if(cls.includes("score")&&!cls.includes("heading")){const numeric=typeof value==="number"?value:(typeof value==="string"&&value.trim()!==""&&value!=="–"&&!Number.isNaN(Number(value))?Number(value):null);el.classList.add(numeric===null?"empty":numeric>0?"positive":"nonpositive");}board.append(el);return el;};
  add("Kategorie","heading category");
  players.forEach((p,i)=>add("","heading score"+(i===active?" active":""),i));
  BASE_CATEGORY_NAMES.forEach((name,index)=>{
@@ -179,7 +188,7 @@ function draw(){
     players.forEach((_,i)=>add("–","score subtotal"+(i===active?" active":""),i));
    }
   }
-  add(name,"category");
+  if(index<6){const dice=add("","category dice-category");dice.setAttribute("aria-label",name);dice.title=name;dice.innerHTML=`<span class="glass-die face-${index+1}" aria-hidden="true">${Array.from({length:9},(_,k)=>`<i class="pip p${k+1}"></i>`).join("")}</span>`;}else add(name,"category");
   players.forEach((p,i)=>add(scores[i][name]??"–","score"+(i===active?" active":""),i));
  });
  controls.replaceChildren();bridge=document.createElementNS("http://www.w3.org/2000/svg","svg");bridge.classList.add("liquid-bridge");bridge.setAttribute("aria-hidden","true");bridgePath=document.createElementNS("http://www.w3.org/2000/svg","path");bridge.append(bridgePath);controls.append(bridge);droplet=document.createElement("div");droplet.className="droplet";droplet.setAttribute("aria-hidden","true");controls.append(droplet);players.forEach((p,i)=>{
