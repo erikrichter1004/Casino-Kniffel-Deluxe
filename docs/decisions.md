@@ -125,5 +125,14 @@
 - **Drei Paare** und **Zwei Dreier** sind gemäß der früheren Projektdatei feste Kategorien, nicht frei einzugebende Summen. Die Eingabezuordnung wurde korrigiert.
 - **Quellenstatus:** Werte stammen aus früheren Projektdateien, das ursprüngliche Foto wurde nicht erneut visuell eingesehen. Eventuelle Abweichungen zum Foto sind noch zu prüfen.
 
-## Frage 18 — nächster Entwicklungsschritt
-Wie sollen die Kategorien im digitalen Wertungsblatt angeordnet und ausgewählt werden?
+## Frage 18 — klassischer Kniffelblock (Variante A)
+- **Ein klassischer, vertikaler Wertungsblock** mit allen Kategorien untereinander.
+- **Oben Einser bis Sechser**, darunter die übrigen Originalkategorien in der festgelegten Reihenfolge; bei Lang folgen die neuen Spezialkategorien im unteren Bereich.
+- Keine Kachelansicht und keine standardmäßig eingeklappten Gruppen.
+- Kurz zeigt nur die 11 gezogenen Felder, Standard alle 22, Lang alle 44 in einem Block.
+- Wiederholte Kategorien in Lang behalten **separate Slot-IDs** und sind unabhängig wertbar.
+- `src/scorecard.js` liefert das Datenmodell für die vertikale Darstellung samt Eingabetyp je Zeile. `tests/scorecard.test.mjs` enthält Strukturtests.
+- **Noch keine Browser-Oberfläche**; das Layout ist bislang als Datenmodell implementiert.
+
+## Frage 19 — offen
+Soll der klassische Block alle Spieler nebeneinander als Spalten zeigen oder jeweils nur das Wertungsblatt des ausgewählten Spielers?
