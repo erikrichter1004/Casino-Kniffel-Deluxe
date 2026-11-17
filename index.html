@@ -79,13 +79,25 @@ p{color:#aeb9d2;line-height:1.5}.tag{color:#a5efcf;font-size:.85rem;letter-spaci
 @media(prefers-reduced-motion:no-preference){.board>.score{transition:background .45s,border-color .45s,color .4s,font-size .45s,text-shadow .45s}}
 /* Three-dimensional glass dice for the upper scoring categories. */
 .dice-category{justify-content:flex-start;padding-left:16px!important}
-.glass-die{width:34px;height:34px;position:relative;display:block;border-radius:9px;transform:perspective(140px) rotateX(-12deg) rotateY(-15deg);background:linear-gradient(138deg,rgba(220,244,255,.52),rgba(99,148,174,.28) 24%,rgba(23,41,59,.86) 60%,rgba(94,167,160,.48));border:1px solid rgba(222,250,255,.72);box-shadow:inset 2px 2px 3px rgba(255,255,255,.48),inset -3px -4px 7px rgba(5,17,28,.7),3px 5px 7px rgba(0,0,0,.45),0 0 10px rgba(107,211,184,.12);transition:transform .65s cubic-bezier(.2,.8,.2,1),box-shadow .65s}
+.glass-die{width:34px;height:34px;position:relative;display:block;border-radius:9px;transform:none;background:linear-gradient(138deg,rgba(220,244,255,.52),rgba(99,148,174,.28) 24%,rgba(23,41,59,.86) 60%,rgba(94,167,160,.48));border:1px solid rgba(222,250,255,.72);box-shadow:inset 2px 2px 3px rgba(255,255,255,.48),inset -3px -4px 7px rgba(5,17,28,.7),3px 5px 7px rgba(0,0,0,.45),0 0 10px rgba(107,211,184,.12);transition:transform .65s cubic-bezier(.2,.8,.2,1),box-shadow .65s}
 .glass-die:before{content:"";position:absolute;inset:2px;border-radius:7px;background:linear-gradient(145deg,rgba(255,255,255,.26),transparent 43%,rgba(108,233,191,.09));pointer-events:none}
 .glass-die:after{content:"";position:absolute;left:3px;right:3px;top:2px;height:4px;border-radius:100%;background:rgba(242,255,255,.4);filter:blur(2px)}
 .pip{position:absolute;width:5px;height:5px;border-radius:50%;background:#f4fffc;box-shadow:0 0 4px rgba(234,255,255,.72),inset 0 1px 1px white;display:none}
 .p1{left:6px;top:6px}.p2{left:14px;top:6px}.p3{right:6px;top:6px}.p4{left:6px;top:14px}.p5{left:14px;top:14px}.p6{right:6px;top:14px}.p7{left:6px;bottom:6px}.p8{left:14px;bottom:6px}.p9{right:6px;bottom:6px}
 .face-1 .p5,.face-2 .p1,.face-2 .p9,.face-3 .p1,.face-3 .p5,.face-3 .p9,.face-4 .p1,.face-4 .p3,.face-4 .p7,.face-4 .p9,.face-5 .p1,.face-5 .p3,.face-5 .p5,.face-5 .p7,.face-5 .p9,.face-6 .p1,.face-6 .p3,.face-6 .p4,.face-6 .p6,.face-6 .p7,.face-6 .p9{display:block}
-@media(prefers-reduced-motion:no-preference){.board[data-active="1"] .glass-die{transform:perspective(140px) rotateX(-8deg) rotateY(9deg)}.board[data-active="2"] .glass-die{transform:perspective(140px) rotateX(-13deg) rotateY(-9deg)}.board>.score.active{transition:background .65s,border-color .65s,color .65s,font-size .65s,text-shadow .65s,box-shadow .65s}}
+@media(prefers-reduced-motion:no-preference){.board>.score.active{transition:background .65s,border-color .65s,color .65s,font-size .65s,text-shadow .65s,box-shadow .65s}}
+/* Straight-on dice and one full rotation per turn. */
+.glass-die{transform:none;transform-origin:50% 50%;backface-visibility:visible}
+@keyframes die-turn{0%{transform:rotateY(0deg) scale(1)}48%{transform:rotateY(185deg) scale(.86);filter:brightness(1.4)}100%{transform:rotateY(360deg) scale(1);filter:brightness(1)}}
+.combo-category{display:flex;gap:6px;align-items:center;white-space:normal}
+.combo-icon{flex:0 0 37px;width:37px;height:28px;display:flex;align-items:center;justify-content:center;position:relative}
+.dice-cluster{justify-content:flex-start}
+.mini-die{position:absolute;width:17px;height:17px;border-radius:5px;left:calc(var(--n)*3.5px);top:calc(4px + (var(--n)*.65px));box-shadow:inset 1px 1px 2px rgba(255,255,255,.5),1px 2px 3px rgba(0,0,0,.5);border-color:rgba(218,249,255,.6)}
+.mini-die .pip{width:2.5px;height:2.5px;box-shadow:0 0 2px white}
+.mini-die .p1{left:3px;top:3px}.mini-die .p2{left:7px;top:3px}.mini-die .p3{right:3px;top:3px}.mini-die .p4{left:3px;top:7px}.mini-die .p5{left:7px;top:7px}.mini-die .p6{right:3px;top:7px}.mini-die .p7{left:3px;bottom:3px}.mini-die .p8{left:7px;bottom:3px}.mini-die .p9{right:3px;bottom:3px}
+.symbol-icon{font-size:22px;color:#c5f6e8;text-shadow:0 1px 2px #fff8,0 0 8px #65d9b65c}
+.board>.combo-category{font-size:.7rem;padding-left:5px;letter-spacing:-.02em}
+@media(prefers-reduced-motion:reduce){.glass-die{animation:none!important}}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -172,6 +184,7 @@ function activate(i){
  board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);});
  controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.querySelector("span").textContent=players[j].name;});
  moveDroplet();
+ if(!reduced.matches){board.querySelectorAll(".glass-die").forEach((die,index)=>{die.style.animation="none";void die.offsetWidth;die.style.animation=`die-turn .58s cubic-bezier(.18,.75,.22,1) ${index*32}ms both`;});}
  // Follow the moving column after the CSS grid transition has reached its destination.
  if(reduced.matches)focusColumn();else{requestAnimationFrame(focusColumn);setTimeout(focusColumn,480);}
 }
@@ -188,7 +201,7 @@ function draw(){
     players.forEach((_,i)=>add("–","score subtotal"+(i===active?" active":""),i));
    }
   }
-  if(index<6){const dice=add("","category dice-category");dice.setAttribute("aria-label",name);dice.title=name;dice.innerHTML=`<span class="glass-die face-${index+1}" aria-hidden="true">${Array.from({length:9},(_,k)=>`<i class="pip p${k+1}"></i>`).join("")}</span>`;}else add(name,"category");
+  if(index<6){const dice=add("","category dice-category");dice.setAttribute("aria-label",name);dice.title=name;dice.innerHTML=`<span class="glass-die face-${index+1}" aria-hidden="true">${Array.from({length:9},(_,k)=>`<i class="pip p${k+1}"></i>`).join("")}</span>`;}else{const category=add("","category combo-category");category.title=name;const icon=document.createElement("span");icon.className="combo-icon";icon.setAttribute("aria-hidden","true");const patterns={"Dreierpasch":[3,3,3],"Viererpasch":[4,4,4,4],"Zwei Paare":[2,2,5,5],"Drei Paare":[1,1,3,3,6,6],"Zwei Dreier":[2,2,2,5,5,5],"Full-House":[3,3,3,6,6],"Großes Full-House":[4,4,4,5,5,5],"Kleine Straße":[1,2,3,4],"Große Straße":[1,2,3,4,5]};const key=Object.keys(patterns).find(k=>k.toLowerCase()===name.toLowerCase());if(key){icon.classList.add("dice-cluster");patterns[key].forEach((face,j)=>{const d=document.createElement("span");d.className=`glass-die mini-die face-${face}`;d.style.setProperty("--n",j);d.innerHTML=Array.from({length:9},(_,k)=>`<i class="pip p${k+1}"></i>`).join("");icon.append(d);});}else{const glyph=/highway/i.test(name)?"♜":/superchance/i.test(name)?"✦":/×\s*2|x\s*2/i.test(name)?"×2":/chance/i.test(name)?"✧":"◆";icon.classList.add("symbol-icon");icon.textContent=glyph;}category.append(icon,document.createTextNode(name));}
   players.forEach((p,i)=>add(scores[i][name]??"–","score"+(i===active?" active":""),i));
  });
  controls.replaceChildren();bridge=document.createElementNS("http://www.w3.org/2000/svg","svg");bridge.classList.add("liquid-bridge");bridge.setAttribute("aria-hidden","true");bridgePath=document.createElementNS("http://www.w3.org/2000/svg","path");bridge.append(bridgePath);controls.append(bridge);droplet=document.createElement("div");droplet.className="droplet";droplet.setAttribute("aria-hidden","true");controls.append(droplet);players.forEach((p,i)=>{
