@@ -151,6 +151,8 @@ body{overflow-x:hidden}
 /* Soft liquid morph, no hard-edged filament or snapping transitions. */
 .droplet{transition:none!important;transform-origin:50% 50%;will-change:transform,width,border-radius}
 @media(prefers-reduced-motion:reduce){.droplet{will-change:auto}}
+/* Prevent sharp slanted edges on iOS during liquid deformation. */
+.droplet{transform-origin:center!important;clip-path:none!important;overflow:hidden;transition:none!important}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -179,37 +181,44 @@ function bubbleTarget(i){
  return {x:button.offsetLeft+(button.offsetWidth-w)/2,w};
 }
 function renderBubble(x,w,shape=0,direction=1){
- // Shape is a signed, transient liquid deformation; at rest the capsule is symmetric.
- const deformation=Math.max(0,Math.min(1,shape));
+ const d=Math.max(0,Math.min(1,shape));
  droplet.style.width=w+"px";
- droplet.style.transform="translate3d("+x+"px,0,0) skewX("+(direction*deformation*11)+"deg) scaleY("+(1-deformation*.09)+")";
+ // No skew/scale: those transforms produced visible hard corners on iOS.
+ droplet.style.transform="translate3d("+x+"px,0,0)";
+ // Elliptical corners make a rounded tail and a noticeably tapered nose.
+ const front=Math.round(50-d*39);
  droplet.style.borderRadius=direction>0
-  ? "48% "+(48+deformation*35)+"% "+(48+deformation*35)+"% 48% / 50% "+(50-deformation*28)+"% "+(50-deformation*28)+"% 50%"
-  : (48+deformation*35)+"% 48% 48% "+(48+deformation*35)+"% / "+(50-deformation*28)+"% 50% 50% "+(50-deformation*28)+"%";
+  ? "50% "+front+"% "+front+"% 50% / 50% 50% 50% 50%"
+  : front+"% 50% 50% "+front+"% / 50% 50% 50% 50%";
 }
 function animateBubble(fromX,fromW,toX,toW){
  cancelAnimationFrame(animationFrame);
  if(reduced.matches){position=toX;width=toW;renderBubble(position,width);return;}
- const duration=620,startTime=performance.now();
- const startCenter=fromX+fromW/2,endCenter=toX+toW/2;
- const direction=Math.sign(endCenter-startCenter)||1;
- const distance=Math.abs(endCenter-startCenter);
+ const duration=680,startTime=performance.now();
+ const direction=Math.sign(toX-fromX)||1;
+ const distance=Math.abs(toX-fromX);
  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+ const ease=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
+ const oldLeft=fromX,oldRight=fromX+fromW,newLeft=toX,newRight=toX+toW;
+ const limit=controls.clientWidth-6;
  function frame(now){
   const t=clamp((now-startTime)/duration,0,1);
-  // Fast water-like travel, followed by a soft, low-amplitude damped settle.
-  const travel=1-Math.pow(1-clamp(t/.70,0,1),3);
-  const settle=t>.70?(t-.70)/.30:0;
-  const sway=t>.70?Math.sin(settle*Math.PI*2.5)*Math.pow(1-settle,2)*Math.min(4,distance*.025):0;
-  const center=startCenter+(endCenter-startCenter)*travel+direction*sway;
-  const taper=Math.pow(Math.sin(Math.PI*clamp(t/.73,0,1)),1.3)*Math.min(1,distance/95);
-  const baseWidth=fromW+(toW-fromW)*travel;
-  // Slight elongation only; most of the fluid impression comes from the tapered nose.
-  const liquidWidth=baseWidth+Math.min(13,distance*.065)*taper;
-  const rebound=t>.70?Math.sin(settle*Math.PI*2)*Math.pow(1-settle,2)*3:0;
-  width=Math.max(44,liquidWidth+rebound);
-  position=center-width/2;
-  renderBubble(position,width,taper,direction);
+  // The leading tip reaches the next player before the trailing edge lets go.
+  const lead=ease(t/.52);
+  const follow=ease((t-.37)/.50);
+  let left=direction>0?oldLeft+(newLeft-oldLeft)*follow:oldLeft+(newLeft-oldLeft)*lead;
+  let right=direction>0?oldRight+(newRight-oldRight)*lead:oldRight+(newRight-oldRight)*follow;
+  // One gentle, quickly fading settling wave after the old player is released.
+  if(t>.83){
+   const u=(t-.83)/.17;
+   const offset=Math.sin(u*Math.PI*2)*Math.pow(1-u,2)*Math.min(3,distance*.018)*direction;
+   left+=offset;right+=offset;
+  }
+  left=clamp(left,6,limit-24);
+  right=clamp(right,left+24,limit);
+  const morph=Math.sin(Math.PI*clamp(t/.88,0,1))**.7;
+  position=left;width=right-left;
+  renderBubble(position,width,morph,direction);
   if(t<1)animationFrame=requestAnimationFrame(frame);
   else{position=toX;width=toW;renderBubble(position,width);}
  }
