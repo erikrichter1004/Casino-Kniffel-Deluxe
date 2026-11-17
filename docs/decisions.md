@@ -53,5 +53,13 @@
 - Die vorhandene Prüfmechanik `doubleMiniStraight` entspricht dieser Regel; Kommentar und Regressionstests wurden angepasst.
 - **Punktewert ist weiterhin offen**; die Kategorie bleibt bis dahin ein Vorschlag, keine wertbare Kategorie.
 
+### Ergänzung zu Frage 10 — sämtliche Kombinationen
+- Die vier möglichen Dreier-Straßen sind **1-2-3**, **2-3-4**, **3-4-5** und **4-5-6**.
+- **Jede Kombination von zwei dieser vier Straßen ist gültig**, einschließlich gleicher Straßen und **1-2-3 + 4-5-6** (zugleich Highway).
+- Daraus entstehen **10 ungeordnete Paarkombinationen** (4 mit sich selbst, 6 aus unterschiedlichen Straßen).
+- Die sechs Würfel müssen in zwei vollständige Dreier-Straßen zerlegbar sein; Reihenfolge der Würfel ist egal.
+- Automatisierte Tests prüfen jetzt alle zehn Fälle und die umgekehrte Würfelreihenfolge.
+- Die Überschneidung mit Highway ist ausdrücklich erlaubt; die Felder bleiben eigenständige Wertungsoptionen.
+
 ## Frage 11 — offen
 Welche festen Punkte sollen Doppelte Mini-Straße, Nur niedrige Zahlen und Nur hohe Zahlen bei einem gültigen Wurf erhalten?

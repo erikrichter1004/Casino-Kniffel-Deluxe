@@ -46,3 +46,19 @@ test("Vorschläge dürfen noch keine Punkte erhalten",()=>{
  assert.ok(EXTRA_PROPOSALS.every(c=>c.status==="proposal"&&c.points===null));
  assert.throws(()=>score("all_low",[1,1,2,2,3,3]),/Keine bestätigte/);
 });
+
+test("Frage 10: alle 10 ungeordneten Kombinationen aus vier möglichen Dreier-Straßen",()=>{
+ const straights=[[1,2,3],[2,3,4],[3,4,5],[4,5,6]];
+ let count=0;
+ for(let i=0;i<straights.length;i++)for(let j=i;j<straights.length;j++){
+  const dice=[...straights[i],...straights[j]];
+  assert.equal(match("double_mini_straight",dice),true,`Kombination ${i+1} + ${j+1}`);
+  assert.equal(match("double_mini_straight",[...dice].reverse()),true,"Würfelreihenfolge darf keine Rolle spielen");
+  count++;
+ }
+ assert.equal(count,10);
+});
+test("Nicht jede sechs-Würfel-Kombination ist eine doppelte Mini-Straße",()=>{
+ for(const dice of [[1,1,1,1,2,3],[1,2,2,3,3,6],[2,2,2,4,4,4]])
+  assert.equal(match("double_mini_straight",dice),false);
+});

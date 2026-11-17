@@ -29,7 +29,8 @@ function streetAndPair(dice){
 }
 function doubleMiniStraight(dice){
  // Two disjoint groups of three dice, each forming a consecutive triple.
- // Confirmed Q10: identical triples are explicitly allowed (e.g. 1-2-3 + 1-2-3).
+ // Confirmed Q10: all 10 unordered pairings of the four possible triples
+ // (123, 234, 345, 456) are valid, including identical triples and 123+456 (Highway).
  for(let a=1;a<=4;a++){
   const rest=[...dice];let first=true;
   for(let n=a;n<a+3;n++){
