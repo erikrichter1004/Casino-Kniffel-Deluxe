@@ -24,6 +24,13 @@ function shuffle(values,random){
  }
  return a;
 }
+export function selectLongExtras(extraPool,random=Math.random){
+ if(!Array.isArray(extraPool)||extraPool.length<LONG_EXTRA_COUNT)throw new RangeError("Mindestens acht bestätigte Zusatzkategorien erforderlich");
+ if(extraPool.some(c=>!c||typeof c.id!=="string"||!c.id.trim()||typeof c.label!=="string"||!c.label.trim()))throw new TypeError("Ungültige Zusatzkategorie");
+ if(new Set(extraPool.map(c=>c.id)).size!==extraPool.length)throw new Error("Zusatzkategorien müssen eindeutig sein");
+ if(extraPool.some(c=>c.status==="proposal"||c.approved===false))throw new Error("Unbestätigte Zusatzkategorie im Pool");
+ return shuffle(extraPool,random).slice(0,LONG_EXTRA_COUNT);
+}
 function validateBase(categories){
  if(!Array.isArray(categories)||categories.length!==22)throw new RangeError("22 Grundkategorien erforderlich");
  if(categories.some(c=>!c||typeof c.id!=="string"||!c.id||typeof c.label!=="string"||!c.label))throw new TypeError("Ungültige Kategorie");
@@ -40,21 +47,23 @@ export function chooseLongRepeats(baseCategories,random=Math.random){
  const pool=[...base,...base];
  return shuffle(pool,random).slice(0,LONG_REPEAT_COUNT).map(c=>c.id);
 }
-export function createRoundPlan({mode,baseCategories,random=Math.random,longExtras,longRepeatIds}){
+export function createRoundPlan({mode,baseCategories,random=Math.random,longExtras,longExtraPool,longRepeatIds}){
  const base=validateBase(baseCategories);
  if(mode==="short")return {mode,upperBonusEnabled:false,slots:shuffle(base,random).slice(0,11).map(makeSlot),blockCount:1};
  if(mode==="standard")return {mode,upperBonusEnabled:true,slots:base.map(makeSlot),blockCount:1};
  if(mode==="long"){
-  if(!Array.isArray(longExtras)||longExtras.length!==LONG_EXTRA_COUNT)throw new Error("Lang benötigt genau acht bestätigte Zusatzkategorien");
+  if(longExtras!==undefined&&longExtraPool!==undefined)throw new Error("Entweder Zusatzpool oder feste Kategorien angeben");
+  const extras=longExtraPool!==undefined?selectLongExtras(longExtraPool,random):longExtras;
+  if(!Array.isArray(extras)||extras.length!==LONG_EXTRA_COUNT)throw new Error("Lang benötigt genau acht bestätigte Zusatzkategorien");
   const repeats=longRepeatIds===undefined?chooseLongRepeats(base,random):longRepeatIds;
   if(!Array.isArray(repeats)||repeats.length!==LONG_REPEAT_COUNT)throw new Error("Lang benötigt genau 14 Wiederholungen");
   const byId=new Map(base.map(c=>[c.id,c]));
   if(repeats.some(id=>!byId.has(id)))throw new Error("Unbekannte Wiederholungskategorie");
   const counts=new Map();
   for(const id of repeats){counts.set(id,(counts.get(id)||0)+1);if(counts.get(id)>2)throw new Error("Kategorie darf maximal dreimal vorkommen");}
-  if(longExtras.some(c=>!c||typeof c.id!=="string"||!c.id||typeof c.label!=="string"||!c.label))throw new Error("Ungültige Zusatzkategorie");
-  if(new Set([...base,...longExtras].map(c=>c.id)).size!==22+LONG_EXTRA_COUNT)throw new Error("Zusatzkategorie-ID ist bereits belegt");
-  const categories=[...base,...repeats.map(id=>byId.get(id)),...longExtras];
+  if(extras.some(c=>!c||typeof c.id!=="string"||!c.id||typeof c.label!=="string"||!c.label))throw new Error("Ungültige Zusatzkategorie");
+  if(new Set([...base,...extras].map(c=>c.id)).size!==22+LONG_EXTRA_COUNT)throw new Error("Zusatzkategorie-ID ist bereits belegt");
+  const categories=[...base,...repeats.map(id=>byId.get(id)),...extras];
   return {mode,upperBonusEnabled:true,slots:shuffle(categories,random).map(makeSlot),blockCount:1};
  }
  throw new RangeError("Unbekannter Spielmodus");
