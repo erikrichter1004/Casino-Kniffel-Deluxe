@@ -88,7 +88,7 @@ p{color:#aeb9d2;line-height:1.5}.tag{color:#a5efcf;font-size:.85rem;letter-spaci
 @media(prefers-reduced-motion:no-preference){.board>.score.active{transition:background .65s,border-color .65s,color .65s,font-size .65s,text-shadow .65s,box-shadow .65s}}
 /* Straight-on dice and one full rotation per turn. */
 .glass-die{transform:none;transform-origin:50% 50%;backface-visibility:visible}
-@keyframes die-turn{0%{transform:rotateY(0deg) scale(1)}48%{transform:rotateY(185deg) scale(.86);filter:brightness(1.4)}100%{transform:rotateY(360deg) scale(1);filter:brightness(1)}}
+@keyframes die-turn{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.06);filter:brightness(1.2)}100%{transform:rotate(360deg) scale(1);filter:brightness(1)}}
 .combo-category{display:flex;gap:6px;align-items:center;white-space:normal}
 .combo-icon{flex:0 0 37px;width:37px;height:28px;display:flex;align-items:center;justify-content:center;position:relative}
 .dice-cluster{justify-content:flex-start}
@@ -175,13 +175,13 @@ function renderBubble(x,w){
 function animateBubble(fromX,fromW,toX,toW){
  cancelAnimationFrame(animationFrame);
  if(reduced.matches){position=toX;width=toW;velocity=0;widthVelocity=0;bridgePath.setAttribute("d","");renderBubble(position,width);return;}
- const startTime=performance.now(),duration=920;
+ const startTime=performance.now(),duration=390;
  const startCenter=fromX+fromW/2,endCenter=toX+toW/2;
  const direction=Math.sign(endCenter-startCenter)||1;
  function frame(now){
   const t=Math.min(1,(now-startTime)/duration);
   // Smooth position, small elastic overshoot and settling.
-  const move=1-Math.pow(1-t,3);
+  const move=1-Math.pow(1-t,4);
   const center=startCenter+(endCenter-startCenter)*move;
   const stretch=Math.sin(Math.PI*Math.min(1,t/.78))**2;
   const currentWidth=fromW+(toW-fromW)*(1-Math.min(1,t*1.5))+Math.min(22,Math.abs(endCenter-startCenter)*.12)*stretch;
@@ -226,7 +226,7 @@ function activate(i){
  board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);});
  controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.querySelector("span").textContent=players[j].name;});
  moveDroplet();
- if(!reduced.matches){board.querySelectorAll(".category").forEach((cell,index)=>{const dice=cell.querySelectorAll(".glass-die");dice.forEach(die=>{die.style.animation="none";void die.offsetWidth;die.style.animation=`die-turn .58s cubic-bezier(.18,.75,.22,1) ${index*42}ms both`;});const symbol=cell.querySelector(".glass-symbol");if(symbol){symbol.style.animation="none";void symbol.offsetWidth;symbol.style.animation=`symbol-flash .5s ease-out ${index*42}ms both`;}});}
+ if(!reduced.matches){board.querySelectorAll(".category").forEach((cell,index)=>{const dice=cell.querySelectorAll(".glass-die");dice.forEach(die=>{die.style.animation="none";void die.offsetWidth;die.style.animation=`die-turn .48s cubic-bezier(.2,.75,.3,1) ${index*42}ms both`;});const symbol=cell.querySelector(".glass-symbol");if(symbol){symbol.style.animation="none";void symbol.offsetWidth;symbol.style.animation=`symbol-flash .5s ease-out ${index*42}ms both`;}});}
  // Follow the moving column after the CSS grid transition has reached its destination.
  if(reduced.matches)focusColumn();else{requestAnimationFrame(focusColumn);setTimeout(focusColumn,480);}
 }
