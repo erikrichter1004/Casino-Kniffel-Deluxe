@@ -56,6 +56,7 @@ function bubbleTarget(i){
  return {x:button.offsetLeft+(button.offsetWidth-w)/2,w};
 }
 function renderBubble(x,w){
+ bridge.setAttribute("viewBox",`0 0 ${controls.clientWidth} ${controls.clientHeight}`);
  droplet.style.width=w+"px";
  droplet.style.transform="translate3d("+x+"px,0,0)";
 }
