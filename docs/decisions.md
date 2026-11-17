@@ -86,5 +86,12 @@
 - `APPROVED_EXTRAS` enthält jetzt **zehn bestätigte Kategorien**. Acht werden bei Lang zufällig daraus gezogen.
 - Testfälle für positive und negative Wertungen aktualisiert; der Pool-Zufallstest verwendet nur bestätigte Kategorien.
 
-## Frage 14 — offen
-Soll der Katalog mit zehn bestätigten Zusatzkategorien vorerst abgeschlossen werden oder sollen wir weitere Spezialkategorien entwickeln?
+## Frage 14 — Katalog abgeschlossen (Variante A)
+- Der Zusatzkategorien-Katalog ist **vorerst auf genau zehn bestätigte Kategorien abgeschlossen**.
+- Es werden **keine weiteren Kategorien** für diesen Entwicklungsstand ergänzt.
+- Lang zieht weiterhin **acht verschiedene aus diesen zehn** pro Partie.
+- Die alten Vorschlagslisten sind leer; insbesondere bleibt „Drei unterschiedliche Paare“ **außerhalb** des bestätigten Pools.
+- Die Wertungslogik und bereits bestätigten Punktwerte bleiben unverändert.
+
+## Frage 15 — offen
+Wie sollen die sechs Würfel pro Zug geworfen und erneut geworfen werden (Anzahl Würfe und Festhalten einzelner Würfel)?

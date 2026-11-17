@@ -10,12 +10,9 @@ export const BASE_CATEGORY_NAMES=Object.freeze([
 export const LONG_TOTAL=44;
 export const LONG_EXTRA_COUNT=8;
 export const LONG_REPEAT_COUNT=LONG_TOTAL-BASE_CATEGORY_NAMES.length-LONG_EXTRA_COUNT;
-export const PROPOSED_EXTRAS=Object.freeze([
- Object.freeze({id:"street_pair",label:"Kleine Straße + Paar",status:"proposal"}),
- Object.freeze({id:"three_distinct_pairs",label:"Drei unterschiedliche Paare",status:"proposal"}),
- Object.freeze({id:"all_even",label:"Sechs gerade",status:"proposal"}),
- Object.freeze({id:"all_odd",label:"Sechs ungerade",status:"proposal"})
-]);
+// Q14: The additional-category catalog is closed at ten approved entries.
+// Use APPROVED_EXTRAS from extras.js when building the long-mode pool.
+export const PROPOSED_EXTRAS=Object.freeze([]);
 function shuffle(values,random){
  const a=[...values];
  for(let i=a.length-1;i>0;i--){

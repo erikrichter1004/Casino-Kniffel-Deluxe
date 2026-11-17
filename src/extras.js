@@ -1,4 +1,4 @@
-/** Approved extra categories for six ordinary six-sided dice. */
+/** Finalized Q14 catalog: exactly ten approved six-dice extra categories. */
 export const APPROVED_EXTRAS=Object.freeze([
  Object.freeze({id:"street_pair",label:"Kleine Straße + Paar",points:45,status:"approved"}),
  Object.freeze({id:"all_even",label:"Sechs gerade",points:35,status:"approved"}),
@@ -11,9 +11,9 @@ export const APPROVED_EXTRAS=Object.freeze([
  Object.freeze({id:"sum_21",label:"Punktlandung 21",points:30,status:"approved"}),
  Object.freeze({id:"sum_11",label:"Punktlandung 11",points:20,status:"approved"})
 ]);
-// Backward-compatible name for earlier consumers.
+// Backward-compatible name for earlier consumers; do not add new candidates.
 export const EXTRA_CANDIDATES=APPROVED_EXTRAS;
-export const EXTRA_PROPOSALS=Object.freeze([]);
+export const EXTRA_PROPOSALS=Object.freeze([]); // Q14: catalog closed
 export const HELD_FOR_REVIEW=Object.freeze({id:"three_distinct_pairs",label:"Drei unterschiedliche Paare",reason:"Potential duplicate of original Drei Paare"});
 function checkDice(dice){
  if(!Array.isArray(dice)||dice.length!==6||dice.some(n=>!Number.isInteger(n)||n<1||n>6))throw new RangeError("Genau sechs Würfel mit Werten von 1 bis 6 erforderlich");

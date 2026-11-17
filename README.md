@@ -18,7 +18,7 @@
 - **Doppeltes Extrem: 60 Punkte** (1-1-1-6-6-6).
 - **Punktlandung 21: 30 Punkte** (Augensumme exakt 21).
 - **Punktlandung 11: 20 Punkte** (Augensumme exakt 11).
-- Damit sind **zehn** Zusatzkategorien bestätigt. Für Lang werden acht verschiedene zufällig aus diesem Pool gezogen.
+- **Frage 14: Katalog abgeschlossen bei genau zehn bestätigten Zusatzkategorien.** Für Lang werden acht verschiedene zufällig aus diesen zehn gezogen. Keine weiteren Zusatzkategorien geplant.
 
 ## Code
 - `src/lobby.js`: Lobby-Modell
