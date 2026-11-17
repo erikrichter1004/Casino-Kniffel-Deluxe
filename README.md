@@ -1,17 +1,19 @@
 # Casino Kniffel Deluxe — Neuentwicklung
 
-Wir entwickeln die Spielregeln gemeinsam Schritt für Schritt und setzen bestätigte Entscheidungen als testbare Module um.
-
 ## Bestätigt
-- Spiel erstellen / beitreten; Einzelspieler separat; Host wählt Spieldauer und Aktionsgrad.
-- Spieldauer: **Kurz 11**, **Standard 22**, **Lang 44** Wertungen pro Spieler, zusätzlich frei wählbar.
-- Regeln zur Verteilung der Wertungen auf die 22 Kategorien sind noch offen.
+1. Host erstellt Lobby, Spieler treten bei; Einzelspieler separat. Host bestimmt Dauer und Casino-Aktionsgrad.
+2. Feste Spieldauern plus individuelle Feldanzahl.
+3. Kurz 11, Standard 22, Lang 44 Wertungen.
+4. Kurz: 11 zufällige Kategorien ohne oberen Bonus; Standard: alle 22; Lang: zwei Durchgänge, mit Wiederholungen und neuen sechs-Würfel-Kategorien.
 
 ## Implementiert
-- `src/lobby.js`: Lobby-Grundmodell und Host-Konfiguration.
-- `src/duration.js`: Spieldauer-Presets und freie Feldanzahl.
-- Unit-Tests unter `tests/`, startbar mit `npm test`.
+- `src/lobby.js`: Host-Konfigurationsmodell.
+- `src/duration.js`: Presets und freie Feldanzahl.
+- `src/rounds.js`: Wertungspläne, Zufallsauswahl und sechs vorläufige Zusatzkategorien für die Lang-Variante.
+- Unit-Tests: `npm test`.
 
-**Noch keine neue spielbare Webseite:** GitHub Pages kann deshalb derzeit eine Fehlerseite anzeigen.
+**Nicht bestätigt:** konkrete Verteilung 16 wiederholte + 6 neue Kategorien sowie Namen und Wertungen der sechs vorgeschlagenen Zusatzkategorien. Diese werden in Frage 5 abgestimmt.
+
+**Noch keine spielbare Webseite:** Der Code wird zunächst als reine Logik entwickelt.
 
 [Entscheidungsprotokoll](docs/decisions.md)
