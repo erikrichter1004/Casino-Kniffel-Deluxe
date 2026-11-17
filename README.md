@@ -19,3 +19,6 @@ GitHub Pages kann die Dateien direkt aus dem Repository-Stamm ausliefern. Lokal 
 
 ## Geplante Architektur
 Reine Spielregeln in `game.js`; UI in `main.js`; für echten Multiplayer später serverseitige transaktionale Spielzüge mit Authentifizierung, Revisionskontrolle, idempotenten Aktionen und Realtime-Updates.
+
+## Casino-Testkarten
+Vier ausdrücklich vorläufige Karten können einmal pro Wertung gezogen werden. Sie verändern die nächste Punkteingabe. Das ist **nicht** der vollständige offizielle Ereigniskatalog; eine gezogene Karte wird derzeit nicht über Seitenneuladen gespeichert.

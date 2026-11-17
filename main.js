@@ -2,6 +2,9 @@ import {CATEGORIES,UPPER,newGame,totals,scoreTurn,completed,validateSave,BONUS_T
 const STORAGE='casino-kniffel-deluxe-v2';
 const $=id=>document.getElementById(id);
 let state=load(),flash=null;
+const CASINO_DEMO=[{title:'Glücksgriff',description:'Deine nächste Wertung erhält +10 Punkte.',kind:'bonus',value:10},{title:'Doppeltes Glück',description:'Deine nächste Wertung wird verdoppelt.',kind:'multiplier',value:2},{title:'Niete',description:'Kein zusätzlicher Effekt für diese Wertung.',kind:'none',value:0},{title:'Kleiner Bonus',description:'Deine nächste Wertung erhält +5 Punkte.',kind:'bonus',value:5}];
+let drawn=null;
+
 function load(){try{const s=JSON.parse(localStorage.getItem(STORAGE));if(validateSave(s))return s}catch{}return newGame()}
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state));$('storage').textContent='Lokal gespeichert'}catch{$('storage').textContent='Speichern nicht möglich'}}
 function node(tag,cls='',text=''){const e=document.createElement(tag);e.className=cls;e.textContent=text;return e}
@@ -39,10 +42,12 @@ function openScore(playerId,key,label){
 }
 $('scoreForm').addEventListener('submit',e=>{
  e.preventDefault();if(!pending)return;
- const raw=$('points').value.trim();
- if(!/^\d+$/.test(raw)){$('scoreError').textContent='Bitte eine ganze Punktzahl eingeben.';return}
+ const raw=$('points').value.trim().replace(',', '.');
+ if(!/^(0|[1-9]\d*)$/.test(raw)){$('scoreError').textContent='Bitte eine ganze Punktzahl eingeben.';return}
  try{
-  state=scoreTurn(state,{...pending,category:pending.key,points:Number(raw),expectedRevision:pending.revision});
+  const base=Number(raw);const adjusted=drawn?(drawn.kind==='multiplier'?base*drawn.value:drawn.kind==='bonus'?base+drawn.value:base):base;
+  state=scoreTurn(state,{...pending,category:pending.key,points:adjusted,expectedRevision:pending.revision});
+  drawn=null;updateCasino();
   flash={playerId:pending.playerId,key:pending.key};pending=null;$('scoreDialog').close();save();render();
   setTimeout(()=>{flash=null;render()},650)
  }catch(err){$('scoreError').textContent=err.message}
@@ -50,6 +55,8 @@ $('scoreForm').addEventListener('submit',e=>{
 $('cancelScore').onclick=()=>{$('scoreDialog').close();pending=null};
 $('scoreDialog').addEventListener('close',()=>{pending=null});
 $('add').onclick=()=>{if(state.revision||state.players.some(p=>Object.keys(p.scores).length)){alert('Spieler können nur vor der ersten Wertung hinzugefügt werden.');return}if(state.players.length>=8){alert('Maximal 8 Spieler.');return}const name=prompt('Name des neuen Spielers','Spieler '+(state.players.length+1));if(name===null)return;if(!name.trim()||name.trim().length>32){alert('Bitte einen Namen mit maximal 32 Zeichen eingeben.');return}state=newGame([...state.players.map(p=>p.name),name.trim()]);save();render()};
-$('reset').onclick=()=>{if(confirm('Neues Spiel starten? Der bisherige Spielstand wird gelöscht.')){state=newGame(state.players.map(p=>p.name));flash=null;save();render()}};
+$('drawCard').onclick=()=>{if(completed(state)||drawn)return;const random=new Uint32Array(1);crypto.getRandomValues(random);drawn=CASINO_DEMO[random[0]%CASINO_DEMO.length];updateCasino()};
+function updateCasino(){const box=$('casinoCard');box.replaceChildren();if(drawn){box.append(node('strong','',drawn.title),node('p','',drawn.description))}else{box.append(node('p','','Ziehe eine Casino-Karte für die nächste Wertung.'))}$('drawCard').disabled=Boolean(drawn)||completed(state)}
+$('reset').onclick=()=>{if(confirm('Neues Spiel starten? Der bisherige Spielstand wird gelöscht.')){state=newGame(state.players.map(p=>p.name));flash=null;drawn=null;updateCasino();save();render()}};
 $('next').title='Der Zug wechselt automatisch nach jeder gültigen Wertung';
-render();save();
+render();updateCasino();save();
