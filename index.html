@@ -112,6 +112,16 @@ p{color:#aeb9d2;line-height:1.5}.tag{color:#a5efcf;font-size:.85rem;letter-spaci
 .glass-symbol svg{width:35px;height:30px;stroke:rgba(194,250,237,.95);filter:drop-shadow(1px 2px 1px #07151e)}
 .symbol-crown-wide svg{width:41px}
 .board>.combo-category{gap:5px;font-size:.69rem}
+/* Optical glass: illuminated edges, restrained dark center. */
+.viewport{border:1px solid rgba(147,250,199,.52);border-radius:25px;background:linear-gradient(140deg,rgba(150,255,215,.13),rgba(10,18,25,.93) 15%,rgba(9,16,24,.97) 84%,rgba(105,231,178,.12));box-shadow:inset 0 1px 1px rgba(225,255,240,.48),inset 1px 0 2px rgba(145,255,200,.2),inset -1px -1px 2px rgba(124,236,182,.24),0 0 0 2px rgba(55,149,112,.10),0 0 22px rgba(67,213,142,.13),0 12px 36px rgba(0,0,0,.38)}
+.viewport:before{height:3px;margin-bottom:-3px;background:linear-gradient(90deg,rgba(110,245,186,.12),rgba(236,255,249,.85) 12%,rgba(71,233,154,.52) 45%,rgba(234,255,246,.7) 85%,transparent);filter:blur(.4px)}
+.board>.score.active{background:linear-gradient(125deg,rgba(36,69,56,.32),#0c1719 15%,#0a1518 85%,rgba(37,91,67,.26));border-color:rgba(92,227,151,.36);box-shadow:inset 1px 0 1px rgba(130,255,185,.15),inset -1px 0 1px rgba(103,242,160,.12),0 0 7px rgba(67,220,132,.08)}
+.board>.heading.score.active{box-shadow:inset 0 1px 1px rgba(168,255,202,.36),0 0 8px rgba(56,222,135,.12)}
+.dice-category{padding-left:13px!important}
+.dice-category>.glass-die{width:25px;height:25px;border-radius:7px}
+.dice-category .pip{width:4px;height:4px}
+.dice-category .p1{left:5px;top:5px}.dice-category .p2{left:11px;top:5px}.dice-category .p3{right:5px;top:5px}.dice-category .p4{left:5px;top:11px}.dice-category .p5{left:11px;top:11px}.dice-category .p6{right:5px;top:11px}.dice-category .p7{left:5px;bottom:5px}.dice-category .p8{left:11px;bottom:5px}.dice-category .p9{right:5px;bottom:5px}
+@keyframes symbol-flash{0%{filter:brightness(1)}48%{filter:brightness(1.65) drop-shadow(0 0 6px rgba(92,255,172,.45))}100%{filter:brightness(1)}}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -198,7 +208,7 @@ function activate(i){
  board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);});
  controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.querySelector("span").textContent=players[j].name;});
  moveDroplet();
- if(!reduced.matches){board.querySelectorAll(".glass-die").forEach((die,index)=>{die.style.animation="none";void die.offsetWidth;die.style.animation=`die-turn .58s cubic-bezier(.18,.75,.22,1) ${index*32}ms both`;});}
+ if(!reduced.matches){board.querySelectorAll(".category").forEach((cell,index)=>{const dice=cell.querySelectorAll(".glass-die");dice.forEach(die=>{die.style.animation="none";void die.offsetWidth;die.style.animation=`die-turn .58s cubic-bezier(.18,.75,.22,1) ${index*42}ms both`;});const symbol=cell.querySelector(".glass-symbol");if(symbol){symbol.style.animation="none";void symbol.offsetWidth;symbol.style.animation=`symbol-flash .5s ease-out ${index*42}ms both`;}});}
  // Follow the moving column after the CSS grid transition has reached its destination.
  if(reduced.matches)focusColumn();else{requestAnimationFrame(focusColumn);setTimeout(focusColumn,480);}
 }
