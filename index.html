@@ -162,10 +162,39 @@ body{overflow-x:hidden}
 .mini-die{border-color:rgba(151,255,197,.78);box-shadow:inset 1px 1px 2px rgba(232,255,241,.5),1px 2px 3px rgba(0,0,0,.5),0 0 5px rgba(47,231,126,.24)}
 .glass-symbol{color:#8dffc0;filter:drop-shadow(0 0 5px rgba(45,235,120,.48))}
 .glass-symbol svg{stroke:rgba(145,255,192,.98);filter:drop-shadow(1px 2px 1px #052519) drop-shadow(0 0 3px rgba(63,250,139,.35))}
+/* Per-player theme variables: score semantics are intentionally excluded. */
+:root{--accent:#36e68a;--accent-rgb:54,230,138;--accent-soft:#baffd5}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.settings-gear{flex:none;width:42px;height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.25);color:#eafff4;background:linear-gradient(135deg,#344050,#111c28);font-size:25px;cursor:pointer;box-shadow:inset 0 1px rgba(255,255,255,.2)}
+.settings-gear:active{transform:scale(.94)}
+#settings-dialog{color:#f5fff9;background:linear-gradient(155deg,#25313c,#0b141b 65%);border:1px solid rgba(200,255,230,.35);border-radius:22px;padding:22px;width:min(92vw,420px);box-shadow:0 20px 80px #000b,0 0 24px rgba(var(--accent-rgb),.22)}
+#settings-dialog::backdrop{background:rgba(0,0,0,.68);backdrop-filter:blur(7px)}
+.settings-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.settings-head h2{margin:0;font-size:1.3rem}
+#settings-close{border:0;background:#34414c;color:white;border-radius:10px;padding:8px 12px;font-size:18px;cursor:pointer}
+.settings-note,.settings-foot{font-size:.85rem;color:#aebfc6}.setting-label{display:block;margin:20px 0 10px;font-weight:650}
+#theme-color{display:block;width:100%;height:54px;padding:3px;border-radius:12px;border:1px solid #ffffff50;background:#1c2930;cursor:pointer}
+.color-presets{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.color-presets button{width:32px;height:32px;border-radius:50%;border:2px solid #ffffff80;background:var(--swatch);cursor:pointer}
+.color-presets button[aria-pressed=true]{outline:2px solid white;outline-offset:2px}
+.setting-line{display:flex;align-items:center;justify-content:space-between;margin-top:24px;padding:12px 0;border-top:1px solid #ffffff25}
+#sound-toggle{width:22px;height:22px;accent-color:var(--accent)}
+.sound-preview{border:1px solid rgba(var(--accent-rgb),.5);background:#192b29;color:white;border-radius:12px;padding:10px 14px;cursor:pointer}
+.droplet{background:linear-gradient(165deg,rgba(255,255,255,.32),rgba(var(--accent-rgb),.30) 37%,rgba(var(--accent-rgb),.42) 75%,rgba(255,255,255,.24))!important;border-color:rgba(var(--accent-rgb),.85)!important;box-shadow:inset 0 2px 4px rgba(255,255,255,.5),inset 0 -4px 7px rgba(var(--accent-rgb),.3),0 4px 13px #0004,0 0 15px rgba(var(--accent-rgb),.48)!important}
+.droplet:before{box-shadow:inset 2px 0 3px #ffffff50,inset -3px 0 4px rgba(var(--accent-rgb),.35)!important}
+.viewport{border-color:rgba(var(--accent-rgb),.75)!important;box-shadow:inset 0 0 0 1px #ffffff70,inset 0 0 10px rgba(var(--accent-rgb),.24),0 0 0 1px rgba(var(--accent-rgb),.25),0 0 14px rgba(var(--accent-rgb),.32),0 0 28px rgba(var(--accent-rgb),.14),0 14px 35px #0008!important}
+.viewport:before{background:linear-gradient(90deg,rgba(var(--accent-rgb),.28),#eafffa 10%,rgba(var(--accent-rgb),.85) 35%,rgba(var(--accent-rgb),.35) 70%,#d8fff6 94%,rgba(var(--accent-rgb),.4))!important}
+.board>.score.active{border-color:rgba(var(--accent-rgb),.48)!important;background:linear-gradient(90deg,rgba(var(--accent-rgb),.18),#071511 12%,#081711 88%,rgba(var(--accent-rgb),.18))!important;box-shadow:inset 2px 0 5px rgba(var(--accent-rgb),.16),inset -2px 0 5px rgba(var(--accent-rgb),.16),0 0 9px rgba(var(--accent-rgb),.13)!important}
+.board>.heading.score.active{border-top-color:rgba(var(--accent-rgb),.85)!important}
+.glass-die{background:linear-gradient(138deg,#e5fff2a6,rgba(var(--accent-rgb),.56) 24%,#12251e 62%,rgba(var(--accent-rgb),.66))!important;border-color:rgba(var(--accent-rgb),.86)!important;box-shadow:inset 2px 2px 3px #ffffff85,inset -3px -4px 7px #021e16aa,3px 5px 7px #0007,0 0 10px rgba(var(--accent-rgb),.35)!important}
+.glass-die:before{background:linear-gradient(145deg,#ffffff65,transparent 43%,rgba(var(--accent-rgb),.24))!important}
+.glass-symbol{color:var(--accent-soft)!important;filter:drop-shadow(0 0 5px rgba(var(--accent-rgb),.5))!important}
+.glass-symbol svg{stroke:var(--accent-soft)!important;filter:drop-shadow(1px 2px 1px #061c19) drop-shadow(0 0 4px rgba(var(--accent-rgb),.5))!important}
+.board>.score.positive,.board>.score.active.positive{color:#87ffb6!important}
+.board>.score.nonpositive,.board>.score.active.nonpositive{color:#ff7788!important}
 </style></head><body><main>
-<div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
+<div class="topline"><div><div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1></div><button id="settings-open" class="settings-gear" type="button" aria-label="Einstellungen öffnen" title="Einstellungen">⚙</button></div>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
-<div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div>
+<dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für <strong id="settings-player">Anna</strong> auf diesem Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><p class="settings-foot">Punkte bleiben grün bzw. rot. Jede Spielerfarbe und Ton-Einstellung wird separat auf diesem Gerät gespeichert.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
 <div class="board" id="board" data-active="0"></div></div>
 <p>Auf dem Smartphone kannst du die Tabelle seitlich wischen. Die Eingabe von Wertungen, echte Partien und Synchronisation folgen später.</p>
@@ -271,6 +300,7 @@ function focusColumn(){
 function activate(i){
  if(active===i)return;
  active=i;
+ applyTheme();playEffect("switch");
  board.dataset.active=String(active);
  board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);});
  controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.querySelector("span").textContent=players[j].name;});
@@ -300,6 +330,53 @@ function draw(){
  });
  requestAnimationFrame(()=>moveDroplet(true));
 }
+
+// Player-specific visual and audio preferences (local to this browser).
+const preferenceKey="casino-kniffel-player-settings-v1";
+const defaults={color:"#36e68a",sound:true};
+let preferences={};
+try{preferences=JSON.parse(localStorage.getItem(preferenceKey)||"{}")||{};}catch{preferences={};}
+const currentPrefs=()=>({...defaults,...(preferences[players[active].id]||{})});
+const colorPicker=document.querySelector("#theme-color"),soundToggle=document.querySelector("#sound-toggle");
+const dialog=document.querySelector("#settings-dialog");
+const hexRGB=hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));
+function applyTheme(){
+ const p=currentPrefs(),rgb=hexRGB(p.color),light=rgb.map(v=>Math.round(v+(255-v)*.48));
+ document.documentElement.style.setProperty("--accent",p.color);
+ document.documentElement.style.setProperty("--accent-rgb",rgb.join(","));
+ document.documentElement.style.setProperty("--accent-soft","rgb("+light.join(",")+")");
+ colorPicker.value=p.color;soundToggle.checked=p.sound;
+ document.querySelector("#settings-player").textContent=players[active].name;
+ document.querySelectorAll("#color-presets button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.color===p.color)));
+}
+function savePreference(key,value){
+ const id=players[active].id;
+ preferences[id]={...currentPrefs(),[key]:value};
+ try{localStorage.setItem(preferenceKey,JSON.stringify(preferences));}catch{}
+ applyTheme();
+}
+const swatches=["#36e68a","#00cfff","#3978ff","#b45aff","#ff43b4","#ff5262","#ff9d30","#ffe34d","#ffffff"];
+for(const color of swatches){const b=document.createElement("button");b.type="button";b.dataset.color=color;b.style.setProperty("--swatch",color);b.title=color;b.setAttribute("aria-label","Farbe "+color);b.addEventListener("click",()=>{savePreference("color",color);playEffect("tap");});document.querySelector("#color-presets").append(b);}
+colorPicker.addEventListener("input",()=>savePreference("color",colorPicker.value));
+soundToggle.addEventListener("change",()=>{savePreference("sound",soundToggle.checked);if(soundToggle.checked)playEffect("tap");});
+document.querySelector("#settings-open").addEventListener("click",()=>{applyTheme();dialog.showModal();playEffect("tap");});
+document.querySelector("#settings-close").addEventListener("click",()=>{playEffect("tap");dialog.close();});
+document.querySelector("#sound-preview").addEventListener("click",()=>playEffect("switch"));
+let audioContext;
+function playEffect(type="tap"){
+ if(!currentPrefs().sound)return;
+ try{
+  audioContext??=new (window.AudioContext||window.webkitAudioContext)();
+  if(audioContext.state==="suspended")audioContext.resume();
+  const t=audioContext.currentTime,osc=audioContext.createOscillator(),gain=audioContext.createGain();
+  osc.type="sine";osc.frequency.setValueAtTime(type==="switch"?390:660,t);
+  osc.frequency.exponentialRampToValueAtTime(type==="switch"?850:510,t+(type==="switch"?.19:.065));
+  gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.065,t+.012);
+  gain.gain.exponentialRampToValueAtTime(.0001,t+(type==="switch"?.22:.09));
+  osc.connect(gain);gain.connect(audioContext.destination);osc.start(t);osc.stop(t+(type==="switch"?.24:.11));
+ }catch{}
+}
+applyTheme();
 draw();
 window.addEventListener("resize",()=>moveDroplet(true));
 </script></body></html>
