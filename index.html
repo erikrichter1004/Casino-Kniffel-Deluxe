@@ -122,6 +122,24 @@ p{color:#aeb9d2;line-height:1.5}.tag{color:#a5efcf;font-size:.85rem;letter-spaci
 .dice-category .pip{width:4px;height:4px}
 .dice-category .p1{left:5px;top:5px}.dice-category .p2{left:11px;top:5px}.dice-category .p3{right:5px;top:5px}.dice-category .p4{left:5px;top:11px}.dice-category .p5{left:11px;top:11px}.dice-category .p6{right:5px;top:11px}.dice-category .p7{left:5px;bottom:5px}.dice-category .p8{left:11px;bottom:5px}.dice-category .p9{right:5px;bottom:5px}
 @keyframes symbol-flash{0%{filter:brightness(1)}48%{filter:brightness(1.65) drop-shadow(0 0 6px rgba(92,255,172,.45))}100%{filter:brightness(1)}}
+/* Mobile layout stability: animated liquid remains clipped to its own toolbar. */
+html{overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow-x:hidden}
+.toolbar{overflow:hidden;contain:layout paint}
+.liquid-bridge{display:none!important}
+.droplet{max-width:calc(100% - 12px);filter:none}
+.viewport{overflow-x:auto;overflow-y:hidden;position:relative;isolation:isolate;border:2px solid rgba(151,255,216,.75);border-radius:27px;background:#07131a;box-shadow:inset 0 0 0 1px rgba(236,255,252,.5),inset 0 0 10px rgba(63,222,156,.24),0 0 0 1px rgba(27,127,95,.4),0 0 12px rgba(67,243,165,.31),0 0 28px rgba(56,220,168,.14),0 14px 35px rgba(0,0,0,.46)}
+.viewport:before{height:4px;margin-bottom:-4px;background:linear-gradient(90deg,rgba(145,255,216,.28),#eafffa 10%,rgba(81,255,170,.8) 32%,rgba(156,255,222,.28) 70%,#d8fff6 94%,rgba(118,255,205,.4));box-shadow:0 1px 9px rgba(122,255,200,.5)}
+.board>.score.active{border-left-color:rgba(80,255,150,.72);border-right-color:rgba(80,255,150,.72);background:linear-gradient(90deg,rgba(17,81,54,.4),#071511 9%,#081711 91%,rgba(22,92,61,.4));box-shadow:inset 2px 0 5px rgba(55,245,135,.14),inset -2px 0 5px rgba(55,245,135,.14),0 0 9px rgba(35,224,120,.12)}
+.board>.heading.score.active{border-top-color:rgba(143,255,189,.9);border-radius:12px 12px 6px 6px;box-shadow:inset 0 3px 7px rgba(100,255,169,.25),0 -2px 10px rgba(75,245,147,.3)}
+/* Correctly scaled dice faces using percentage-based positions. */
+.dice-category>.glass-die{width:25px;height:25px}
+.dice-category .pip{width:15%;height:15%;transform:translate(-50%,-50%)}
+.dice-category .p1{left:25%;top:25%}.dice-category .p2{left:50%;top:25%}.dice-category .p3{left:75%;top:25%}
+.dice-category .p4{left:25%;top:50%}.dice-category .p5{left:50%;top:50%}.dice-category .p6{left:75%;top:50%}
+.dice-category .p7{left:25%;top:75%;bottom:auto}.dice-category .p8{left:50%;top:75%;bottom:auto}.dice-category .p9{left:75%;top:75%;right:auto;bottom:auto}
+.dice-category .p3,.dice-category .p6{right:auto}
+@media(max-width:450px){.viewport{border-radius:24px}}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -163,10 +181,10 @@ function animateBubble(fromX,fromW,toX,toW){
  function frame(now){
   const t=Math.min(1,(now-startTime)/duration);
   // Smooth position, small elastic overshoot and settling.
-  const move=1-Math.exp(-6.5*t)*(Math.cos(11.5*t)+.12*Math.sin(11.5*t));
+  const move=1-Math.pow(1-t,3);
   const center=startCenter+(endCenter-startCenter)*move;
   const stretch=Math.sin(Math.PI*Math.min(1,t/.78))**2;
-  const currentWidth=fromW+(toW-fromW)*(1-Math.min(1,t*1.5))+Math.abs(endCenter-startCenter)*.34*stretch;
+  const currentWidth=fromW+(toW-fromW)*(1-Math.min(1,t*1.5))+Math.min(22,Math.abs(endCenter-startCenter)*.12)*stretch;
   const x=center-currentWidth/2;
   position=x;width=currentWidth;
   renderBubble(x,currentWidth);
@@ -176,7 +194,7 @@ function animateBubble(fromX,fromW,toX,toW){
    const reach=edge+direction*Math.max(0,Math.abs(endCenter-center)-toW*.28)*Math.sin(Math.PI*t/.75);
    const y=controls.clientHeight/2;
    const r=5.5*stretch;
-   bridgePath.setAttribute("d",`M ${edge} ${y-r} C ${edge+direction*18} ${y-r} ${reach-direction*18} ${y-3*stretch} ${reach} ${y} C ${reach-direction*18} ${y+3*stretch} ${edge+direction*18} ${y+r} ${edge} ${y+r} Z`);
+   bridgePath.setAttribute("d","");
   }else bridgePath.setAttribute("d","");
   if(t<1)animationFrame=requestAnimationFrame(frame);
   else{position=toX;width=toW;renderBubble(position,width);bridgePath.setAttribute("d","");}
