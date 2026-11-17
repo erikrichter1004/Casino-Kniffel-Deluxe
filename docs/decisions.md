@@ -69,5 +69,14 @@
 - Lang erfordert mindestens acht bestätigte Zusatzkategorien: **es fehlen noch zwei**.
 - Die Testfälle prüfen gültige und ungültige Würfe sowie alle zehn Kombinationen der doppelten Mini-Straße.
 
-## Frage 12 — offen
-Welche weiteren mindestens zwei eigenständigen Spezialkategorien sollen wir in den Zusatzpool aufnehmen?
+## Frage 12 — vier neue Vorschläge (Würfelprüfungen implementiert, Punkte offen)
+- **Perfekte Balance:** exakt drei gerade und drei ungerade Würfel, z. B. 1-2-3-4-5-6. Machbar. Keine identische Bedingung unter den sechs bisher bestätigten Zusatzkategorien.
+- **Doppeltes Extrem:** exakt drei Einsen und drei Sechsen (1-1-1-6-6-6). Machbar; bei sechs Würfeln erzwingt „mindestens drei von beiden“ genau diese Verteilung. Überschneidet sich bei diesem Wurf mit ursprünglichen Pasch-/Zwei-Dreier-Mustern, ist aber nicht mit den bisherigen sechs Zusatzkategorien identisch.
+- **Punktlandung 21:** Augensumme genau 21, z. B. 1-2-3-4-5-6. Machbar. Überschneidet sich mit Highway/doppelter Mini-Straße bei einzelnen Würfen; keine identische Wertungsbedingung.
+- **Punktlandung 11:** Augensumme genau 11, z. B. 1-1-1-1-1-6. Machbar (minimal mögliche Summe 6). Überschneidet sich mit dem ursprünglichen Feld „10 oder weniger“ **nicht**, da die Summen verschieden sind; genaue Originalregeln sind weiterhin zu prüfen.
+- Alle vier Bedingungen werden in `matchesExtraCategory` geprüft; Tests für positive und negative Fälle sind ergänzt.
+- Noch **keine Punktwerte** für diese vier Vorschläge bestätigt. Daher `status:"proposal"` und nicht in `APPROVED_EXTRAS` aufgenommen; sechs Kategorien bleiben für Lang bestätigt.
+- `selectLongExtras` weist nun ausdrücklich alle Kategorien zurück, die nicht `status:"approved"` tragen. Damit können die Vorschläge nicht versehentlich gezogen werden.
+
+## Frage 13 — offen
+Welche festen Punkte sollen Perfekte Balance, Doppeltes Extrem, Punktlandung 21 und Punktlandung 11 bei gültigem Wurf erhalten?

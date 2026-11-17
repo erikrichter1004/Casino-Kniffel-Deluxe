@@ -9,7 +9,12 @@ export const APPROVED_EXTRAS=Object.freeze([
 ]);
 // Backward-compatible name for earlier consumers.
 export const EXTRA_CANDIDATES=APPROVED_EXTRAS;
-export const EXTRA_PROPOSALS=Object.freeze([]);
+export const EXTRA_PROPOSALS=Object.freeze([
+ Object.freeze({id:"perfect_balance",label:"Perfekte Balance",status:"proposal",points:null}),
+ Object.freeze({id:"double_extreme",label:"Doppeltes Extrem",status:"proposal",points:null}),
+ Object.freeze({id:"sum_21",label:"Punktlandung 21",status:"proposal",points:null}),
+ Object.freeze({id:"sum_11",label:"Punktlandung 11",status:"proposal",points:null})
+]);
 export const HELD_FOR_REVIEW=Object.freeze({id:"three_distinct_pairs",label:"Drei unterschiedliche Paare",reason:"Potential duplicate of original Drei Paare"});
 function checkDice(dice){
  if(!Array.isArray(dice)||dice.length!==6||dice.some(n=>!Number.isInteger(n)||n<1||n>6))throw new RangeError("Genau sechs Würfel mit Werten von 1 bis 6 erforderlich");
@@ -52,6 +57,10 @@ export function matchesExtraCategory(id,dice){
   case "double_mini_straight":return doubleMiniStraight(dice);
   case "all_low":return dice.every(n=>n<=3);
   case "all_high":return dice.every(n=>n>=4);
+  case "perfect_balance":return dice.filter(n=>n%2===0).length===3;
+  case "double_extreme":return dice.filter(n=>n===1).length===3&&dice.filter(n=>n===6).length===3;
+  case "sum_21":return dice.reduce((sum,n)=>sum+n,0)===21;
+  case "sum_11":return dice.reduce((sum,n)=>sum+n,0)===11;
   case "three_distinct_pairs":throw new Error("Kategorie wegen Überschneidung mit Drei Paare noch nicht freigegeben");
   default:throw new RangeError("Unbekannte Zusatzkategorie");
  }

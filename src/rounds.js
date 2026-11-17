@@ -28,7 +28,7 @@ export function selectLongExtras(extraPool,random=Math.random){
  if(!Array.isArray(extraPool)||extraPool.length<LONG_EXTRA_COUNT)throw new RangeError("Mindestens acht bestätigte Zusatzkategorien erforderlich");
  if(extraPool.some(c=>!c||typeof c.id!=="string"||!c.id.trim()||typeof c.label!=="string"||!c.label.trim()))throw new TypeError("Ungültige Zusatzkategorie");
  if(new Set(extraPool.map(c=>c.id)).size!==extraPool.length)throw new Error("Zusatzkategorien müssen eindeutig sein");
- if(extraPool.some(c=>c.status==="proposal"||c.approved===false))throw new Error("Unbestätigte Zusatzkategorie im Pool");
+ if(extraPool.some(c=>c.status!=="approved"||c.approved===false))throw new Error("Unbestätigte Zusatzkategorie im Pool");
  return shuffle(extraPool,random).slice(0,LONG_EXTRA_COUNT);
 }
 function validateBase(categories){

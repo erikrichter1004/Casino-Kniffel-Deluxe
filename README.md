@@ -15,12 +15,13 @@
 - **Nur niedrige Zahlen: 35 Punkte** (alle sechs Würfel 1, 2 oder 3).
 - **Nur hohe Zahlen: 35 Punkte** (alle sechs Würfel 4, 5 oder 6).
 - Damit sind **sechs** Zusatzkategorien bestätigt; für Lang fehlen mindestens **zwei**.
+- **Vier Vorschläge mit Würfelprüfung, aber noch ohne Punkte:** Perfekte Balance (3 gerade, 3 ungerade), Doppeltes Extrem (1-1-1-6-6-6), Punktlandung 21 (Augensumme 21), Punktlandung 11 (Augensumme 11). Erst nach Punktefreigabe in den bestätigten Pool aufnehmen.
 
 ## Code
 - `src/lobby.js`: Lobby-Modell
 - `src/duration.js`: Spieldauern
 - `src/rounds.js`: Wertungsblock und Zufallsauswahl
-- `src/extras.js`: Würfelbedingungen und feste Punktwertung für alle sechs bestätigten Zusatzkategorien
+- `src/extras.js`: Würfelbedingungen für sechs bestätigte und vier vorgeschlagene Kategorien; Punkte nur für bestätigte
 - `tests/`: Node-Tests (`npm test`)
 
 **Noch keine neue spielbare Website.**

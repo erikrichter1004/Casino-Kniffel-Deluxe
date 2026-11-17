@@ -68,3 +68,29 @@ test("Nicht jede sechs-Würfel-Kombination ist eine doppelte Mini-Straße",()=>{
  for(const dice of [[1,1,1,1,2,3],[1,2,2,3,3,6],[2,2,2,4,4,4]])
   assert.equal(match("double_mini_straight",dice),false);
 });
+
+test("Frage 12: Perfekte Balance genau drei gerade und drei ungerade",()=>{
+ assert.equal(match("perfect_balance",[1,2,3,4,5,6]),true);
+ assert.equal(match("perfect_balance",[1,1,1,2,2,2]),true);
+ assert.equal(match("perfect_balance",[1,1,1,1,2,2]),false);
+ assert.equal(match("perfect_balance",[2,2,2,2,1,1]),false);
+});
+test("Frage 12: Doppeltes Extrem nur drei Einsen und drei Sechsen",()=>{
+ assert.equal(match("double_extreme",[1,1,1,6,6,6]),true);
+ assert.equal(match("double_extreme",[6,1,6,1,6,1]),true);
+ assert.equal(match("double_extreme",[1,1,1,1,6,6]),false);
+ assert.equal(match("double_extreme",[1,1,1,6,6,5]),false);
+});
+test("Frage 12: Punktlandung 21 und 11 sind möglich und exakt",()=>{
+ assert.equal(match("sum_21",[1,2,3,4,5,6]),true);
+ assert.equal(match("sum_21",[6,6,6,1,1,1]),true);
+ assert.equal(match("sum_21",[1,2,3,4,5,5]),false);
+ assert.equal(match("sum_11",[1,1,1,1,1,6]),true);
+ assert.equal(match("sum_11",[1,1,1,2,3,3]),true);
+ assert.equal(match("sum_11",[1,1,1,1,1,5]),false);
+});
+test("Frage 12: vier Vorschläge ohne voreilige Punktvergabe",()=>{
+ assert.deepEqual(EXTRA_PROPOSALS.map(c=>c.id),["perfect_balance","double_extreme","sum_21","sum_11"]);
+ assert.ok(EXTRA_PROPOSALS.every(c=>c.status==="proposal"&&c.points===null));
+ for(const id of EXTRA_PROPOSALS.map(c=>c.id))assert.throws(()=>score(id,[1,2,3,4,5,6]),/Keine bestätigte/);
+});
