@@ -5,16 +5,15 @@ export const APPROVED_EXTRAS=Object.freeze([
  Object.freeze({id:"all_odd",label:"Sechs ungerade",points:35,status:"approved"}),
  Object.freeze({id:"double_mini_straight",label:"Doppelte Mini-Straße",points:45,status:"approved"}),
  Object.freeze({id:"all_low",label:"Nur niedrige Zahlen",points:35,status:"approved"}),
- Object.freeze({id:"all_high",label:"Nur hohe Zahlen",points:35,status:"approved"})
+ Object.freeze({id:"all_high",label:"Nur hohe Zahlen",points:35,status:"approved"}),
+ Object.freeze({id:"perfect_balance",label:"Perfekte Balance",points:30,status:"approved"}),
+ Object.freeze({id:"double_extreme",label:"Doppeltes Extrem",points:60,status:"approved"}),
+ Object.freeze({id:"sum_21",label:"Punktlandung 21",points:30,status:"approved"}),
+ Object.freeze({id:"sum_11",label:"Punktlandung 11",points:20,status:"approved"})
 ]);
 // Backward-compatible name for earlier consumers.
 export const EXTRA_CANDIDATES=APPROVED_EXTRAS;
-export const EXTRA_PROPOSALS=Object.freeze([
- Object.freeze({id:"perfect_balance",label:"Perfekte Balance",status:"proposal",points:null}),
- Object.freeze({id:"double_extreme",label:"Doppeltes Extrem",status:"proposal",points:null}),
- Object.freeze({id:"sum_21",label:"Punktlandung 21",status:"proposal",points:null}),
- Object.freeze({id:"sum_11",label:"Punktlandung 11",status:"proposal",points:null})
-]);
+export const EXTRA_PROPOSALS=Object.freeze([]);
 export const HELD_FOR_REVIEW=Object.freeze({id:"three_distinct_pairs",label:"Drei unterschiedliche Paare",reason:"Potential duplicate of original Drei Paare"});
 function checkDice(dice){
  if(!Array.isArray(dice)||dice.length!==6||dice.some(n=>!Number.isInteger(n)||n<1||n>6))throw new RangeError("Genau sechs Würfel mit Werten von 1 bis 6 erforderlich");

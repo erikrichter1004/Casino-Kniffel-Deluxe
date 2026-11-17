@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {APPROVED_EXTRAS,EXTRA_PROPOSALS,HELD_FOR_REVIEW,matchesExtraCategory as match,scoreExtraCategory as score} from "../src/extras.js";
-test("Sechs bestätigte Zusatzkategorien mit festen Punkten",()=>{
- assert.deepEqual(APPROVED_EXTRAS.map(c=>c.points),[45,35,35,45,35,35]);
+test("Zehn bestätigte Zusatzkategorien mit festen Punkten",()=>{
+ assert.deepEqual(APPROVED_EXTRAS.map(c=>c.points),[45,35,35,45,35,35,30,60,30,20]);
  assert.ok(APPROVED_EXTRAS.every(c=>c.status==="approved"));
  assert.equal(HELD_FOR_REVIEW.id,"three_distinct_pairs");
 });
@@ -89,8 +89,14 @@ test("Frage 12: Punktlandung 21 und 11 sind möglich und exakt",()=>{
  assert.equal(match("sum_11",[1,1,1,2,3,3]),true);
  assert.equal(match("sum_11",[1,1,1,1,1,5]),false);
 });
-test("Frage 12: vier Vorschläge ohne voreilige Punktvergabe",()=>{
- assert.deepEqual(EXTRA_PROPOSALS.map(c=>c.id),["perfect_balance","double_extreme","sum_21","sum_11"]);
- assert.ok(EXTRA_PROPOSALS.every(c=>c.status==="proposal"&&c.points===null));
- for(const id of EXTRA_PROPOSALS.map(c=>c.id))assert.throws(()=>score(id,[1,2,3,4,5,6]),/Keine bestätigte/);
+test("Frage 13: vier bestätigte feste Punktwerte und Nullwertung",()=>{
+ assert.equal(EXTRA_PROPOSALS.length,0);
+ assert.equal(score("perfect_balance",[1,2,3,4,5,6]),30);
+ assert.equal(score("perfect_balance",[1,1,1,1,2,2]),0);
+ assert.equal(score("double_extreme",[1,1,1,6,6,6]),60);
+ assert.equal(score("double_extreme",[1,1,1,1,6,6]),0);
+ assert.equal(score("sum_21",[1,2,3,4,5,6]),30);
+ assert.equal(score("sum_21",[1,2,3,4,5,5]),0);
+ assert.equal(score("sum_11",[1,1,1,1,1,6]),20);
+ assert.equal(score("sum_11",[1,1,1,1,1,5]),0);
 });

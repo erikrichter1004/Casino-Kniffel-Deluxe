@@ -69,14 +69,22 @@
 - Lang erfordert mindestens acht bestätigte Zusatzkategorien: **es fehlen noch zwei**.
 - Die Testfälle prüfen gültige und ungültige Würfe sowie alle zehn Kombinationen der doppelten Mini-Straße.
 
-## Frage 12 — vier neue Vorschläge (Würfelprüfungen implementiert, Punkte offen)
+## Frage 12 — vier neue Kategorien (Würfelprüfungen implementiert, Punkte in Frage 13 bestätigt)
 - **Perfekte Balance:** exakt drei gerade und drei ungerade Würfel, z. B. 1-2-3-4-5-6. Machbar. Keine identische Bedingung unter den sechs bisher bestätigten Zusatzkategorien.
 - **Doppeltes Extrem:** exakt drei Einsen und drei Sechsen (1-1-1-6-6-6). Machbar; bei sechs Würfeln erzwingt „mindestens drei von beiden“ genau diese Verteilung. Überschneidet sich bei diesem Wurf mit ursprünglichen Pasch-/Zwei-Dreier-Mustern, ist aber nicht mit den bisherigen sechs Zusatzkategorien identisch.
 - **Punktlandung 21:** Augensumme genau 21, z. B. 1-2-3-4-5-6. Machbar. Überschneidet sich mit Highway/doppelter Mini-Straße bei einzelnen Würfen; keine identische Wertungsbedingung.
 - **Punktlandung 11:** Augensumme genau 11, z. B. 1-1-1-1-1-6. Machbar (minimal mögliche Summe 6). Überschneidet sich mit dem ursprünglichen Feld „10 oder weniger“ **nicht**, da die Summen verschieden sind; genaue Originalregeln sind weiterhin zu prüfen.
 - Alle vier Bedingungen werden in `matchesExtraCategory` geprüft; Tests für positive und negative Fälle sind ergänzt.
-- Noch **keine Punktwerte** für diese vier Vorschläge bestätigt. Daher `status:"proposal"` und nicht in `APPROVED_EXTRAS` aufgenommen; sechs Kategorien bleiben für Lang bestätigt.
+- Die vier Kategorien wurden in Frage 13 mit festen Punkten bestätigt und in `APPROVED_EXTRAS` aufgenommen; insgesamt sind zehn Kategorien bestätigt.
 - `selectLongExtras` weist nun ausdrücklich alle Kategorien zurück, die nicht `status:"approved"` tragen. Damit können die Vorschläge nicht versehentlich gezogen werden.
 
-## Frage 13 — offen
-Welche festen Punkte sollen Perfekte Balance, Doppeltes Extrem, Punktlandung 21 und Punktlandung 11 bei gültigem Wurf erhalten?
+## Frage 13 — Punkte bestätigt und implementiert
+- **Perfekte Balance: 30 Punkte** bei exakt drei geraden und drei ungeraden Würfeln, sonst 0.
+- **Doppeltes Extrem: 60 Punkte** bei exakt 1-1-1-6-6-6, sonst 0.
+- **Punktlandung 21: 30 Punkte** bei Augensumme 21, sonst 0.
+- **Punktlandung 11: 20 Punkte** bei Augensumme 11, sonst 0.
+- `APPROVED_EXTRAS` enthält jetzt **zehn bestätigte Kategorien**. Acht werden bei Lang zufällig daraus gezogen.
+- Testfälle für positive und negative Wertungen aktualisiert; der Pool-Zufallstest verwendet nur bestätigte Kategorien.
+
+## Frage 14 — offen
+Soll der Katalog mit zehn bestätigten Zusatzkategorien vorerst abgeschlossen werden oder sollen wir weitere Spezialkategorien entwickeln?

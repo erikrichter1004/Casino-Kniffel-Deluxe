@@ -23,7 +23,7 @@ test("Keine erfundenen acht Zusatzkategorien",()=>assert.throws(()=>createRoundP
 test("Mehr als dreifache Kategorie wird abgewiesen",()=>assert.throws(()=>createRoundPlan({mode:"long",baseCategories:base,random,longExtras:extras,longRepeatIds:Array(14).fill("c0")}),/maximal dreimal/));
 
 test("Acht zufällige Zusatzkategorien aus gesamtem Pool, ohne Duplikate",()=>{
- const pool=Array.from({length:19},(_,i)=>({id:"new"+i,label:"Spezial "+i}));
+ const pool=Array.from({length:19},(_,i)=>({id:"new"+i,label:"Spezial "+i,status:"approved"}));
  const chosen=selectLongExtras(pool,random);
  assert.equal(chosen.length,8);
  assert.equal(new Set(chosen.map(c=>c.id)).size,8);
@@ -32,7 +32,7 @@ test("Acht zufällige Zusatzkategorien aus gesamtem Pool, ohne Duplikate",()=>{
  assert.equal(plan.slots.filter(s=>s.categoryId.startsWith("new")).length,8);
 });
 test("Weniger als acht Zusatzkategorien wird abgelehnt",()=>{
- assert.throws(()=>selectLongExtras(Array.from({length:7},(_,i)=>({id:"e"+i,label:"E"+i}))),/Mindestens acht/);
+ assert.throws(()=>selectLongExtras(Array.from({length:7},(_,i)=>({id:"e"+i,label:"E"+i,status:"approved"}))),/Mindestens acht/);
 });
 test("Doppelte und unbestätigte Zusatzkategorien werden abgelehnt",()=>{
  assert.throws(()=>selectLongExtras(Array(8).fill({id:"x",label:"X"})),/eindeutig/);
