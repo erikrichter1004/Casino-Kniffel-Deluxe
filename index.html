@@ -207,7 +207,7 @@ function renderBubble(x,w,shape=0,direction=1){
 function animateBubble(fromX,fromW,toX,toW){
  cancelAnimationFrame(animationFrame);
  if(reduced.matches){position=toX;width=toW;renderBubble(position,width);return;}
- const duration=680,startTime=performance.now();
+ const duration=620,startTime=performance.now();
  const direction=Math.sign(toX-fromX)||1;
  const distance=Math.abs(toX-fromX);
  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
@@ -217,19 +217,25 @@ function animateBubble(fromX,fromW,toX,toW){
  function frame(now){
   const t=clamp((now-startTime)/duration,0,1);
   // The leading tip reaches the next player before the trailing edge lets go.
-  const lead=ease(t/.52);
-  const follow=ease((t-.37)/.50);
+  const lead=ease(t/.48);
+  const follow=ease((t-.32)/.46);
   let left=direction>0?oldLeft+(newLeft-oldLeft)*follow:oldLeft+(newLeft-oldLeft)*lead;
   let right=direction>0?oldRight+(newRight-oldRight)*lead:oldRight+(newRight-oldRight)*follow;
-  // One gentle, quickly fading settling wave after the old player is released.
-  if(t>.83){
-   const u=(t-.83)/.17;
-   const offset=Math.sin(u*Math.PI*2)*Math.pow(1-u,2)*Math.min(3,distance*.018)*direction;
-   left+=offset;right+=offset;
+  // A soft water-balloon wobble: one pronounced sway, then progressively
+  // smaller oscillations. Both position and width settle without a hard snap.
+  let widthWobble=0;
+  if(t>.78){
+   const u=(t-.78)/.22;
+   const envelope=Math.exp(-2.7*u)*(1-u);
+   const phase=2.6*Math.PI*u;
+   const sway=Math.sin(phase)*envelope*Math.min(8,distance*.045)*direction;
+   widthWobble=Math.sin(phase+Math.PI/3)*Math.sin(Math.PI*u)*envelope*5;
+   left+=sway-widthWobble/2;
+   right+=sway+widthWobble/2;
   }
   left=clamp(left,6,limit-24);
   right=clamp(right,left+24,limit);
-  const morph=Math.sin(Math.PI*clamp(t/.88,0,1))**.7;
+  const morph=Math.sin(Math.PI*clamp(t/.79,0,1))**.7;
   position=left;width=right-left;
   renderBubble(position,width,morph,direction);
   if(t<1)animationFrame=requestAnimationFrame(frame);
