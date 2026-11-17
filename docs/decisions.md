@@ -118,5 +118,12 @@
 - `src/entry.js` implementiert die Eingabetypen, Berechnung, Streichen und Validierung; Tests in `tests/entry.test.mjs`.
 - Visuelle Animation und echte interaktive Website folgen später.
 
-## Frage 18 — offen
-Sollen die festen Punktwerte der Originalkategorien zunächst anhand eines Fotos des Original-Spielblocks abgeglichen werden, bevor wir die Wertungseingabe-Oberfläche bauen?
+## Ergänzung zu Frage 17 — frühere Originalwerte wiedergefunden
+- Der Nutzer hat den Original-Spielblock bereits mehrfach gezeigt; kein erneutes Foto anfordern.
+- Die frühere eigene Projektdatei `Casino_Kniffel_Paket_D_SQL_zum_Kopieren.txt` enthält diese Original-Festwerte: Drei Paare 35; Zwei Dreier 45; Full-House 25; Großes Full-House 45; Kleine Straße 30; Große Straße 40; Highway 50; Kniffel 50; Kniffel Extrem 75; 10 oder weniger 40; 33 oder mehr 40.
+- Die elf Werte sind jetzt in `src/entry.js` als `ORIGINAL_FIXED_POINTS` eingetragen; bei diesen Feldern nur **Geschafft** oder **Streichen**.
+- **Drei Paare** und **Zwei Dreier** sind gemäß der früheren Projektdatei feste Kategorien, nicht frei einzugebende Summen. Die Eingabezuordnung wurde korrigiert.
+- **Quellenstatus:** Werte stammen aus früheren Projektdateien, das ursprüngliche Foto wurde nicht erneut visuell eingesehen. Eventuelle Abweichungen zum Foto sind noch zu prüfen.
+
+## Frage 18 — nächster Entwicklungsschritt
+Wie sollen die Kategorien im digitalen Wertungsblatt angeordnet und ausgewählt werden?

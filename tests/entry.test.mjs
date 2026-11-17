@@ -18,8 +18,12 @@ test("Variable Felder: direkte Zahleneingabe",()=>{
  assert.deepEqual(scoreEntry("Chance",{points:23}),{points:23,struck:false});
  assert.throws(()=>scoreEntry("Super Chance",{points:-1}),/Punktzahl/);
 });
-test("Original-Festwerte ohne gesicherte Zuordnung werden nicht erfunden",()=>{
- assert.equal(entryDescriptor("Highway").kind,"fixed_pending");
- assert.throws(()=>scoreEntry("Highway",{achieved:true}),/bestätigt/);
- assert.deepEqual(scoreEntry("Highway",{strike:true}),{points:0,struck:true});
+test("Original-Festwerte aus früherer Casino-Kniffel-Projektdatei",()=>{
+ const fixed=[["Drei Paare",35],["Zwei Dreier",45],["Full-House",25],["Großes Full-House",45],["Kleine Straße",30],["Große Straße",40],["Highway",50],["Kniffel",50],["Kniffel Extrem",75],["10 oder weniger",40],["33 oder mehr",40]];
+ for(const [category,points] of fixed){
+  assert.equal(entryDescriptor(category).kind,"fixed");
+  assert.deepEqual(scoreEntry(category,{achieved:true}),{points,struck:false});
+  assert.deepEqual(scoreEntry(category,{strike:true}),{points:0,struck:true});
+ }
+ assert.equal(entryDescriptor("Zwei Paare").kind,"number");
 });
