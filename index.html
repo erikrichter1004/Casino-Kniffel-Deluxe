@@ -209,6 +209,23 @@ main{max-width:980px}
 @keyframes card-touch{0%{transform:scale(1)}45%{transform:scale(1.08) translateY(-5px)}100%{transform:scale(1)}}
 .card-tapped .card-fan{animation:card-touch .42s ease-out}
 @media(prefers-reduced-motion:reduce){.mystery-card,.card-tapped .card-fan{animation:none!important}}
+/* Hero action: occupies the upper half of the phone screen. */
+.action-area{min-height:max(300px,calc(50svh - 76px));display:flex;flex-direction:column;justify-content:center;padding:10px 0 8px}
+.action-draw{min-height:260px;gap:18px;overflow:visible;background:radial-gradient(ellipse at center,rgba(var(--accent-rgb),.13),transparent 68%)}
+.card-fan{width:260px;height:205px;filter:drop-shadow(0 14px 17px #0009);animation:fan-float 4.3s ease-in-out infinite}
+.mystery-card{left:77px;top:13px;width:106px;height:151px;border-radius:18px;font-size:55px;animation:card-breathe 3.2s ease-in-out infinite,card-drift 4.5s ease-in-out infinite;isolation:isolate}
+.mystery-card.back{--fan-x:-54px;--fan-r:-19deg;animation-delay:-.6s,-.9s}
+.mystery-card.middle{--fan-x:54px;--fan-r:19deg;animation-delay:-1.2s,-1.8s}
+.mystery-card.front{--fan-x:0px;--fan-r:0deg;animation-delay:0s,-.2s}
+.mystery-card{transform:translateX(var(--fan-x)) rotate(var(--fan-r))}
+.mystery-card::before{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;background:conic-gradient(from var(--rainbow-angle),#ff536c,#ffc94e,#72ff96,#4de8ff,#748aff,#d57bff,#ff536c);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;animation:rainbow-orbit 3.8s linear infinite;filter:brightness(1.35)}
+.mystery-card::after{content:"";position:absolute;inset:-5px;border-radius:20px;background:conic-gradient(from var(--rainbow-angle),#ff536c80,#ffc94e70,#72ff9670,#4de8ff70,#748aff70,#d57bff70,#ff536c80);filter:blur(12px);z-index:-1;animation:rainbow-orbit 3.8s linear infinite;opacity:.65;pointer-events:none}
+@property --rainbow-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+@keyframes rainbow-orbit{to{--rainbow-angle:360deg}}
+@keyframes fan-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.045)}}
+@keyframes card-drift{0%,100%{transform:translateX(var(--fan-x)) rotate(var(--fan-r)) translateY(0) scale(1)}50%{transform:translateX(var(--fan-x)) rotate(var(--fan-r)) translateY(-5px) scale(1.035)}}
+.action-caption{font-size:1.05rem;letter-spacing:.095em}
+@media(prefers-reduced-motion:reduce){.card-fan,.mystery-card,.mystery-card::before,.mystery-card::after{animation:none!important}}
 </style></head><body><main>
 <dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
