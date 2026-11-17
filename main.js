@@ -45,7 +45,7 @@ $('scoreForm').addEventListener('submit',e=>{
  const raw=$('points').value.trim().replace(',', '.');
  if(!/^(0|[1-9]\d*)$/.test(raw)){$('scoreError').textContent='Bitte eine ganze Punktzahl eingeben.';return}
  try{
-  const base=Number(raw);const adjusted=drawn?(drawn.kind==='multiplier'?base*drawn.value:drawn.kind==='bonus'?base+drawn.value:base):base;
+  const base=Number(raw);const adjusted=base===0?0:drawn?(drawn.kind==='multiplier'?base*drawn.value:drawn.kind==='bonus'?base+drawn.value:base):base;
   state=scoreTurn(state,{...pending,category:pending.key,points:adjusted,expectedRevision:pending.revision});
   drawn=null;updateCasino();
   flash={playerId:pending.playerId,key:pending.key};pending=null;$('scoreDialog').close();save();render();
