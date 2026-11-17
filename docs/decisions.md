@@ -151,5 +151,10 @@
 - Die Blase berücksichtigt Resize und respektiert `prefers-reduced-motion`; Buttons bleiben per Tastatur bedienbar.
 - In `index.html` als interaktive Browser-Vorschau implementiert. Echtes Mehrspieler-Backend und Eingabedialoge stehen noch aus.
 
-## Frage 21 — offen
-Soll die Glasblase bei einem Zugwechsel nur zum nächsten Namen gleiten oder zusätzlich einen kurzen elastischen Dehn-/Zusammenzieh-Effekt erhalten?
+## Frage 21 — Variante A: elastischer Wassertropfen
+- Die Glasblase bewegt sich **kontinuierlich** und wird unterwegs dezent in Bewegungsrichtung gedehnt, kurz gestaucht und setzt sich weich.
+- CSS-Keyframes und Federkurve ergänzen die bestehende Transform-Animation; `prefers-reduced-motion` bleibt berücksichtigt.
+- **Wichtiger Hinweis:** Die GitHub-Pages-Adresse wurde nicht erfolgreich als funktionierende Vorschau verifiziert. Das Vorhandensein von `index.html` im Repository beweist keine aktivierte Pages-Veröffentlichung. Nicht als live verifiziert ausgeben.
+
+## Frage 22 — offen
+Soll die Vorschau zuerst als echte öffentliche GitHub-Pages-Website erreichbar gemacht werden, bevor weitere Animationen hinzukommen?
