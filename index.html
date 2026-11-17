@@ -59,6 +59,24 @@ p{color:#aeb9d2;line-height:1.5}.tag{color:#a5efcf;font-size:.85rem;letter-spaci
 .board>.subtotal.active{background:#25493d;color:#f1fff5}
 .droplet{background:linear-gradient(125deg,rgba(89,197,157,.75),rgba(37,111,92,.70) 45%,rgba(47,143,109,.78) 80%,rgba(118,218,170,.74));border-color:rgba(137,245,192,.86);box-shadow:inset 2px 2px 3px rgba(215,255,232,.5),inset -3px -3px 6px rgba(18,74,55,.4),0 4px 15px rgba(14,69,46,.32)}
 @media(max-width:450px){body{padding-inline:8px}.board{grid-template-columns:112px repeat(3,minmax(48px,1fr))}.board[data-active="0"]{grid-template-columns:112px minmax(150px,1fr) 48px 48px}.board[data-active="1"]{grid-template-columns:112px 48px minmax(150px,1fr) 48px}.board[data-active="2"]{grid-template-columns:112px 48px 48px minmax(150px,1fr)}}
+/* Dark glass scorecard, with semantic numeric emphasis. */
+.viewport{position:relative;isolation:isolate;border-radius:22px;border:1px solid rgba(188,222,255,.23);background:linear-gradient(145deg,rgba(48,62,87,.27),rgba(12,17,29,.9) 45%,rgba(25,40,54,.85));box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1px 0 rgba(132,181,211,.12),0 16px 42px rgba(0,0,0,.25),0 0 24px rgba(91,159,177,.06)}
+.viewport:before{content:"";position:sticky;display:block;left:0;top:0;height:2px;margin-bottom:-2px;z-index:9;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(221,246,255,.58) 22%,rgba(141,213,220,.2) 67%,transparent)}
+.board{background:transparent}
+.board>.score,.board>.score.active,.board>.heading.score,.board>.heading.score.active{background:linear-gradient(145deg,#141c2b,#111925 70%,#182232);border:1px solid rgba(148,181,210,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.045);transform:none}
+.board>.score.active{background:linear-gradient(145deg,#18232d,#111b23 65%,#172a2b);border-color:rgba(129,205,173,.27);box-shadow:inset 0 1px 0 rgba(225,255,242,.07),inset 0 0 15px rgba(44,143,96,.035)}
+.board>.heading.score{min-height:24px;padding:2px}
+.board>.heading.score.active{border-color:rgba(121,215,171,.27)}
+.board>.score.positive{color:#64dca0;font-weight:750;text-shadow:0 0 8px rgba(71,230,138,.15)}
+.board>.score.nonpositive{color:#ff6978;font-weight:750;text-shadow:0 0 8px rgba(255,74,103,.13)}
+.board>.score.active.positive{color:#87ffb6;font-size:1.42rem;font-weight:850;text-shadow:0 0 11px rgba(73,255,141,.36),0 0 23px rgba(56,216,118,.12)}
+.board>.score.active.nonpositive{color:#ff7788;font-size:1.42rem;font-weight:850;text-shadow:0 0 11px rgba(255,75,105,.3)}
+.board>.score.empty,.board>.score.active.empty{color:#647085;font-size:.82rem;font-weight:400;text-shadow:none}
+.board>.score.subtotal.empty{color:#69788b}
+.board>.category:not(.heading){background:#1a2535}
+.board>.category.subtotal{background:#243144}
+.board>.heading.category{background:#28364b}
+@media(prefers-reduced-motion:no-preference){.board>.score{transition:background .45s,border-color .45s,color .4s,font-size .45s,text-shadow .45s}}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -142,7 +160,7 @@ function activate(i){
  if(active===i)return;
  active=i;
  board.dataset.active=String(active);
- board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);if(cell.classList.contains("heading"))cell.textContent=players[index].name;});
+ board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);});
  controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.querySelector("span").textContent=players[j].name;});
  moveDroplet();
  // Follow the moving column after the CSS grid transition has reached its destination.
@@ -151,9 +169,9 @@ function activate(i){
 function draw(){
  // DOM order is kept stable so CSS grid tracks animate without abrupt column reordering.
  board.dataset.active=String(active);board.replaceChildren();
- const add=(value,cls,playerIndex=null)=>{const el=document.createElement("div");el.className="cell "+cls;el.textContent=value;if(playerIndex!==null)el.dataset.player=String(playerIndex);board.append(el);};
+ const add=(value,cls,playerIndex=null)=>{const el=document.createElement("div");el.className="cell "+cls;el.textContent=value;if(playerIndex!==null)el.dataset.player=String(playerIndex);if(cls.includes("score")&&!cls.includes("heading")){const numeric=typeof value==="number"?value:(typeof value==="string"&&value.trim()!==""&&value!=="–"&&!Number.isNaN(Number(value))?Number(value):null);el.classList.add(numeric===null?"empty":numeric>0?"positive":"nonpositive");}board.append(el);};
  add("Kategorie","heading category");
- players.forEach((p,i)=>add(p.name,"heading score"+(i===active?" active":""),i));
+ players.forEach((p,i)=>add("","heading score"+(i===active?" active":""),i));
  BASE_CATEGORY_NAMES.forEach((name,index)=>{
   if(index===6){
    for(const label of ["Summe oben","Bonus","Gesamt oben"]){
