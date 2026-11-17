@@ -1,16 +1,17 @@
 # Casino Kniffel Deluxe — Neuentwicklung
 
-Entscheidungen werden nacheinander getroffen und als eigenständige, testbare Module umgesetzt.
+Wir entwickeln die Spielregeln gemeinsam Schritt für Schritt und setzen bestätigte Entscheidungen als testbare Module um.
 
-## Stand
-- [x] Frage 1: Host erstellt Spiel, andere treten bei, Solo separat; Host wählt Spieldauer und Aktionsgrad.
-- [x] Frage 2: feste Spieldauern **plus** individuelle Feldanzahl.
-- [x] Lobby- und Spieldauer-Domänenmodell mit Unit-Tests.
-- [ ] Konkrete Spieldauer-Presets und Mehrfachblock-Regel.
-- [ ] Casino-Karten, vollständige Spielengine, Online-Lobby und UI.
+## Bestätigt
+- Spiel erstellen / beitreten; Einzelspieler separat; Host wählt Spieldauer und Aktionsgrad.
+- Spieldauer: **Kurz 11**, **Standard 22**, **Lang 44** Wertungen pro Spieler, zusätzlich frei wählbar.
+- Regeln zur Verteilung der Wertungen auf die 22 Kategorien sind noch offen.
 
-**Es gibt noch keine neue spielbare Webseite.** GitHub Pages kann daher derzeit eine Fehlerseite anzeigen.
+## Implementiert
+- `src/lobby.js`: Lobby-Grundmodell und Host-Konfiguration.
+- `src/duration.js`: Spieldauer-Presets und freie Feldanzahl.
+- Unit-Tests unter `tests/`, startbar mit `npm test`.
 
-`npm test` führt die Tests unter Node.js aus.
+**Noch keine neue spielbare Webseite:** GitHub Pages kann deshalb derzeit eine Fehlerseite anzeigen.
 
-[Verbindliche Entscheidungen](docs/decisions.md)
+[Entscheidungsprotokoll](docs/decisions.md)

@@ -1,20 +1,25 @@
 # Verbindliche Entscheidungen
 
-## Frage 1 — Spielstart (bestätigt)
+## Frage 1 — Spielstart
 - **Spiel erstellen (Host)**, **Spiel beitreten**, **Einzelspieler separat**.
 - Der Host bestimmt **Spieldauer/Feldanzahl** und **Aktionsgrad der Casino-Karten**.
 
-## Frage 2 — Spieldauer (bestätigt)
+## Frage 2 — Spieldauer
 - **Feste Spieldauern UND individuelle Einstellung** müssen verfügbar sein.
-- Feste Preset-Werte (z. B. kurz/normal/lang) sind **noch nicht verbindlich beschlossen**. Beispielzahlen aus der Frage sind nicht automatisch eine Bestätigung.
-- Eigene Feldanzahl wird als positive ganze Zahl validiert.
-- Bei mehr als 22 Wertungen ist die Block-/Wiederholungsregel noch offen.
+- Individuelle Feldanzahl ist eine positive ganze Zahl.
 
-## Implementiert
+## Frage 3 — Feste Spieldauern
+- **Kurz: 11 Wertungen pro Spieler**
+- **Standard: 22 Wertungen pro Spieler**
+- **Lang: 44 Wertungen pro Spieler**
+- Diese drei Presets sind in `src/duration.js` verbindlich implementiert.
+- **Noch offen:** Wie funktionieren mehrere Wertungen über den 22 Kategorien? Neuer Block, wiederverwendbare Kategorien oder andere Regel? Auch bei Kurz 11 ist noch offen, welche Felder zur Verfügung stehen.
+
+## Technischer Stand
 - `src/lobby.js`: Host-Rechte, Lobby-Konfiguration, Solo-/Join-Grundmodell.
-- `src/duration.js`: vordefinierte Dauer aus konfigurierbarem Preset-Katalog oder individuelle Feldanzahl, Validierung.
-- Unit-Tests für Lobby und Spieldauer.
-- Noch **keine** funktionierende Online-Lobby, keine UI, keine Kartenengine und keine veröffentlichte Spielversion.
+- `src/duration.js`: drei verbindliche Presets und individuelle Feldanzahl.
+- Tests in `tests/`.
+- Keine Online-Lobby, UI, Kartenengine oder veröffentlichte Spielversion.
 
-## Frage 3 — offen
-Welche konkreten festen Spieldauern soll der Host auswählen können, und wie sollen mehr als 22 Wertungen behandelt werden?
+## Frage 4 — offen
+Wie sollen die Wertungen bei Kurz (11) und Lang (44) auf die 22 Wertungskategorien verteilt werden?
