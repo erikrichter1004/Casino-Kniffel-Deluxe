@@ -191,13 +191,29 @@ body{overflow-x:hidden}
 .glass-symbol svg{stroke:var(--accent-soft)!important;filter:drop-shadow(1px 2px 1px #061c19) drop-shadow(0 0 4px rgba(var(--accent-rgb),.5))!important}
 .board>.score.positive,.board>.score.active.positive{color:#87ffb6!important}
 .board>.score.nonpositive,.board>.score.active.nonpositive{color:#ff7788!important}
+/* Mobile-first game layout, respecting the iPhone safe area. */
+body{padding:calc(env(safe-area-inset-top,0px) + 8px) 10px calc(env(safe-area-inset-bottom,0px) + 22px)}
+main{max-width:980px}
+.toolbar{margin:0 0 12px}
+.game-footer{display:flex;justify-content:flex-end;margin:22px 4px 0}
+.action-area{padding:8px 0 17px;text-align:center}
+.action-draw{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;min-height:156px;background:radial-gradient(ellipse at 50% 52%,rgba(var(--accent-rgb),.10),transparent 70%);border:0;border-radius:22px;color:#effff8;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.card-fan{position:relative;width:166px;height:111px;display:block;filter:drop-shadow(0 7px 12px #0008)}
+.mystery-card{position:absolute;left:48px;top:6px;width:70px;height:98px;display:flex;align-items:center;justify-content:center;border-radius:12px;border:1px solid rgba(var(--accent-rgb),.78);color:var(--accent-soft);font-weight:700;font-size:35px;font-family:Georgia,serif;background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(var(--accent-rgb),.23) 22%,#0c1823 58%,rgba(var(--accent-rgb),.29));box-shadow:inset 0 1px 2px #ffffff80,inset 0 -3px 8px rgba(var(--accent-rgb),.15),0 0 12px rgba(var(--accent-rgb),.25);text-shadow:0 0 12px rgba(var(--accent-rgb),.8);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:card-breathe 2.9s ease-in-out infinite}
+.mystery-card.back{transform:translateX(-35px) rotate(-19deg);animation-delay:-.5s}
+.mystery-card.middle{transform:translateX(35px) rotate(19deg);animation-delay:-1s}
+.mystery-card.front{z-index:2}
+.action-caption{font-size:.85rem;letter-spacing:.07em;font-weight:700;color:var(--accent-soft);text-shadow:0 0 9px rgba(var(--accent-rgb),.4)}
+.action-status{font-size:.76rem;margin:0;min-height:1em;color:#aab8c8}
+@keyframes card-breathe{0%,100%{filter:brightness(.83);box-shadow:inset 0 1px 2px #ffffff65,0 0 9px rgba(var(--accent-rgb),.18)}50%{filter:brightness(1.28);box-shadow:inset 0 1px 3px #ffffffa0,0 0 20px rgba(var(--accent-rgb),.5)}}
+@keyframes card-touch{0%{transform:scale(1)}45%{transform:scale(1.08) translateY(-5px)}100%{transform:scale(1)}}
+.card-tapped .card-fan{animation:card-touch .42s ease-out}
+@media(prefers-reduced-motion:reduce){.mystery-card,.card-tapped .card-fan{animation:none!important}}
 </style></head><body><main>
-<div class="topline"><div><div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1></div><button id="settings-open" class="settings-gear" type="button" aria-label="Einstellungen öffnen" title="Einstellungen">⚙</button></div>
-<p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
-<dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für <strong id="settings-player">Anna</strong> auf diesem Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><p class="settings-foot">Punkte bleiben grün bzw. rot. Jede Spielerfarbe und Ton-Einstellung wird separat auf diesem Gerät gespeichert.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div>
+<dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
 <div class="board" id="board" data-active="0"></div></div>
-<p>Auf dem Smartphone kannst du die Tabelle seitlich wischen. Die Eingabe von Wertungen, echte Partien und Synchronisation folgen später.</p>
+<footer class="game-footer"><button id="settings-open" class="settings-gear" type="button" aria-label="Einstellungen öffnen" title="Einstellungen">⚙</button></footer>
 </main><script type="module">
 import {BASE_CATEGORY_NAMES} from "./src/rounds.js";
 import {createPlayerColumns} from "./src/player-columns.js";
@@ -300,7 +316,7 @@ function focusColumn(){
 function activate(i){
  if(active===i)return;
  active=i;
- applyTheme();playEffect("switch");
+ playEffect("switch");
  board.dataset.active=String(active);
  board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);});
  controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.querySelector("span").textContent=players[j].name;});
@@ -332,11 +348,11 @@ function draw(){
 }
 
 // Player-specific visual and audio preferences (local to this browser).
-const preferenceKey="casino-kniffel-player-settings-v1";
+const preferenceKey="casino-kniffel-device-settings-v1";
 const defaults={color:"#36e68a",sound:true};
-let preferences={};
-try{preferences=JSON.parse(localStorage.getItem(preferenceKey)||"{}")||{};}catch{preferences={};}
-const currentPrefs=()=>({...defaults,...(preferences[players[active].id]||{})});
+let preferences={...defaults};
+try{preferences={...defaults,...JSON.parse(localStorage.getItem(preferenceKey)||"{}")};}catch{}
+const currentPrefs=()=>preferences;
 const colorPicker=document.querySelector("#theme-color"),soundToggle=document.querySelector("#sound-toggle");
 const dialog=document.querySelector("#settings-dialog");
 const hexRGB=hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));
@@ -346,12 +362,10 @@ function applyTheme(){
  document.documentElement.style.setProperty("--accent-rgb",rgb.join(","));
  document.documentElement.style.setProperty("--accent-soft","rgb("+light.join(",")+")");
  colorPicker.value=p.color;soundToggle.checked=p.sound;
- document.querySelector("#settings-player").textContent=players[active].name;
  document.querySelectorAll("#color-presets button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.color===p.color)));
 }
 function savePreference(key,value){
- const id=players[active].id;
- preferences[id]={...currentPrefs(),[key]:value};
+ preferences={...preferences,[key]:value};
  try{localStorage.setItem(preferenceKey,JSON.stringify(preferences));}catch{}
  applyTheme();
 }
@@ -377,6 +391,8 @@ function playEffect(type="tap"){
  }catch{}
 }
 applyTheme();
+const actionDraw=document.querySelector("#action-draw");
+actionDraw.addEventListener("click",()=>{playEffect("tap");actionDraw.classList.remove("card-tapped");void actionDraw.offsetWidth;actionDraw.classList.add("card-tapped");document.querySelector("#action-status").textContent="Vorschau – echte Aktionskarten folgen mit der Spiellogik.";});
 draw();
 window.addEventListener("resize",()=>moveDroplet(true));
 </script></body></html>
