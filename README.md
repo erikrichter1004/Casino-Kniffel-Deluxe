@@ -31,7 +31,7 @@
 - `src/entry.js`: interaktive Wertungseingabe als Datenmodell (Augenzahl-Anzahl, Festwertung oder Punktefeld); elf Original-Festwerte aus der früheren Casino-Kniffel-Projektdatei hinterlegt (noch nicht erneut am Foto geprüft)
 - `src/scorecard.js`: klassischer vertikaler Kniffelblock (Einser–Sechser oben, übrige Kategorien unten), mit separaten Feldern bei Wiederholungen
 - `src/player-columns.js`: Spieler-Spalten und Zugfokus
-- `index.html`: interaktive Layout-Vorschau mit weichen Fokusübergängen und horizontalem Wischen (noch keine vollständige Partie)
+- `index.html`: interaktive Liquid-Glass-inspirierte Layout-Vorschau mit gleitender Glasblase, animiertem Zugfokus und automatischem horizontalen Scrollen (noch keine vollständige Partie)
 - `tests/`: Node-Tests (`npm test`)
 
 **Eine interaktive Layout-Vorschau ist vorhanden; noch keine vollständig spielbare Partie.**

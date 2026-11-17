@@ -143,5 +143,13 @@
 - `src/player-columns.js` enthält die Fokus-/Spielerlogik; `index.html` ist eine **interaktive Layout-Vorschau** mit simuliertem Zugwechsel, noch kein vollständiges Spiel.
 - Bewegung wird bei `prefers-reduced-motion` deaktiviert.
 
-## Frage 20 — offen
-Soll der aktive Spieler beim Zugwechsel automatisch in die Mitte des sichtbaren Bereichs scrollen oder soll die Tabelle ihre horizontale Scrollposition behalten?
+## Frage 20 — automatisch gleitender Fokus und hochwertige glasartige Animationen (Variante A)
+- Bei jedem Zugwechsel gleitet der horizontale Ausschnitt **automatisch weich zum aktiven Spieler**; auf kleinen Displays wird dessen Spalte möglichst mittig sichtbar.
+- Eine **einzige dauerhaft bestehende, glasartige Fokusblase** liegt über dem Namen des aktiven Spielers und bewegt sich kontinuierlich zum nächsten Namen (kein Bildwechsel oder hartes Neuzeichnen).
+- Visuelle Anlehnung an iOS Liquid Glass: mehrschichtige transparente Farbverläufe, Lichtkanten, Glanz, Blur/Backdrop-Filter, weiche Schatten, elastisch wirkende Übergänge; **keine Behauptung einer identischen Apple-Implementierung**.
+- Beim Zugwechsel bleiben die DOM-Zellen bestehen; Spaltenbreiten, Textgrößen, Gewichte und Hervorhebung ändern sich über CSS-Transitions, um Sprünge zu vermeiden.
+- Die Blase berücksichtigt Resize und respektiert `prefers-reduced-motion`; Buttons bleiben per Tastatur bedienbar.
+- In `index.html` als interaktive Browser-Vorschau implementiert. Echtes Mehrspieler-Backend und Eingabedialoge stehen noch aus.
+
+## Frage 21 — offen
+Soll die Glasblase bei einem Zugwechsel nur zum nächsten Namen gleiten oder zusätzlich einen kurzen elastischen Dehn-/Zusammenzieh-Effekt erhalten?
