@@ -1,18 +1,18 @@
 # Casino Kniffel Deluxe — Neuentwicklung
 
-## Bestätigte Entscheidungen
-- Host-Lobby / Beitreten / Solo, Host bestimmt Dauer und Casino-Aktionsgrad.
-- Kurz 11, Standard 22, Lang 44, zusätzlich individuell.
+## Bestätigte Regeln
+- Host erstellt Spiel / Spieler treten bei; Solo separat. Host bestimmt Spieldauer und Casino-Aktionsgrad.
+- Kurz 11, Standard 22, Lang 44, zusätzlich individuelle Feldanzahl.
 - Kurz: 11 zufällige Kategorien ohne oberen Bonus.
-- Standard: alle 22 Grundkategorien.
-- Lang: **ein einzelner 44-Felder-Block**, in dem Grundkategorien mehrfach als separate Felder vorkommen und neue Kategorien hinzukommen.
+- Standard: 22 reguläre Kategorien.
+- Lang: **ein gemeinsamer Block mit 44 Feldern**: 22 Grundkategorien + 14 zufällige Wiederholungen + **8 neue Spezialkategorien**.
 
-## Stand der Implementierung
-- `src/lobby.js`: Host-/Join-/Solo-Grundmodell.
-- `src/duration.js`: Dauerwahl.
-- `src/rounds.js`: Slot-Generator für alle drei Modi; Lang nur mit ausdrücklich übergebenen Wiederholungen und Zusatzkategorien.
-- `tests/`: automatisierte Tests, ausführbar mit `npm test`.
+## Implementiert
+- `src/lobby.js`: Host-Konfigurationsmodell.
+- `src/duration.js`: Spieldauer-Presets und freie Feldanzahl.
+- `src/rounds.js`: Slot-Generator mit Wiederholungen und acht einzusetzenden Spezialkategorien.
+- `tests/`: Tests, ausführbar mit `npm test`.
 
-Noch **keine neue spielbare Webseite**. Die neuen Zusatzkategorien sind bis zur Bestätigung nur Entwürfe.
+**Noch offen:** Welche acht neuen Spezialkategorien gelten und wie sie gewertet werden. Keine spielbare Webseite vorhanden.
 
 [Entscheidungsprotokoll](docs/decisions.md)

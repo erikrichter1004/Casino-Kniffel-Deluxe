@@ -1,6 +1,5 @@
 /** One scorecard per game; repeated categories occupy separate slots.
- * The exact 22 base categories are known, but scoring formulas and long-mode
- * extra-category selection require separate confirmation.
+ * Extra-category rules and points are not invented before user confirmation.
  */
 export const BASE_CATEGORY_NAMES=Object.freeze([
  "Einser","Zweier","Dreier","Vierer","Fünfer","Sechser",
@@ -8,6 +7,9 @@ export const BASE_CATEGORY_NAMES=Object.freeze([
  "Full-House","Großes Full-House","Kleine Straße","Große Straße","Highway",
  "Kniffel","Kniffel Extrem","10 oder weniger","33 oder mehr","Chance","Super Chance"
 ]);
+export const LONG_TOTAL=44;
+export const LONG_EXTRA_COUNT=8;
+export const LONG_REPEAT_COUNT=LONG_TOTAL-BASE_CATEGORY_NAMES.length-LONG_EXTRA_COUNT;
 export const PROPOSED_EXTRAS=Object.freeze([
  Object.freeze({id:"street_pair",label:"Kleine Straße + Paar",status:"proposal"}),
  Object.freeze({id:"three_distinct_pairs",label:"Drei unterschiedliche Paare",status:"proposal"}),
@@ -31,23 +33,28 @@ function validateBase(categories){
 function makeSlot(category,index){
  return {slotId:`slot-${index+1}`,categoryId:category.id,label:category.label,position:index+1};
 }
+export function chooseLongRepeats(baseCategories,random=Math.random){
+ const base=validateBase(baseCategories);
+ // Draw from 22 categories, with up to two additional appearances per category.
+ // This allows double and triple entries while preserving 14 total repeats.
+ const pool=[...base,...base];
+ return shuffle(pool,random).slice(0,LONG_REPEAT_COUNT).map(c=>c.id);
+}
 export function createRoundPlan({mode,baseCategories,random=Math.random,longExtras,longRepeatIds}){
  const base=validateBase(baseCategories);
- if(mode==="short"){
-  return {mode,upperBonusEnabled:false,slots:shuffle(base,random).slice(0,11).map(makeSlot),blockCount:1};
- }
- if(mode==="standard"){
-  return {mode,upperBonusEnabled:true,slots:base.map(makeSlot),blockCount:1};
- }
+ if(mode==="short")return {mode,upperBonusEnabled:false,slots:shuffle(base,random).slice(0,11).map(makeSlot),blockCount:1};
+ if(mode==="standard")return {mode,upperBonusEnabled:true,slots:base.map(makeSlot),blockCount:1};
  if(mode==="long"){
-  // Never silently invent the number of repeats or approve draft categories.
-  if(!Array.isArray(longExtras)||!Array.isArray(longRepeatIds))throw new Error("Lang-Zusatzkategorien und Wiederholungsanzahl sind noch nicht bestätigt");
+  if(!Array.isArray(longExtras)||longExtras.length!==LONG_EXTRA_COUNT)throw new Error("Lang benötigt genau acht bestätigte Zusatzkategorien");
+  const repeats=longRepeatIds===undefined?chooseLongRepeats(base,random):longRepeatIds;
+  if(!Array.isArray(repeats)||repeats.length!==LONG_REPEAT_COUNT)throw new Error("Lang benötigt genau 14 Wiederholungen");
   const byId=new Map(base.map(c=>[c.id,c]));
-  if(longRepeatIds.some(id=>!byId.has(id)))throw new Error("Unbekannte Wiederholungskategorie");
+  if(repeats.some(id=>!byId.has(id)))throw new Error("Unbekannte Wiederholungskategorie");
+  const counts=new Map();
+  for(const id of repeats){counts.set(id,(counts.get(id)||0)+1);if(counts.get(id)>2)throw new Error("Kategorie darf maximal dreimal vorkommen");}
   if(longExtras.some(c=>!c||typeof c.id!=="string"||!c.id||typeof c.label!=="string"||!c.label))throw new Error("Ungültige Zusatzkategorie");
-  if(22+longRepeatIds.length+longExtras.length!==44)throw new Error("Lang muss genau 44 Felder haben");
-  const categories=[...base,...longRepeatIds.map(id=>byId.get(id)),...longExtras];
-  if(new Set([...base,...longExtras].map(c=>c.id)).size!==22+longExtras.length)throw new Error("Zusatzkategorie-ID ist bereits belegt");
+  if(new Set([...base,...longExtras].map(c=>c.id)).size!==22+LONG_EXTRA_COUNT)throw new Error("Zusatzkategorie-ID ist bereits belegt");
+  const categories=[...base,...repeats.map(id=>byId.get(id)),...longExtras];
   return {mode,upperBonusEnabled:true,slots:shuffle(categories,random).map(makeSlot),blockCount:1};
  }
  throw new RangeError("Unbekannter Spielmodus");
