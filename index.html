@@ -35,6 +35,17 @@ p{color:#aeb9d2;line-height:1.5}.tag{color:#a5efcf;font-size:.85rem;letter-spaci
 .toolbar button span{display:block;width:max-content;max-width:100%;margin-inline:auto;text-align:center}
 .toolbar button[aria-pressed=true]{color:#f1fff5;text-shadow:0 0 10px rgba(147,255,187,.19)}
 .heading.score.active,.score.active{background-color:#25493d}
+/* Keep the category labels visible when the score columns move horizontally. */
+.board>.category,.board>.section:not(.score){position:sticky;left:0;z-index:4;min-width:0;overflow-wrap:anywhere;box-shadow:3px 0 9px rgba(8,15,28,.35)}
+.board>.heading.category{z-index:6;background:#293954}
+.board>.section:not(.score){background:#32405b}
+.board>.category:not(.heading){background:#1d2940}
+.board{grid-template-columns:minmax(165px,1.4fr) repeat(3,minmax(90px,1fr))}
+.board[data-active="0"]{grid-template-columns:minmax(165px,1.4fr) minmax(148px,1.4fr) repeat(2,minmax(80px,.75fr))}
+.board[data-active="1"]{grid-template-columns:minmax(165px,1.4fr) minmax(80px,.75fr) minmax(148px,1.4fr) minmax(80px,.75fr)}
+.board[data-active="2"]{grid-template-columns:minmax(165px,1.4fr) repeat(2,minmax(80px,.75fr)) minmax(148px,1.4fr)}
+.droplet{background:linear-gradient(115deg,rgba(116,224,168,.48),rgba(35,117,89,.37) 38%,rgba(39,132,99,.42) 70%,rgba(128,242,179,.46));border:1px solid rgba(140,236,188,.78);box-shadow:inset 2px 2px 3px rgba(225,255,235,.46),inset -3px -3px 5px rgba(22,90,68,.35),0 5px 14px rgba(8,34,23,.23)}
+.liquid-bridge path{fill:rgba(50,143,105,.34);stroke:rgba(144,238,188,.65)}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -104,15 +115,22 @@ function moveDroplet(initial=false){
 function focusColumn(){
  const heading=board.querySelectorAll(".heading.score")[active];
  if(!heading)return;
- const desired=heading.offsetLeft+heading.offsetWidth/2-viewport.clientWidth/2;
+ const labelWidth=board.querySelector(".heading.category")?.offsetWidth||160;
+ const visibleStart=viewport.scrollLeft+labelWidth+12;
+ const visibleEnd=viewport.scrollLeft+viewport.clientWidth-12;
+ const columnStart=heading.offsetLeft;
+ const columnEnd=columnStart+heading.offsetWidth;
+ let desired=viewport.scrollLeft;
+ if(columnEnd>visibleEnd)desired=columnEnd-viewport.clientWidth+12;
+ else if(columnStart<visibleStart)desired=columnStart-labelWidth-12;
  viewport.scrollTo({left:Math.max(0,desired),behavior:reduced.matches?"instant":"smooth"});
 }
 function activate(i){
  if(active===i)return;
  active=i;
  board.dataset.active=String(active);
- board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);if(cell.classList.contains("heading"))cell.textContent=players[index].name+(index===active?" · am Zug":"");if(cell.classList.contains("section"))cell.textContent=index===active?"●":"";});
- controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.querySelector("span").textContent=players[j].name+(j===active?" · am Zug":"");});
+ board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);if(cell.classList.contains("heading"))cell.textContent=players[index].name;if(cell.classList.contains("section"))cell.textContent=index===active?"●":"";});
+ controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.querySelector("span").textContent=players[j].name;});
  moveDroplet();
  // Follow the moving column after the CSS grid transition has reached its destination.
  if(reduced.matches)focusColumn();else{requestAnimationFrame(focusColumn);setTimeout(focusColumn,480);}
@@ -122,7 +140,7 @@ function draw(){
  board.dataset.active=String(active);board.replaceChildren();
  const add=(value,cls,playerIndex=null)=>{const el=document.createElement("div");el.className="cell "+cls;el.textContent=value;if(playerIndex!==null)el.dataset.player=String(playerIndex);board.append(el);};
  add("Kategorie","heading category");
- players.forEach((p,i)=>add(p.name+(i===active?" · am Zug":""),"heading score"+(i===active?" active":""),i));
+ players.forEach((p,i)=>add(p.name,"heading score"+(i===active?" active":""),i));
  BASE_CATEGORY_NAMES.forEach((name,index)=>{
   if(index===0||index===6){
    add(index===0?"OBERER BLOCK":"UNTERER BLOCK","section");
@@ -132,7 +150,7 @@ function draw(){
   players.forEach((p,i)=>add(scores[i][name]??"–","score"+(i===active?" active":""),i));
  });
  controls.replaceChildren();bridge=document.createElementNS("http://www.w3.org/2000/svg","svg");bridge.classList.add("liquid-bridge");bridge.setAttribute("aria-hidden","true");bridgePath=document.createElementNS("http://www.w3.org/2000/svg","path");bridge.append(bridgePath);controls.append(bridge);droplet=document.createElement("div");droplet.className="droplet";droplet.setAttribute("aria-hidden","true");controls.append(droplet);players.forEach((p,i)=>{
-  const b=document.createElement("button");const span=document.createElement("span");span.textContent=p.name+(i===active?" · am Zug":"");b.append(span);b.setAttribute("aria-pressed",String(i===active));b.addEventListener("click",()=>activate(i));controls.append(b);
+  const b=document.createElement("button");const span=document.createElement("span");span.textContent=p.name;b.append(span);b.setAttribute("aria-pressed",String(i===active));b.addEventListener("click",()=>activate(i));controls.append(b);
  });
  requestAnimationFrame(()=>moveDroplet(true));
 }
