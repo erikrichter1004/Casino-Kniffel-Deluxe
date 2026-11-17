@@ -163,3 +163,11 @@
 - **Veröffentlichung und Abruf sind noch nicht bestätigt**; die öffentliche URL ließ sich in der verfügbaren Umgebung nicht zuverlässig aufrufen.
 - Bei ausbleibender Veröffentlichung unter Repository → Settings → Pages die Quelle **GitHub Actions** wählen und im Actions-Tab den Deploy-Workflow überprüfen.
 - Weitere Designfragen erst nach verifizierter Vorschau fortsetzen.
+
+## Feedback zur Glasblase — iPhone-Vorschau
+- Der Nutzer hat die tatsächliche GitHub-Pages-Vorschau auf dem iPhone gezeigt.
+- Glasblase soll **immer mittig hinter dem Text** liegen und ihre Breite an den aktuellen Namen einschließlich „am Zug“ anpassen.
+- **Weniger milchig**, transparentere, saubere hellgrüne Glasanmutung mit akzentuierten Licht-/Randkanten. Echte iOS-Lichtbrechung ist im Web nicht identisch reproduzierbar; nur visuelle Annäherung.
+- Beim Zugwechsel soll die Verformung **aus der Mitte des rechten beziehungsweise linken Randes** in Bewegungsrichtung wachsen, als schmaler flüssiger Ausläufer; danach kurzer Yo-Yo-/Feder-Nachlauf.
+- Umsetzung in `index.html`: dynamische Textbreitenmessung, zentrierte Position, animierte transparente Glasblase, SVG-Verbindung am mittleren Rand, federähnliche Bewegungsfunktion; reduzierte Animation bei Systemeinstellung.
+- Noch nicht auf echtem iPhone nach dem Update getestet.

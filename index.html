@@ -19,6 +19,15 @@ p{color:#aeb9d2;line-height:1.5}.tag{color:#a5efcf;font-size:.85rem;letter-spaci
 .heading.active{background:linear-gradient(140deg,rgba(148,233,232,.28),rgba(63,137,158,.3));transform:translateY(-2px);box-shadow:inset 0 1px rgba(255,255,255,.3)}.score.active{transition:background .5s,color .5s,font-size .5s,box-shadow .5s}.board{will-change:grid-template-columns}
 .section{background:#32405b;color:#c3d4f2;font-size:.78rem;font-weight:800;letter-spacing:.04em}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+.toolbar{align-items:stretch}
+.toolbar button{white-space:nowrap;text-align:center;padding:12px 5px;overflow:visible}
+.toolbar button span{display:inline-block;white-space:nowrap;position:relative;z-index:2}
+.droplet{top:6px;left:0;height:calc(100% - 12px);width:90px;border-radius:999px;background:linear-gradient(165deg,rgba(205,255,231,.23) 0%,rgba(152,255,208,.085) 45%,rgba(130,244,197,.12) 100%);border:1px solid rgba(188,255,216,.52);box-shadow:inset 0 2px 2px rgba(244,255,248,.55),inset 0 -2px 5px rgba(71,174,123,.23),0 5px 16px rgba(16,48,38,.18),0 0 12px rgba(124,245,180,.07);backdrop-filter:blur(3px) saturate(125%);-webkit-backdrop-filter:blur(3px) saturate(125%);transition:none;will-change:transform,width}
+.droplet:before{content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;box-shadow:inset 2px 0 3px rgba(255,255,255,.22),inset -3px 0 4px rgba(86,238,166,.23);background:linear-gradient(105deg,rgba(255,255,255,.16),transparent 28%,transparent 70%,rgba(218,255,234,.1))}
+.liquid-bridge{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:visible}
+.liquid-bridge path{fill:rgba(133,247,185,.17);stroke:rgba(198,255,220,.42);stroke-width:1.1}
+.toolbar button[aria-pressed=true]{color:#effff5;font-weight:700}
+@media(prefers-reduced-motion:reduce){.liquid-bridge{display:none}}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -36,12 +45,53 @@ const board=document.querySelector("#board"),controls=document.querySelector("#c
 let active=0;
 const viewport=document.querySelector("#viewport");
 const reduced=window.matchMedia("(prefers-reduced-motion: reduce)");
-let droplet;
-function moveDroplet(){
- const target=controls.querySelectorAll("button")[active];
- if(!target||!droplet)return;
- droplet.style.width=target.offsetWidth+"px";
- droplet.style.transform="translateX("+(target.offsetLeft-6)+"px)";
+let droplet,bridge,bridgePath,animationFrame=0;
+let position=0,width=90,velocity=0,widthVelocity=0;
+function bubbleTarget(i){
+ const button=controls.querySelectorAll("button")[i];
+ const span=button?.querySelector("span");
+ if(!button||!span)return {x:6,w:90};
+ const textWidth=span.getBoundingClientRect().width;
+ const w=Math.min(controls.clientWidth-12,Math.max(76,textWidth+34));
+ return {x:button.offsetLeft+(button.offsetWidth-w)/2,w};
+}
+function renderBubble(x,w){
+ droplet.style.width=w+"px";
+ droplet.style.transform="translate3d("+x+"px,0,0)";
+}
+function animateBubble(fromX,fromW,toX,toW){
+ cancelAnimationFrame(animationFrame);
+ if(reduced.matches){position=toX;width=toW;velocity=0;widthVelocity=0;bridgePath.setAttribute("d","");renderBubble(position,width);return;}
+ const startTime=performance.now(),duration=850;
+ const startCenter=fromX+fromW/2,endCenter=toX+toW/2;
+ const direction=Math.sign(endCenter-startCenter)||1;
+ function frame(now){
+  const t=Math.min(1,(now-startTime)/duration);
+  // Smooth position, small elastic overshoot and settling.
+  const move=1-Math.exp(-7*t)*(Math.cos(10*t)+.18*Math.sin(10*t));
+  const center=startCenter+(endCenter-startCenter)*move;
+  const stretch=Math.sin(Math.PI*Math.min(1,t/.76))**2;
+  const currentWidth=fromW+(toW-fromW)*(1-Math.min(1,t*1.5))+Math.abs(endCenter-startCenter)*.24*stretch;
+  const x=center-currentWidth/2;
+  position=x;width=currentWidth;
+  renderBubble(x,currentWidth);
+  // The liquid filament grows from the middle of the leading edge, never from the bottom.
+  if(t>.04&&t<.75){
+   const edge=center+direction*currentWidth/2;
+   const reach=edge+direction*Math.max(0,Math.abs(endCenter-center)-toW*.28)*Math.sin(Math.PI*t/.75);
+   const y=controls.clientHeight/2;
+   const r=7*stretch;
+   bridgePath.setAttribute("d",`M ${edge} ${y-r} C ${edge+direction*18} ${y-r} ${reach-direction*18} ${y-3*stretch} ${reach} ${y} C ${reach-direction*18} ${y+3*stretch} ${edge+direction*18} ${y+r} ${edge} ${y+r} Z`);
+  }else bridgePath.setAttribute("d","");
+  if(t<1)animationFrame=requestAnimationFrame(frame);
+  else{position=toX;width=toW;renderBubble(position,width);bridgePath.setAttribute("d","");}
+ }
+ animationFrame=requestAnimationFrame(frame);
+}
+function moveDroplet(initial=false){
+ const target=bubbleTarget(active);
+ if(initial||reduced.matches){cancelAnimationFrame(animationFrame);position=target.x;width=target.w;renderBubble(position,width);bridgePath?.setAttribute("d","");}
+ else animateBubble(position,width,target.x,target.w);
 }
 function focusColumn(){
  const heading=board.querySelectorAll(".heading.score")[active];
@@ -54,8 +104,7 @@ function activate(i){
  active=i;
  board.dataset.active=String(active);
  board.querySelectorAll(".score").forEach(cell=>{const index=Number(cell.dataset.player);cell.classList.toggle("active",index===active);if(cell.classList.contains("heading"))cell.textContent=players[index].name+(index===active?" · am Zug":"");if(cell.classList.contains("section"))cell.textContent=index===active?"●":"";});
- controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.textContent=players[j].name+(j===active?" · am Zug":"");});
- droplet.classList.remove("traveling");void droplet.offsetWidth;droplet.classList.add("traveling");
+ controls.querySelectorAll("button").forEach((button,j)=>{button.setAttribute("aria-pressed",String(j===active));button.querySelector("span").textContent=players[j].name+(j===active?" · am Zug":"");});
  moveDroplet();
  // Follow the moving column after the CSS grid transition has reached its destination.
  if(reduced.matches)focusColumn();else{requestAnimationFrame(focusColumn);setTimeout(focusColumn,480);}
@@ -74,9 +123,11 @@ function draw(){
   add(name,"category");
   players.forEach((p,i)=>add(scores[i][name]??"–","score"+(i===active?" active":""),i));
  });
- controls.replaceChildren();droplet=document.createElement("div");droplet.className="droplet";droplet.setAttribute("aria-hidden","true");controls.append(droplet);players.forEach((p,i)=>{
-  const b=document.createElement("button");b.textContent=p.name+(i===active?" · am Zug":"");b.setAttribute("aria-pressed",String(i===active));b.addEventListener("click",()=>activate(i));controls.append(b);
+ controls.replaceChildren();bridge=document.createElementNS("http://www.w3.org/2000/svg","svg");bridge.classList.add("liquid-bridge");bridge.setAttribute("aria-hidden","true");bridgePath=document.createElementNS("http://www.w3.org/2000/svg","path");bridge.append(bridgePath);controls.append(bridge);droplet=document.createElement("div");droplet.className="droplet";droplet.setAttribute("aria-hidden","true");controls.append(droplet);players.forEach((p,i)=>{
+  const b=document.createElement("button");const span=document.createElement("span");span.textContent=p.name+(i===active?" · am Zug":"");b.append(span);b.setAttribute("aria-pressed",String(i===active));b.addEventListener("click",()=>activate(i));controls.append(b);
  });
+ requestAnimationFrame(()=>moveDroplet(true));
 }
 draw();
+window.addEventListener("resize",()=>moveDroplet(true));
 </script></body></html>
