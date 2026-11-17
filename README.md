@@ -2,7 +2,8 @@
 
 ## Bestätigte Spielregeln
 - Host/Beitreten/Solo, Host wählt Spieldauer und Casino-Aktionsgrad.
-- **Sechs W6, standardmäßig maximal drei Würfe pro Zug**; der Host kann optional **zwei, drei oder vier** einstellen. Würfel lassen sich zwischen Würfen festhalten und freigeben.
+- **Mehrspieler standardmäßig mit sechs echten Würfeln**, digitale Würfel sind als optionale Host-Einstellung für Tests vorgesehen; ihre Oberfläche wird später entwickelt.
+- **Standardmäßig maximal drei Würfe pro Zug**; der Host kann optional **zwei, drei oder vier** einstellen. Bei digitalen Würfeln lassen sich Würfel zwischen Würfen festhalten und freigeben.
 - Kurz 11 zufällige Kategorien ohne oberen Bonus; Standard 22 Grundkategorien.
 - Lang ein einzelner 44-Felder-Block: 22 Originalfelder + 14 Wiederholungen + 8 zufällig aus dem gesamten bestätigten Zusatzkatalog gezogene neue Kategorien.
 

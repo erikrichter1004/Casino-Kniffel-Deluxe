@@ -16,7 +16,7 @@ test("Feldanzahl muss positiv und ganzzahlig sein",()=>{
 test("Konfiguration wird unveränderlich aktualisiert",()=>{
  const l=createHostLobby({hostId:"a",hostName:"Anna"});
  const next=configureLobby(l,{actorId:"a",fieldCount:12,actionLevel:"light"});
- assert.equal(l.settings.fieldCount,null);assert.deepEqual(next.settings,{fieldCount:12,actionLevel:"light"});assert.equal(next.revision,1);
+ assert.equal(l.settings.fieldCount,null);assert.deepEqual(next.settings,{fieldCount:12,actionLevel:"light",maxRolls:3,diceMode:"physical"});assert.equal(next.revision,1);
 });
 test("Freigabe erst nach vollständiger Host-Konfiguration",()=>{
  const l=createHostLobby({hostId:"a",hostName:"Anna"});
@@ -27,4 +27,19 @@ test("Freigabe erst nach vollständiger Host-Konfiguration",()=>{
 test("Beitrittsabsicht und Solo-Setup sind getrennt",()=>{
  assert.deepEqual(createJoinIntent({code:" ABC ",playerName:" Max "}),{type:"join",code:"ABC",playerName:"Max"});
  assert.equal(createSoloSetup().type,"solo");
+});
+
+test("Frage 16: Mehrspieler standardmäßig mit echten Würfeln",()=>{
+ const l=createHostLobby({hostId:"a",hostName:"Anna"});
+ assert.equal(l.settings.diceMode,"physical");
+ assert.equal(l.settings.maxRolls,3);
+});
+test("Frage 16: Host kann digital einstellen und später zurückwechseln",()=>{
+ const l=createHostLobby({hostId:"a",hostName:"Anna"});
+ const digital=configureLobby(l,{actorId:"a",fieldCount:22,actionLevel:"light",diceMode:"digital"});
+ assert.equal(digital.settings.diceMode,"digital");
+ assert.equal(l.settings.diceMode,"physical");
+ const physical=configureLobby(digital,{actorId:"a",fieldCount:22,actionLevel:"light",diceMode:"physical"});
+ assert.equal(physical.settings.diceMode,"physical");
+ assert.throws(()=>configureLobby(l,{actorId:"a",fieldCount:22,actionLevel:"light",diceMode:"unknown"}),/Würfelmodus/);
 });

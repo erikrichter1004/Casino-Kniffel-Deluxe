@@ -102,5 +102,13 @@
 - `src/lobby.js` speichert die Wurfgrenze mit dem Standardwert drei in den Lobby-Einstellungen.
 - Testfälle für Standard, Optionen, Würfe und Festhalten ergänzt.
 
-## Frage 16 — offen
-Sollen Würfe ausschließlich durch Tippen auf einen Würfel-Button ausgelöst werden oder zusätzlich durch Schütteln des Smartphones?
+## Frage 16 — echte Würfel standardmäßig, digitale optional
+- **Mehrspieler-Standard ist das klassische Spielen mit sechs echten Würfeln**; die Website übernimmt die Spielverwaltung und Wertung, nicht den physischen Würfelwurf.
+- Der Host kann in der Lobby optional **digitale Würfel** auswählen, insbesondere zum Testen der Website.
+- Digitale Würfel sind **nicht der Entwicklungsfokus**; keine Entscheidung zu Schüttelsteuerung oder Würfelanimationen.
+- Standardmäßig gelten weiterhin **drei Würfe pro Zug**, optional zwei oder vier.
+- Die Lobby-Konfiguration speichert `diceMode: "physical" | "digital"`, standardmäßig `physical`; Wechsel nur durch Host während der Konfiguration.
+- Die bisherige digitale Würfelzug-Logik bleibt für spätere Nutzung vorhanden, aber eine Oberfläche dafür wird zurückgestellt.
+
+## Frage 17 — offen
+Wie sollen Spieler bei echten Würfeln ihre Ergebnisse in die Website eintragen: sechs Augenzahlen auswählen oder nur die gewünschte Wertungskategorie samt Punkten bestätigen?
