@@ -146,6 +146,8 @@ body{overflow-x:hidden}
 .glass-symbol{will-change:filter}
 .board>.score{backface-visibility:hidden}
 @media(prefers-reduced-motion:reduce){.droplet,.glass-die,.glass-symbol{will-change:auto}}
+/* Fluid capsule: soft surface tension while it stretches and settles. */
+.droplet{transition:none!important;transform-origin:center;contain:paint;border-radius:999px;box-shadow:inset 0 2px 4px rgba(228,255,237,.52),inset 0 -4px 7px rgba(18,95,59,.34),0 4px 13px rgba(0,0,0,.18),0 0 12px rgba(57,244,144,.22)}
 </style></head><body><main>
 <div class="tag">Interaktive Liquid-Glass-inspirierte Vorschau · Frage 20</div><h1>Casino Kniffel Deluxe</h1>
 <p>Alle Spieler sind nebeneinander sichtbar. Der aktive Spieler wird größer und hervorgehoben. Der glasartige Tropfen gleitet beim Zugwechsel zum nächsten Namen; die aktive Spalte wird weich vergrößert und automatisch ins Sichtfeld bewegt. Dies ist noch keine spielbare Partie.</p>
@@ -179,22 +181,37 @@ function renderBubble(x,w){
 }
 function animateBubble(fromX,fromW,toX,toW){
  cancelAnimationFrame(animationFrame);
- if(reduced.matches){position=toX;width=toW;velocity=0;widthVelocity=0;bridgePath.setAttribute("d","");renderBubble(position,width);return;}
- const startTime=performance.now(),duration=390;
- const startCenter=fromX+fromW/2,endCenter=toX+toW/2;
- 
+ if(reduced.matches){position=toX;width=toW;renderBubble(position,width);return;}
+ const duration=590,startTime=performance.now();
+ const fromRight=fromX+fromW,toRight=toX+toW;
+ const forward=toX>=fromX;
+ const ease=t=>1-Math.pow(1-Math.max(0,Math.min(1,t)),3);
+ const clamp=(n,min,max)=>Math.min(max,Math.max(min,n));
+ const limit=controls.clientWidth-6;
  function frame(now){
-  const t=Math.min(1,(now-startTime)/duration);
-  // Smooth position, small elastic overshoot and settling.
-  const move=1-Math.pow(1-t,4);
-  const center=startCenter+(endCenter-startCenter)*move;
-  const stretch=Math.sin(Math.PI*Math.min(1,t/.78))**2;
-  const currentWidth=fromW+(toW-fromW)*(1-Math.min(1,t*1.5))+Math.min(22,Math.abs(endCenter-startCenter)*.12)*stretch;
-  const x=center-currentWidth/2;
-  position=x;width=currentWidth;
-  renderBubble(x,currentWidth);
+  const t=clamp((now-startTime)/duration,0,1);
+  // The leading edge reaches first; the trailing edge follows like elastic water.
+  const head=ease(t/.57),tail=ease((t-.16)/.63);
+  let left,right;
+  if(forward){
+   left=fromX+(toX-fromX)*tail;
+   right=fromRight+(toRight-fromRight)*head;
+  }else{
+   left=fromX+(toX-fromX)*head;
+   right=fromRight+(toRight-fromRight)*tail;
+  }
+  // Small, quickly damped bounce after the liquid collects at the target.
+  if(t>.63){
+   const u=(t-.63)/.37;
+   const bounce=Math.sin(u*Math.PI*3)*Math.pow(1-u,2)*9*(forward?1:-1);
+   left+=bounce;right+=bounce;
+  }
+  left=clamp(left,6,limit-24);
+  right=clamp(right,left+24,limit);
+  position=left;width=right-left;
+  renderBubble(position,width);
   if(t<1)animationFrame=requestAnimationFrame(frame);
-  else{position=toX;width=toW;renderBubble(position,width);bridgePath.setAttribute("d","");}
+  else{position=toX;width=toW;renderBubble(position,width);}
  }
  animationFrame=requestAnimationFrame(frame);
 }
