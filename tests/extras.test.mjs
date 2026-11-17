@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {APPROVED_EXTRAS,HELD_FOR_REVIEW,matchesExtraCategory as match,scoreExtraCategory as score} from "../src/extras.js";
+import {APPROVED_EXTRAS,EXTRA_PROPOSALS,HELD_FOR_REVIEW,matchesExtraCategory as match,scoreExtraCategory as score} from "../src/extras.js";
 test("Drei bestätigte Zusatzkategorien mit festen Punkten",()=>{
  assert.deepEqual(APPROVED_EXTRAS.map(c=>c.points),[45,35,35]);
  assert.ok(APPROVED_EXTRAS.every(c=>c.status==="approved"));
@@ -23,4 +23,23 @@ test("Sechs gerade und sechs ungerade",()=>{
 test("Ungültige Würfel und unbestätigte Kategorie abweisen",()=>{
  for(const dice of [[1,2,3],[1,2,3,4,5,7],[1,2,3,4,5,2.5]])assert.throws(()=>score("all_even",dice),/sechs Würfel/);
  assert.throws(()=>score("three_distinct_pairs",[1,1,2,2,3,3]),/Keine bestätigte/);
+});
+
+test("Doppelte Mini-Straße: zwei disjunkte Dreierfolgen",()=>{
+ assert.equal(match("double_mini_straight",[1,2,3,4,5,6]),true);
+ assert.equal(match("double_mini_straight",[1,2,3,2,3,4]),true);
+ assert.equal(match("double_mini_straight",[1,2,3,1,2,3]),true);
+ assert.equal(match("double_mini_straight",[1,1,1,2,3,4]),false);
+ assert.equal(match("double_mini_straight",[1,2,3,3,5,6]),false);
+});
+test("Niedrige und hohe Zahlen mit genau sechs Würfeln",()=>{
+ assert.equal(match("all_low",[1,1,2,2,3,3]),true);
+ assert.equal(match("all_low",[1,1,2,2,3,4]),false);
+ assert.equal(match("all_high",[4,4,5,5,6,6]),true);
+ assert.equal(match("all_high",[3,4,5,5,6,6]),false);
+});
+test("Vorschläge dürfen noch keine Punkte erhalten",()=>{
+ assert.equal(EXTRA_PROPOSALS.length,3);
+ assert.ok(EXTRA_PROPOSALS.every(c=>c.status==="proposal"&&c.points===null));
+ assert.throws(()=>score("all_low",[1,1,2,2,3,3]),/Keine bestätigte/);
 });
