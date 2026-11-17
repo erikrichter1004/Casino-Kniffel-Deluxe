@@ -226,8 +226,19 @@ main{max-width:980px}
 @keyframes card-drift{0%,100%{transform:translateX(var(--fan-x)) rotate(var(--fan-r)) translateY(0) scale(1)}50%{transform:translateX(var(--fan-x)) rotate(var(--fan-r)) translateY(-5px) scale(1.035)}}
 .action-caption{font-size:1.05rem;letter-spacing:.095em}
 @media(prefers-reduced-motion:reduce){.card-fan,.mystery-card,.mystery-card::before,.mystery-card::after{animation:none!important}}
+/* Optional static, screen-spanning gradients; animated card rainbow stays unchanged. */
+.gradient-presets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}
+.gradient-presets button{min-height:47px;border:1px solid #ffffff55;border-radius:12px;background:var(--swatch-gradient);color:#fff;font-weight:750;text-shadow:0 1px 4px #000b;cursor:pointer}
+.gradient-presets button[aria-pressed=true]{outline:2px solid white;outline-offset:2px}
+.gradient-theme body{background:radial-gradient(ellipse at 50% 0%,#283046,#0d101b 65%)}
+.gradient-theme .viewport{border-color:transparent!important;background:linear-gradient(#101924,#101924) padding-box,var(--theme-gradient) border-box!important;border:2px solid transparent!important;box-shadow:0 0 20px rgba(var(--accent-rgb),.28),0 14px 35px #0008!important}
+.gradient-theme .board{position:relative;isolation:isolate}
+.gradient-theme .board::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:var(--theme-gradient);opacity:.18;mix-blend-mode:screen}
+.gradient-theme .board>.score.active{background:linear-gradient(90deg,rgba(var(--accent-rgb),.20),#08151b 16%,#08151b 84%,rgba(var(--accent-rgb),.20))!important}
+.gradient-theme .toolbar{border-color:rgba(var(--accent-rgb),.55)}
+.gradient-theme .droplet{background:linear-gradient(145deg,#ffffff50,rgba(var(--accent-rgb),.34),#ffffff12)!important}
 </style></head><body><main>
-<dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
+<dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
 <div class="board" id="board" data-active="0"></div></div>
 <footer class="game-footer"><button id="settings-open" class="settings-gear" type="button" aria-label="Einstellungen öffnen" title="Einstellungen">⚙</button></footer>
@@ -366,7 +377,7 @@ function draw(){
 
 // Player-specific visual and audio preferences (local to this browser).
 const preferenceKey="casino-kniffel-device-settings-v1";
-const defaults={color:"#36e68a",sound:true};
+const defaults={color:"#36e68a",gradient:"",sound:true};
 let preferences={...defaults};
 try{preferences={...defaults,...JSON.parse(localStorage.getItem(preferenceKey)||"{}")};}catch{}
 const currentPrefs=()=>preferences;
@@ -378,7 +389,11 @@ function applyTheme(){
  document.documentElement.style.setProperty("--accent",p.color);
  document.documentElement.style.setProperty("--accent-rgb",rgb.join(","));
  document.documentElement.style.setProperty("--accent-soft","rgb("+light.join(",")+")");
+ const selected=gradientThemes[p.gradient];
+ document.documentElement.classList.toggle("gradient-theme",!!selected);
+ document.documentElement.style.setProperty("--theme-gradient",selected?.gradient||"none");
  colorPicker.value=p.color;soundToggle.checked=p.sound;
+ document.querySelectorAll("#gradient-presets button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.gradient===p.gradient)));
  document.querySelectorAll("#color-presets button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.color===p.color)));
 }
 function savePreference(key,value){
@@ -386,9 +401,11 @@ function savePreference(key,value){
  try{localStorage.setItem(preferenceKey,JSON.stringify(preferences));}catch{}
  applyTheme();
 }
+const gradientThemes={rainbow:{name:"Regenbogen",color:"#a16aff",gradient:"linear-gradient(130deg,#ff5a83 0%,#ffca59 18%,#7bf8a1 38%,#52ddff 58%,#807aff 77%,#e975ef 100%)"},violetblue:{name:"Lila → Blau",color:"#9270ff",gradient:"linear-gradient(135deg,#d06aff,#6b7bff 52%,#34c8ff)"},sunset:{name:"Sonnenuntergang",color:"#ff8295",gradient:"linear-gradient(135deg,#ff579d,#ff8d61 52%,#ffe16e)"},aurora:{name:"Polarlicht",color:"#36dfb9",gradient:"linear-gradient(135deg,#2af4b0,#37b9e9 48%,#a16eff)"},fire:{name:"Feuer",color:"#ff724c",gradient:"linear-gradient(135deg,#ff3d72,#ff8045 55%,#ffe257)"}};
 const swatches=["#36e68a","#00cfff","#3978ff","#b45aff","#ff43b4","#ff5262","#ff9d30","#ffe34d","#ffffff"];
-for(const color of swatches){const b=document.createElement("button");b.type="button";b.dataset.color=color;b.style.setProperty("--swatch",color);b.title=color;b.setAttribute("aria-label","Farbe "+color);b.addEventListener("click",()=>{savePreference("color",color);playEffect("tap");});document.querySelector("#color-presets").append(b);}
-colorPicker.addEventListener("input",()=>savePreference("color",colorPicker.value));
+for(const color of swatches){const b=document.createElement("button");b.type="button";b.dataset.color=color;b.style.setProperty("--swatch",color);b.title=color;b.setAttribute("aria-label","Farbe "+color);b.addEventListener("click",()=>{preferences.gradient="";savePreference("color",color);playEffect("tap");});document.querySelector("#color-presets").append(b);}
+colorPicker.addEventListener("input",()=>{preferences.gradient="";savePreference("color",colorPicker.value);});
+for(const [id,theme] of Object.entries(gradientThemes)){const b=document.createElement("button");b.type="button";b.dataset.gradient=id;b.textContent=theme.name;b.style.setProperty("--swatch-gradient",theme.gradient);b.addEventListener("click",()=>{preferences={...preferences,gradient:id,color:theme.color};try{localStorage.setItem(preferenceKey,JSON.stringify(preferences));}catch{}applyTheme();playEffect("tap");});document.querySelector("#gradient-presets").append(b);}
 soundToggle.addEventListener("change",()=>{savePreference("sound",soundToggle.checked);if(soundToggle.checked)playEffect("tap");});
 document.querySelector("#settings-open").addEventListener("click",()=>{applyTheme();dialog.showModal();playEffect("tap");});
 document.querySelector("#settings-close").addEventListener("click",()=>{playEffect("tap");dialog.close();});
