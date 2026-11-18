@@ -429,8 +429,28 @@ main{max-width:980px}
 /* Expose the underlying reforming fan during the last half of the overlay exit. */
 .reveal-overlay.is-closing{animation:reveal-close-overlay .85s cubic-bezier(.45,0,.5,1) forwards}
 @media(prefers-reduced-motion:reduce){.action-draw.fan-reforming .card-fan,.action-draw.fan-reforming .mystery-card{animation:none!important}}
+
+.audio-controls{display:grid;gap:10px;margin:14px 0;padding:14px;border-radius:13px;background:#101b2a;border:1px solid #ffffff24}
+.audio-controls label{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.audio-controls input{width:100%;accent-color:var(--accent)}
+.audio-controls select{background:#172235;border:1px solid #ffffff45;color:#fff;border-radius:9px;padding:10px;font:inherit}
+/* End frames match the actual CSS resting coordinates exactly, preventing final-frame snapping. */
+.action-draw.fan-reforming .card-fan{animation:fan-reform-stable .85s ease-out both!important}
+.action-draw.fan-reforming .mystery-card.front{animation:fan-reform-center-stable .85s ease-out both!important}
+.action-draw.fan-reforming .mystery-card.back{animation:fan-reform-left-stable .85s ease-out both!important}
+.action-draw.fan-reforming .mystery-card.middle{animation:fan-reform-right-stable .85s ease-out both!important}
+@keyframes fan-reform-stable{0%{transform:translateY(10px) scale(.84)}65%{transform:translateY(0) scale(1)}100%{transform:translateY(0) scale(1)}}
+@keyframes fan-reform-center-stable{0%{transform:translateX(0) rotate(0deg) rotateY(180deg) scale(1.07)}70%{transform:translateX(0) rotate(0deg) rotateY(360deg) scale(1)}100%{transform:translateX(0) rotate(0deg) rotateY(360deg) scale(1)}}
+@keyframes fan-reform-left-stable{0%,30%{transform:translateX(0) rotate(0deg) scale(.92);opacity:0}75%,100%{transform:translateX(-54px) rotate(-19deg) scale(1);opacity:1}}
+@keyframes fan-reform-right-stable{0%,30%{transform:translateX(0) rotate(0deg) scale(.92);opacity:0}75%,100%{transform:translateX(54px) rotate(19deg) scale(1);opacity:1}}
+/* Resting fan is briefly held still after reassembly, then resumes its floating loop. */
+.action-draw.fan-settling .card-fan,.action-draw.fan-settling .mystery-card{animation:none!important}
+.action-draw.fan-settling .mystery-card{filter:brightness(1)}
+.action-draw.fan-settling .mystery-card.back{transform:translateX(-54px) rotate(-19deg)}
+.action-draw.fan-settling .mystery-card.middle{transform:translateX(54px) rotate(19deg)}
+.action-draw.fan-settling .mystery-card.front{transform:translateX(0) rotate(0)}
 </style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="legendary-atmosphere" aria-hidden="true"><span></span><span></span><span></span></div><div class="reveal-stage"><div class="rarity-sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="reveal-rotator"><div class="reveal-face front"><span class="card-sheen"></span>?</div><div class="reveal-face back"><span class="card-sheen"></span><span class="crystal-facets" aria-hidden="true"></span><span id="reveal-event-icon" class="reveal-event-icon">✦</span><span id="reveal-event-name">MYSTERY</span><small id="reveal-event-description">Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><div class="reveal-demo-note" id="reveal-demo-note"></div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><main>
-<dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><div class="rarity-test-settings"><label class="setting-label" for="rarity-test-select">Karten-Testmodus (nur Vorschau)</label><select id="rarity-test-select"><option value="random">Zufällige Seltenheit (55 / 30 / 11 / 3 / 1 %)</option><option value="base">Basis</option><option value="silver">Silber</option><option value="gold">Gold</option><option value="diamond">Diamant</option><option value="legendary">Legendär</option></select><small>Testet nur die Animation. Keine Auswirkung auf spätere echte Spiele.</small></div><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
+<dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><div class="audio-controls"><label for="sound-volume">Gesamtlautstärke <output id="sound-volume-value">70 %</output></label><input id="sound-volume" type="range" min="0" max="100" step="5" value="70"><label for="sound-intensity">Sound-Intensität</label><select id="sound-intensity"><option value="subtle">Dezent</option><option value="normal" selected>Normal</option><option value="spectacular">Spektakulär</option></select></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><div class="rarity-test-settings"><label class="setting-label" for="rarity-test-select">Karten-Testmodus (nur Vorschau)</label><select id="rarity-test-select"><option value="random">Zufällige Seltenheit (55 / 30 / 11 / 3 / 1 %)</option><option value="base">Basis</option><option value="silver">Silber</option><option value="gold">Gold</option><option value="diamond">Diamant</option><option value="legendary">Legendär</option></select><small>Testet nur die Animation. Keine Auswirkung auf spätere echte Spiele.</small></div><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
 <div class="board" id="board" data-active="0"></div></div>
 <footer class="game-footer"><button id="settings-open" class="settings-gear" type="button" aria-label="Einstellungen öffnen" title="Einstellungen">⚙</button></footer>
@@ -570,7 +590,7 @@ function draw(){
 
 // Player-specific visual and audio preferences (local to this browser).
 const preferenceKey="casino-kniffel-device-settings-v1";
-const defaults={color:"#36e68a",gradient:"",sound:true};
+const defaults={color:"#36e68a",gradient:"",sound:true,volume:70,intensity:"normal"};
 let preferences={...defaults};
 try{preferences={...defaults,...JSON.parse(localStorage.getItem(preferenceKey)||"{}")};}catch{}
 const currentPrefs=()=>preferences;
@@ -587,6 +607,9 @@ function applyTheme(){
  document.documentElement.style.setProperty("--theme-gradient",selected?.gradient||"none");
  updateBoardNeon();
  colorPicker.value=p.color;soundToggle.checked=p.sound;
+ document.querySelector("#sound-volume").value=p.volume;
+ document.querySelector("#sound-volume-value").textContent=p.volume+" %";
+ document.querySelector("#sound-intensity").value=p.intensity;
  document.querySelectorAll("#gradient-presets button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.gradient===p.gradient)));
  document.querySelectorAll("#color-presets button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.color===p.color)));
 }
@@ -620,20 +643,23 @@ const swatches=["#36e68a","#00cfff","#3978ff","#b45aff","#ff43b4","#ff5262","#ff
 for(const color of swatches){const b=document.createElement("button");b.type="button";b.dataset.color=color;b.style.setProperty("--swatch",color);b.title=color;b.setAttribute("aria-label","Farbe "+color);b.addEventListener("click",()=>{preferences.gradient="";savePreference("color",color);playEffect("tap");});document.querySelector("#color-presets").append(b);}
 colorPicker.addEventListener("input",()=>{preferences.gradient="";savePreference("color",colorPicker.value);});
 for(const [id,theme] of Object.entries(gradientThemes)){const b=document.createElement("button");b.type="button";b.dataset.gradient=id;b.textContent=theme.name;b.style.setProperty("--swatch-gradient",theme.gradient);b.addEventListener("click",()=>{preferences={...preferences,gradient:id,color:theme.color};try{localStorage.setItem(preferenceKey,JSON.stringify(preferences));}catch{}applyTheme();playEffect("tap");});document.querySelector("#gradient-presets").append(b);}
+document.querySelector("#sound-volume").addEventListener("input",e=>savePreference("volume",Number(e.target.value)));
+document.querySelector("#sound-intensity").addEventListener("change",e=>savePreference("intensity",e.target.value));
 soundToggle.addEventListener("change",()=>{savePreference("sound",soundToggle.checked);if(soundToggle.checked)playEffect("tap");});
 document.querySelector("#settings-open").addEventListener("click",()=>{applyTheme();dialog.showModal();playEffect("tap");});
 document.querySelector("#settings-close").addEventListener("click",()=>{playEffect("tap");dialog.close();});
 document.querySelector("#sound-preview").addEventListener("click",()=>playEffect("switch"));
 let audioContext;
+function audioLevel(){const p=currentPrefs();return Math.max(0,Math.min(1,Number(p.volume??70)/100))*({subtle:.45,normal:1,spectacular:1.45}[p.intensity]||1);}
 function playEffect(type="tap"){
- if(!currentPrefs().sound)return;
+ if(!currentPrefs().sound||audioLevel()===0)return;
  try{
   audioContext??=new (window.AudioContext||window.webkitAudioContext)();
   if(audioContext.state==="suspended")audioContext.resume();
   const t=audioContext.currentTime,osc=audioContext.createOscillator(),gain=audioContext.createGain();
   osc.type="sine";osc.frequency.setValueAtTime(type==="switch"?390:660,t);
   osc.frequency.exponentialRampToValueAtTime(type==="switch"?850:510,t+(type==="switch"?.19:.065));
-  gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.065,t+.012);
+  gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.065*audioLevel(),t+.012);
   gain.gain.exponentialRampToValueAtTime(.0001,t+(type==="switch"?.22:.09));
   osc.connect(gain);gain.connect(audioContext.destination);osc.start(t);osc.stop(t+(type==="switch"?.24:.11));
  }catch{}
@@ -647,7 +673,7 @@ function cardSoundLater(delay,callback){
  cardSoundTimers.push(id);
 }
 function audioEngine(){
- if(!currentPrefs().sound)return null;
+ if(!currentPrefs().sound||audioLevel()===0)return null;
  try{
   audioContext??=new (window.AudioContext||window.webkitAudioContext)();
   if(audioContext.state==="suspended")audioContext.resume();
@@ -659,7 +685,7 @@ function cardTone(freq=600,duration=.22,volume=.035,wave="sine",delay=0,finishFr
  const t=ctx.currentTime+delay,o=ctx.createOscillator(),g=ctx.createGain();
  o.type=wave;o.frequency.setValueAtTime(Math.max(40,freq),t);
  if(finishFreq)o.frequency.exponentialRampToValueAtTime(Math.max(40,finishFreq),t+duration);
- g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(volume,t+.014);
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0001,volume*audioLevel()),t+.014);
  g.gain.exponentialRampToValueAtTime(.0001,t+duration);
  o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+duration+.02);
 }
@@ -671,7 +697,7 @@ function cardWhoosh(duration=.38,volume=.035){
  source.buffer=buffer;filter.type="bandpass";filter.Q.value=.75;
  filter.frequency.setValueAtTime(260,t);filter.frequency.exponentialRampToValueAtTime(1800,t+duration*.6);
  filter.frequency.exponentialRampToValueAtTime(420,t+duration);
- gain.gain.setValueAtTime(.0001,t);gain.gain.linearRampToValueAtTime(volume,t+duration*.3);
+ gain.gain.setValueAtTime(.0001,t);gain.gain.linearRampToValueAtTime(Math.max(.0001,volume*audioLevel()),t+duration*.3);
  gain.gain.exponentialRampToValueAtTime(.0001,t+duration);
  source.connect(filter);filter.connect(gain);gain.connect(ctx.destination);source.start(t);source.stop(t+duration);
 }
@@ -685,6 +711,7 @@ function playCardReveal(event){
  const rarity=event.rarity||"base",kind=event.kind||"twist";
  const duration=({base:2600,silver:3300,gold:4500,diamond:6500,legendary:7000}[rarity]||2600);
  cardWhoosh(.55,.04);
+ if(currentPrefs().intensity==="spectacular")cardTone(160,.8,.022,"triangle",0,460);
  cardSoundLater(Math.round(duration*.3),()=>{
   if(kind==="bonus"){cardTone(523,.48,.04,"sine");cardTone(784,.54,.026,"sine",.11);}
   else if(kind==="sabotage"){cardTone(230,.48,.045,"sawtooth",0,110);cardTone(180,.3,.02,"triangle",.15,85);}
@@ -726,7 +753,8 @@ function closeReveal(){
   revealClose.disabled=false;
   revealClosing=false;
   resetActionCards();
-  actionDraw.classList.remove("fan-reforming");
+  actionDraw.classList.add("fan-settling");
+  window.setTimeout(()=>actionDraw.classList.remove("fan-settling"),180);
   actionDraw.focus();
  },850);
 }
