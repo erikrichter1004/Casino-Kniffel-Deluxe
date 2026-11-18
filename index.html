@@ -652,6 +652,14 @@ main{max-width:980px}
 @keyframes tap-flash-fade{0%,15%{opacity:0}30%{opacity:1}100%{opacity:0}}
 @keyframes tap-flash-sweep{0%{transform:translateX(-65%) skewX(-14deg)}100%{transform:translateX(65%) skewX(-14deg)}}
 @media(prefers-reduced-motion:reduce){.action-draw.card-tapped .card-fan,.action-draw.card-tapped .fan-tap-flash,.action-draw.card-tapped .fan-tap-flash::before{animation:none!important}}
+
+/* All three cards remain one accessible tap target; the selected visual card is animated automatically. */
+.action-draw .card-fan,.action-draw .card-fan *{pointer-events:none}
+.action-draw.is-drawing[data-visual-pick="0"] .mystery-card.front{z-index:5}
+.action-draw.is-drawing[data-visual-pick="1"] .mystery-card.back{z-index:5}
+.action-draw.is-drawing[data-visual-pick="2"] .mystery-card.middle{z-index:5}
+.action-draw.is-drawing[data-visual-pick="1"] .mystery-card.back,
+.action-draw.is-drawing[data-visual-pick="2"] .mystery-card.middle{filter:brightness(1.18) drop-shadow(0 0 10px rgba(var(--accent-rgb),.65))}
 </style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="reveal-ambient" aria-hidden="true"></div><div class="card-flight-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="legendary-finale" aria-hidden="true"><div class="legendary-flash"></div><div class="legendary-shockwave"></div><div class="legendary-shockwave second"></div><div class="legendary-burst"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i><i style="--n:6"></i><i style="--n:7"></i><i style="--n:8"></i><i style="--n:9"></i><i style="--n:10"></i><i style="--n:11"></i><i style="--n:12"></i><i style="--n:13"></i><i style="--n:14"></i><i style="--n:15"></i></div></div><div class="legendary-atmosphere" aria-hidden="true"><span></span><span></span><span></span></div><div class="reveal-stage"><div class="rarity-sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="reveal-rotator"><div class="reveal-face front"><span class="card-sheen"></span>?</div><div class="reveal-face back"><span class="card-sheen"></span><span class="crystal-facets" aria-hidden="true"></span><span id="reveal-event-icon" class="reveal-event-icon">✦</span><span id="reveal-event-name">MYSTERY</span><small id="reveal-event-description">Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><div class="reveal-demo-note" id="reveal-demo-note"></div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><main>
 <dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><div class="audio-controls"><label for="sound-volume">Gesamtlautstärke <output id="sound-volume-value">70 %</output></label><input id="sound-volume" type="range" min="0" max="100" step="5" value="70"><label for="sound-intensity">Sound-Intensität</label><select id="sound-intensity"><option value="subtle">Dezent</option><option value="normal" selected>Normal</option><option value="spectacular">Spektakulär</option></select></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><div class="rarity-test-settings"><label class="setting-label" for="rarity-test-select">Karten-Testmodus (nur Vorschau)</label><select id="rarity-test-select"><option value="random">Zufällige Seltenheit (55 / 30 / 11 / 3 / 1 %)</option><option value="base">Basis</option><option value="silver">Silber</option><option value="gold">Gold</option><option value="diamond">Diamant</option><option value="legendary">Legendär</option></select><small>Testet nur die Animation. Keine Auswirkung auf spätere echte Spiele.</small></div><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="fan-tap-flash"></span><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
@@ -980,6 +988,7 @@ function closeReveal(){
   actionCaption.textContent="Aktionskarte ziehen";
   actionDraw.setAttribute("aria-label","Aktionskarte ziehen");
   actionStatus.textContent="";
+  delete actionDraw.dataset.visualPick;
   window.setTimeout(()=>{
    actionDraw.classList.remove("fan-spreading");
    actionDraw.focus();
@@ -1042,6 +1051,7 @@ function demoEvent(){
 function resetActionCards(){
  cardState="ready";pendingDemoEvent=null;
  actionDraw.classList.remove("is-drawing","single-mystery","draw-flip","draw-shuffle","draw-mystery","fan-reforming");
+ delete actionDraw.dataset.visualPick;
  actionCaption.textContent="Aktionskarte ziehen";
  actionDraw.setAttribute("aria-label","Aktionskarte ziehen");
  actionStatus.textContent="";
@@ -1049,7 +1059,7 @@ function resetActionCards(){
 revealClose.addEventListener("click",closeReveal);
 revealOverlay.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();closeReveal();}if(e.key==="Tab"){e.preventDefault();revealClose.focus();}});
 actionDraw.addEventListener("click",()=>{
- if(cardState==="drawing")return;
+ if(cardState==="drawing"||revealClosing||actionDraw.classList.contains("fan-spreading"))return;
  if(cardState==="pending"){
   // Preview only: no score entry exists yet, so reveal is an explicit test action.
   cardState="revealed";
@@ -1062,6 +1072,9 @@ actionDraw.addEventListener("click",()=>{
  cardState="drawing";
  const n=drawSequence++;
  const style=drawStyles[n%drawStyles.length];
+ // One shared hit area: the visual card chosen by the animation is independent of tap position.
+ const visualPick=n%3;
+ actionDraw.dataset.visualPick=String(visualPick);
  playCardDraw(style);
  // Alternating demonstration: normal event reveals immediately; mystery stays face down.
  const mystery=n%2===0;
