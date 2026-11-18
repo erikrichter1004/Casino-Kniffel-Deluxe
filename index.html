@@ -996,11 +996,27 @@ function closeReveal(){
  },850);
 }
 let revealDemoCount=0;
-const revealDemoEvents=[
- {kind:"bonus",icon:"✦",name:"BONUS",description:"Vorschau: Ein positiver Effekt wird hier verständlich erklärt."},
- {kind:"sabotage",icon:"⚡",name:"SABOTAGE",description:"Vorschau: Ein negativer Effekt wird hier verständlich erklärt."},
- {kind:"twist",icon:"◆",name:"ÜBERRASCHUNG",description:"Vorschau: Eine ungewöhnliche Regeländerung wird hier erklärt."}
-];
+// First playable-rule catalogue draft. Effects are displayed accurately; score application
+// awaits the real turn/score state and is intentionally not simulated.
+const EVENT_CATALOG=Object.freeze([
+ {id:"b01",kind:"bonus",icon:"✦",name:"Glückswurf",description:"Deine nächste verbindliche Wertung erhält +10 Punkte.",rule:{type:"nextScoreBonus",value:10},mystery:false},
+ {id:"b02",kind:"bonus",icon:"✦",name:"Doppelte Freude",description:"Verdopple die Punkte deiner nächsten verbindlichen Wertung (vor anderen Boni).",rule:{type:"nextScoreMultiplier",value:2},mystery:false},
+ {id:"b03",kind:"bonus",icon:"✦",name:"Kleiner Jackpot",description:"Erhalte nach deiner nächsten verbindlichen Wertung zusätzlich 15 Bonuspunkte.",rule:{type:"bonusAfterScore",value:15},mystery:false},
+ {id:"b04",kind:"bonus",icon:"✦",name:"Rettungsanker",description:"Falls deine nächste Wertung 0 Punkte ergibt, erhältst du stattdessen 12 Punkte.",rule:{type:"zeroRescue",value:12},mystery:false},
+ {id:"s01",kind:"sabotage",icon:"⚡",name:"Pechsträhne",description:"Von deiner nächsten verbindlichen Wertung werden 10 Punkte abgezogen (mindestens 0).",rule:{type:"nextScorePenalty",value:10},mystery:false},
+ {id:"s02",kind:"sabotage",icon:"⚡",name:"Halbiert!",description:"Die Punkte deiner nächsten verbindlichen Wertung werden halbiert und abgerundet.",rule:{type:"nextScoreMultiplier",value:.5},mystery:false},
+ {id:"s03",kind:"sabotage",icon:"⚡",name:"Casino-Steuer",description:"Nach deiner nächsten verbindlichen Wertung verlierst du 15 Gesamtpunkte (Gesamtstand mindestens 0).",rule:{type:"totalPenaltyAfterScore",value:15},mystery:false},
+ {id:"t01",kind:"twist",icon:"◆",name:"Alles oder nichts",description:"Ergibt deine nächste Wertung mindestens 20 Punkte, bekommst du +20 Bonuspunkte. Sonst gibt es keinen Bonus.",rule:{type:"thresholdBonus",threshold:20,value:20},mystery:false},
+ {id:"t02",kind:"twist",icon:"◆",name:"Gerade Zahl",description:"Ist deine nächste verbindliche Wertung gerade und größer als 0, bekommst du +12 Bonuspunkte.",rule:{type:"evenBonus",value:12},mystery:false},
+ {id:"m01",kind:"bonus",icon:"✦",name:"Geheimer Goldregen",description:"Mystery: Deine gerade verbindlich eingetragene Wertung erhält nachträglich +25 Bonuspunkte.",rule:{type:"postScoreBonus",value:25},mystery:true},
+ {id:"m02",kind:"sabotage",icon:"⚡",name:"Versteckte Falle",description:"Mystery: Von deiner gerade verbindlich eingetragenen Wertung werden nachträglich 20 Punkte abgezogen (mindestens 0).",rule:{type:"postScorePenalty",value:20},mystery:true},
+ {id:"m03",kind:"twist",icon:"◆",name:"Geheimer Multiplikator",description:"Mystery: Die gerade verbindlich eingetragene Wertung wird nachträglich verdoppelt.",rule:{type:"postScoreMultiplier",value:2},mystery:true}
+]);
+const revealDemoEvents=EVENT_CATALOG;
+function selectCatalogEvent(mystery){
+ const pool=EVENT_CATALOG.filter(e=>e.mystery===mystery);
+ return pool[Math.floor(Math.random()*pool.length)];
+}
 function startMysteryReveal({rare=false,event=revealDemoEvents[0]}={}){
  const rarity=event.rarity||"base";
  const seconds=({base:2.6,silver:3.3,gold:4.5,diamond:6.5,legendary:7}[rarity]||2.6);
@@ -1012,7 +1028,7 @@ function startMysteryReveal({rare=false,event=revealDemoEvents[0]}={}){
  document.querySelector("#reveal-event-icon").textContent=event.icon;
  document.querySelector("#reveal-event-name").textContent=event.name;
  document.querySelector("#reveal-event-description").textContent=event.description;
- document.querySelector("#reveal-demo-note").textContent=({base:"Basis · Theme-Farbe",silver:"Ungewöhnlich · Silber",gold:"Selten · Gold",diamond:"Extrem selten · Diamant",legendary:"Legendär · Prisma"}[rarity])+" · "+seconds.toLocaleString("de-DE")+" Sekunden · Vorschau";
+ document.querySelector("#reveal-demo-note").textContent=({base:"Basis · Theme-Farbe",silver:"Ungewöhnlich · Silber",gold:"Selten · Gold",diamond:"Extrem selten · Diamant",legendary:"Legendär · Prisma"}[rarity])+" · "+seconds.toLocaleString("de-DE")+" Sekunden · Regelvorschau – noch ohne Punktebuchung";
  revealOverlay.classList.remove("is-closing","is-idle");
  clearTimeout(idleRevealTimer);
  clearTimeout(anticipationTimer);
@@ -1043,10 +1059,10 @@ function drawWeightedRarity(){
  return rarityWeights[rarityWeights.length-1].id;
 }
 const rarityTestSelect=document.querySelector("#rarity-test-select");
-function demoEvent(){
- const n=revealDemoCount++;
+function demoEvent(mystery=false){
+ revealDemoCount++;
  const forced=rarityTestSelect.value;
- return {...revealDemoEvents[n%revealDemoEvents.length],rarity:forced==="random"?drawWeightedRarity():forced};
+ return {...selectCatalogEvent(mystery),rarity:forced==="random"?drawWeightedRarity():forced};
 }
 function resetActionCards(){
  cardState="ready";pendingDemoEvent=null;
@@ -1065,7 +1081,7 @@ actionDraw.addEventListener("click",()=>{
   cardState="revealed";
   // Keep the single covered card behind the overlay until the closing transition ends.
   startMysteryReveal({event:pendingDemoEvent});
-  actionStatus.textContent="Nur Test-Enthüllung – später erst nach verbindlicher Wertung.";
+  actionStatus.textContent="Mystery-Regelvorschau: Im echten Spiel erst nach verbindlicher Wertung.";
   return;
  }
  if(cardState==="revealed")resetActionCards();
@@ -1078,7 +1094,7 @@ actionDraw.addEventListener("click",()=>{
  playCardDraw(style);
  // Alternating demonstration: normal event reveals immediately; mystery stays face down.
  const mystery=n%2===0;
- pendingDemoEvent=demoEvent();
+ pendingDemoEvent=demoEvent(mystery);
  actionDraw.classList.remove("card-tapped","single-mystery",...drawStyles);
  void actionDraw.offsetWidth;
  actionDraw.classList.add("card-tapped");
