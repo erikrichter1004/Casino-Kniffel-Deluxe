@@ -245,6 +245,24 @@ main{max-width:980px}
 .gradient-theme .board>.score.active{background:linear-gradient(90deg,rgba(var(--accent-rgb),.20),#08151b 16%,#08151b 84%,rgba(var(--accent-rgb),.20))!important}
 .gradient-theme .toolbar{border-color:rgba(var(--accent-rgb),.55)}
 .gradient-theme .droplet{background:linear-gradient(145deg,#ffffff50,rgba(var(--accent-rgb),.34),#ffffff12)!important}
+/* Variable casino draw animations; preview only, no random game effects yet. */
+.action-draw{perspective:800px}
+.action-draw.is-drawing{pointer-events:none}
+.action-draw.is-drawing .card-fan{animation:none}
+.action-draw.draw-flip .mystery-card.front{animation:draw-flip 1.1s cubic-bezier(.2,.8,.2,1) both}
+.action-draw.draw-shuffle .mystery-card.back{animation:draw-shuffle-left 1.1s ease-in-out both}
+.action-draw.draw-shuffle .mystery-card.middle{animation:draw-shuffle-right 1.1s ease-in-out both}
+.action-draw.draw-shuffle .mystery-card.front{animation:draw-flip 1.1s ease-in-out both}
+.action-draw.draw-mystery .mystery-card.back{animation:draw-split-left 1.1s ease-in-out both}
+.action-draw.draw-mystery .mystery-card.middle{animation:draw-split-right 1.1s ease-in-out both}
+.action-draw.draw-mystery .mystery-card.front{animation:draw-mystery-focus 1.1s ease-in-out both}
+@keyframes draw-flip{0%{transform:translateX(0) rotateY(0) scale(1)}42%{transform:translateY(-25px) rotateY(90deg) scale(1.2)}75%{transform:translateY(-18px) rotateY(360deg) scale(1.25)}100%{transform:translateY(0) rotateY(360deg) scale(1)}}
+@keyframes draw-shuffle-left{0%,100%{transform:translateX(-54px) rotate(-19deg)}45%{transform:translateX(70px) rotate(28deg) translateY(-25px)}}
+@keyframes draw-shuffle-right{0%,100%{transform:translateX(54px) rotate(19deg)}45%{transform:translateX(-70px) rotate(-28deg) translateY(-25px)}}
+@keyframes draw-split-left{0%,100%{transform:translateX(-54px) rotate(-19deg)}55%{transform:translateX(-105px) rotate(-30deg)}}
+@keyframes draw-split-right{0%,100%{transform:translateX(54px) rotate(19deg)}55%{transform:translateX(105px) rotate(30deg)}}
+@keyframes draw-mystery-focus{0%,100%{transform:scale(1)}55%{transform:translateY(-22px) scale(1.32);filter:brightness(1.6)}}
+@media(prefers-reduced-motion:reduce){.action-draw.is-drawing .mystery-card{animation:none!important}}
 </style></head><body><main>
 <dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
@@ -455,7 +473,21 @@ function playEffect(type="tap"){
 }
 applyTheme();
 const actionDraw=document.querySelector("#action-draw");
-actionDraw.addEventListener("click",()=>{playEffect("tap");actionDraw.classList.remove("card-tapped");void actionDraw.offsetWidth;actionDraw.classList.add("card-tapped");document.querySelector("#action-status").textContent="Vorschau – echte Aktionskarten folgen mit der Spiellogik.";});
+let drawSequence=0;
+const drawStyles=["draw-flip","draw-shuffle","draw-mystery"];
+actionDraw.addEventListener("click",()=>{
+ if(actionDraw.classList.contains("is-drawing"))return;
+ playEffect("tap");
+ const style=drawStyles[drawSequence++%drawStyles.length];
+ actionDraw.classList.remove("card-tapped",...drawStyles);
+ void actionDraw.offsetWidth;
+ actionDraw.classList.add("is-drawing",style);
+ document.querySelector("#action-status").textContent="Ziehanimation – Vorschau";
+ window.setTimeout(()=>{
+  actionDraw.classList.remove("is-drawing",style);
+  document.querySelector("#action-status").textContent="Vorschau: Ereignislogik und Mystery-Enthüllung folgen.";
+ },1150);
+});
 draw();
 window.addEventListener("resize",()=>moveDroplet(true));
 </script></body></html>
