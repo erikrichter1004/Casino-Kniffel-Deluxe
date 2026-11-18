@@ -400,8 +400,22 @@ main{max-width:980px}
 @keyframes legendary-halo{to{box-shadow:inset 0 0 65px #b7e7ffb0,0 0 80px #e08affed}}
 @keyframes legendary-text-glow{to{text-shadow:0 0 35px #e6a5ff,0 0 60px #82dfff}}
 @media(prefers-reduced-motion:reduce){.card-sheen,.crystal-facets,.reveal-face::after,.legendary-atmosphere span,.reveal-overlay[data-rarity="legendary"] .reveal-face{animation:none!important}.legendary-atmosphere{opacity:.2!important}}
+
+.rarity-test-settings{margin-top:20px;padding:14px;border:1px solid rgba(var(--accent-rgb),.45);border-radius:14px;background:#0b1019}
+.rarity-test-settings .setting-label{display:block;margin-bottom:9px}
+.rarity-test-settings select{width:100%;padding:12px 9px;border-radius:10px;background:#141d2b;border:1px solid var(--accent);color:#f6f7ff;font-size:14px}
+.rarity-test-settings small{display:block;margin-top:8px;color:#b2bccb;line-height:1.4}
+.reveal-overlay.is-closing{animation:reveal-close-overlay .85s ease-in forwards;pointer-events:none}
+.reveal-overlay.is-closing .reveal-rotator{animation:reveal-close-card .85s cubic-bezier(.4,0,.65,1) forwards!important}
+.reveal-overlay.is-closing .reveal-title,.reveal-overlay.is-closing .reveal-demo-note,.reveal-overlay.is-closing .reveal-close{animation:reveal-close-copy .35s ease-in forwards!important}
+.reveal-overlay.is-closing .legendary-atmosphere{animation:reveal-close-copy .65s ease-in forwards}
+@keyframes reveal-close-card{0%{transform:translateY(0) scale(1) rotateY(900deg);opacity:1}42%{transform:translateY(-12px) scale(.94) rotateY(1080deg);opacity:1}100%{transform:translateY(-40px) scale(.35) rotateY(1260deg);opacity:0}}
+@keyframes reveal-close-copy{to{opacity:0;transform:translateY(12px)}}
+@keyframes reveal-close-overlay{0%,55%{opacity:1}100%{opacity:0}}
+/* Keep covered mystery card visible under the overlay while it closes. */
+@media(prefers-reduced-motion:reduce){.reveal-overlay.is-closing,.reveal-overlay.is-closing .reveal-rotator,.reveal-overlay.is-closing .reveal-title,.reveal-overlay.is-closing .reveal-demo-note,.reveal-overlay.is-closing .reveal-close{animation:none!important}}
 </style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="legendary-atmosphere" aria-hidden="true"><span></span><span></span><span></span></div><div class="reveal-stage"><div class="rarity-sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="reveal-rotator"><div class="reveal-face front"><span class="card-sheen"></span>?</div><div class="reveal-face back"><span class="card-sheen"></span><span class="crystal-facets" aria-hidden="true"></span><span id="reveal-event-icon" class="reveal-event-icon">✦</span><span id="reveal-event-name">MYSTERY</span><small id="reveal-event-description">Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><div class="reveal-demo-note" id="reveal-demo-note"></div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><main>
-<dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
+<dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><div class="rarity-test-settings"><label class="setting-label" for="rarity-test-select">Karten-Testmodus (nur Vorschau)</label><select id="rarity-test-select"><option value="random">Zufällige Seltenheit (55 / 30 / 11 / 3 / 1 %)</option><option value="base">Basis</option><option value="silver">Silber</option><option value="gold">Gold</option><option value="diamond">Diamant</option><option value="legendary">Legendär</option></select><small>Testet nur die Animation. Keine Auswirkung auf spätere echte Spiele.</small></div><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
 <div class="board" id="board" data-active="0"></div></div>
 <footer class="game-footer"><button id="settings-open" class="settings-gear" type="button" aria-label="Einstellungen öffnen" title="Einstellungen">⚙</button></footer>
@@ -618,7 +632,23 @@ let cardState="ready";
 let pendingDemoEvent=null;
 const revealOverlay=document.querySelector("#reveal-overlay");
 const revealClose=document.querySelector("#reveal-close");
-function closeReveal(){revealOverlay.hidden=true;revealClose.blur();actionDraw.focus();}
+let revealClosing=false;
+let revealCloseTimer=0;
+function closeReveal(){
+ if(revealClosing||revealOverlay.hidden)return;
+ revealClosing=true;
+ revealOverlay.classList.add("is-closing");
+ revealClose.disabled=true;
+ clearTimeout(revealCloseTimer);
+ revealCloseTimer=window.setTimeout(()=>{
+  revealOverlay.hidden=true;
+  revealOverlay.classList.remove("is-closing");
+  revealClose.disabled=false;
+  revealClosing=false;
+  resetActionCards();
+  actionDraw.focus();
+ },850);
+}
 let revealDemoCount=0;
 const revealDemoEvents=[
  {kind:"bonus",icon:"✦",name:"BONUS",description:"Vorschau: Ein positiver Effekt wird hier verständlich erklärt."},
@@ -637,6 +667,8 @@ function startMysteryReveal({rare=false,event=revealDemoEvents[0]}={}){
  document.querySelector("#reveal-event-name").textContent=event.name;
  document.querySelector("#reveal-event-description").textContent=event.description;
  document.querySelector("#reveal-demo-note").textContent=({base:"Basis · Theme-Farbe",silver:"Ungewöhnlich · Silber",gold:"Selten · Gold",diamond:"Extrem selten · Diamant",legendary:"Legendär · Prisma"}[rarity])+" · "+seconds.toLocaleString("de-DE")+" Sekunden · Vorschau";
+ revealOverlay.classList.remove("is-closing");
+ revealClosing=false;revealClose.disabled=false;
  revealOverlay.hidden=false;
  const rotator=revealOverlay.querySelector(".reveal-rotator");
  rotator.style.animation="none";void rotator.offsetWidth;rotator.style.animation="";
@@ -654,9 +686,11 @@ function drawWeightedRarity(){
  for(const tier of rarityWeights){roll-=tier.weight;if(roll<0)return tier.id;}
  return rarityWeights[rarityWeights.length-1].id;
 }
+const rarityTestSelect=document.querySelector("#rarity-test-select");
 function demoEvent(){
  const n=revealDemoCount++;
- return {...revealDemoEvents[n%revealDemoEvents.length],rarity:drawWeightedRarity()};
+ const forced=rarityTestSelect.value;
+ return {...revealDemoEvents[n%revealDemoEvents.length],rarity:forced==="random"?drawWeightedRarity():forced};
 }
 function resetActionCards(){
  cardState="ready";pendingDemoEvent=null;
@@ -672,9 +706,8 @@ actionDraw.addEventListener("click",()=>{
  if(cardState==="pending"){
   // Preview only: no score entry exists yet, so reveal is an explicit test action.
   cardState="revealed";
-  actionDraw.classList.remove("single-mystery");
+  // Keep the single covered card behind the overlay until the closing transition ends.
   startMysteryReveal({event:pendingDemoEvent});
-  actionCaption.textContent="Neue Vorschau ziehen";
   actionStatus.textContent="Nur Test-Enthüllung – später erst nach verbindlicher Wertung.";
   return;
  }
@@ -700,7 +733,7 @@ actionDraw.addEventListener("click",()=>{
    actionStatus.textContent="Erst werten, dann enthüllen · Zum Testen Karte antippen";
   }else{
    cardState="revealed";
-   actionCaption.textContent="Neue Vorschau ziehen";
+   actionCaption.textContent="Karte wird enthüllt …";
    actionStatus.textContent="Normales Ereignis: sofortige Enthüllung · Vorschau";
    startMysteryReveal({event:pendingDemoEvent});
   }
