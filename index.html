@@ -272,7 +272,22 @@ main{max-width:980px}
 #mystery-preview-reveal{font-size:.68rem;border:1px solid #8f72ba;background:#231b37;color:#f2e7ff;border-radius:9px;padding:7px;max-width:91px}
 @keyframes pending-pulse{50%{box-shadow:0 0 23px #b77affc7;transform:translateY(-3px)}}
 @media(prefers-reduced-motion:reduce){.pending-card{animation:none}}
-</style></head><body><main>
+/* Full-screen dramatic mystery reveal, currently demo-only. */
+.reveal-overlay[hidden]{display:none!important}
+.reveal-overlay{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;padding:24px;background:rgba(2,4,13,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);animation:reveal-darken .5s ease-out both}
+.reveal-stage{perspective:1000px;width:190px;height:270px;filter:drop-shadow(0 0 30px #9e70ff99)}
+.reveal-rotator{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:reveal-spin 2.4s cubic-bezier(.12,.6,.12,1) both}
+.reveal-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:2px solid #bf8cff;border-radius:22px;background:linear-gradient(140deg,#3e215f,#0b1021 65%,#4d226c);box-shadow:inset 0 0 25px #a96bff50,0 0 35px #aa66ff9c;color:#fff}
+.reveal-face.front{font:700 110px Georgia,serif}
+.reveal-face.back{transform:rotateY(180deg);font-size:26px;font-weight:850;text-align:center;padding:18px}
+.reveal-face.back small{font-size:13px;color:#e6d4ff;font-weight:500}
+.reveal-overlay .reveal-title{font-size:1.2rem;letter-spacing:.13em;font-weight:800;color:#f3e5ff;text-align:center;animation:reveal-title-in 2.6s both}
+.reveal-overlay .reveal-close{border:1px solid #b68bff;border-radius:13px;background:#2d1c4c;color:white;padding:12px 22px;font-weight:700}
+@keyframes reveal-darken{from{opacity:0}to{opacity:1}}
+@keyframes reveal-spin{0%{transform:translateY(70px) scale(.45) rotateY(0)}35%{transform:translateY(-25px) scale(1.25) rotateY(720deg)}70%{transform:translateY(0) scale(1.15) rotateY(900deg)}100%{transform:scale(1) rotateY(900deg)}}
+@keyframes reveal-title-in{0%,60%{opacity:0;transform:translateY(15px)}100%{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.reveal-overlay,.reveal-rotator,.reveal-title{animation:none!important}.reveal-rotator{transform:rotateY(180deg)}}
+</style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="reveal-stage"><div class="reveal-rotator"><div class="reveal-face front">?</div><div class="reveal-face back"><span>✦ MYSTERY ✦</span><small>Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><main>
 <dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p><div id="mystery-pending" class="mystery-pending" hidden aria-live="polite"><span class="pending-card" aria-hidden="true">?</span><span class="pending-copy"><strong>🔒 Mystery-Karte</strong><small>Enthüllung nach Wertung</small></span><button id="mystery-preview-reveal" type="button">Enthüllung testen</button></div></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
 <div class="board" id="board" data-active="0"></div></div>
@@ -486,7 +501,19 @@ let drawSequence=0;
 const drawStyles=["draw-flip","draw-shuffle","draw-mystery"];
 const mysteryPending=document.querySelector("#mystery-pending");
 const mysteryReveal=document.querySelector("#mystery-preview-reveal");
-mysteryReveal.addEventListener("click",()=>{mysteryPending.hidden=true;document.querySelector("#action-status").textContent="Mystery-Vorschau beendet – echte Enthüllung erst nach verbindlicher Wertung.";playEffect("switch");});
+const revealOverlay=document.querySelector("#reveal-overlay");
+const revealClose=document.querySelector("#reveal-close");
+function closeReveal(){revealOverlay.hidden=true;revealClose.blur();actionDraw.focus();}
+mysteryReveal.addEventListener("click",()=>{
+ mysteryPending.hidden=true;
+ revealOverlay.hidden=false;
+ const rotator=revealOverlay.querySelector(".reveal-rotator");
+ rotator.style.animation="none";void rotator.offsetWidth;rotator.style.animation="";
+ document.querySelector("#action-status").textContent="Enthüllungsanimation getestet – keine Spielwertung verändert.";
+ playEffect("switch");revealClose.focus();
+});
+revealClose.addEventListener("click",closeReveal);
+revealOverlay.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();closeReveal();}if(e.key==="Tab"){e.preventDefault();revealClose.focus();}});
 actionDraw.addEventListener("click",()=>{
  if(actionDraw.classList.contains("is-drawing"))return;
  playEffect("tap");
