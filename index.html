@@ -607,10 +607,21 @@ function startMysteryReveal({rare=false,event=revealDemoEvents[0]}={}){
  rotator.style.animation="none";void rotator.offsetWidth;rotator.style.animation="";
  playEffect("switch");revealClose.focus();
 }
-const demoRarities=["base","silver","gold","diamond","legendary"];
+// Provisional balanced rarity distribution for the interactive preview.
+// Production probabilities will be finalized with the actual event catalogue.
+const rarityWeights=Object.freeze([
+ {id:"base",weight:55},{id:"silver",weight:30},{id:"gold",weight:11},
+ {id:"diamond",weight:3},{id:"legendary",weight:1}
+]);
+function drawWeightedRarity(){
+ const total=rarityWeights.reduce((sum,tier)=>sum+tier.weight,0);
+ let roll=Math.random()*total;
+ for(const tier of rarityWeights){roll-=tier.weight;if(roll<0)return tier.id;}
+ return rarityWeights[rarityWeights.length-1].id;
+}
 function demoEvent(){
  const n=revealDemoCount++;
- return {...revealDemoEvents[n%revealDemoEvents.length],rarity:demoRarities[n%demoRarities.length]};
+ return {...revealDemoEvents[n%revealDemoEvents.length],rarity:drawWeightedRarity()};
 }
 function resetActionCards(){
  cardState="ready";pendingDemoEvent=null;
@@ -643,7 +654,7 @@ actionDraw.addEventListener("click",()=>{
  void actionDraw.offsetWidth;
  actionDraw.classList.add("is-drawing",style);
  actionCaption.textContent="Karte wird gezogen …";
- actionStatus.textContent="Animationsvorschau";
+ actionStatus.textContent="Animationsvorschau · Seltenheit wird gewichtet gezogen";
  window.setTimeout(()=>{
   actionDraw.classList.remove("is-drawing",style);
   if(mystery){
