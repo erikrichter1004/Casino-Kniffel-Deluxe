@@ -662,7 +662,35 @@ main{max-width:980px}
 .action-draw.is-drawing[data-visual-pick="2"] .mystery-card.middle{filter:brightness(1.18) drop-shadow(0 0 10px rgba(var(--accent-rgb),.65))}
 
 .score-editable{cursor:pointer;touch-action:manipulation}.score-editable:focus-visible{outline:2px solid var(--accent-soft);outline-offset:-3px}.score-editable:hover{background:rgba(var(--accent-rgb),.12)}
-</style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="reveal-ambient" aria-hidden="true"></div><div class="card-flight-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="legendary-finale" aria-hidden="true"><div class="legendary-flash"></div><div class="legendary-shockwave"></div><div class="legendary-shockwave second"></div><div class="legendary-burst"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i><i style="--n:6"></i><i style="--n:7"></i><i style="--n:8"></i><i style="--n:9"></i><i style="--n:10"></i><i style="--n:11"></i><i style="--n:12"></i><i style="--n:13"></i><i style="--n:14"></i><i style="--n:15"></i></div></div><div class="legendary-atmosphere" aria-hidden="true"><span></span><span></span><span></span></div><div class="reveal-stage"><div class="rarity-sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="reveal-rotator"><div class="reveal-face front"><span class="card-sheen"></span>?</div><div class="reveal-face back"><span class="card-sheen"></span><span class="crystal-facets" aria-hidden="true"></span><span id="reveal-event-icon" class="reveal-event-icon">✦</span><span id="reveal-event-name">MYSTERY</span><small id="reveal-event-description">Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><div class="reveal-demo-note" id="reveal-demo-note"></div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><main>
+
+.fixed-score-dialog{position:fixed;inset:0;margin:auto;width:min(420px,calc(100vw - 32px));max-height:calc(100dvh - 40px);overflow:auto;padding:0;border:1px solid rgba(255,255,255,.25);border-radius:25px;background:linear-gradient(145deg,#243344,#0d1422 70%);color:#f6fbff;box-shadow:0 25px 90px #000b,0 0 45px rgba(var(--accent-rgb),.14)}
+.fixed-score-dialog::backdrop{background:rgba(2,5,14,.79);backdrop-filter:blur(9px)}
+.fixed-score-content{padding:26px 22px 19px;text-align:center}
+.fixed-score-eyebrow{font-size:.72rem;letter-spacing:.2em;font-weight:800;color:var(--accent-soft)}
+.fixed-score-dialog h2{margin:12px 0 4px;font-size:clamp(1.4rem,5vw,1.9rem);line-height:1.2}
+.fixed-score-dialog p{margin:0;color:#b8c9d7;font-size:.88rem}
+.fixed-score-value{display:flex;flex-direction:column;align-items:center;gap:2px;margin:20px 0;padding:17px;border:1px solid rgba(var(--accent-rgb),.27);border-radius:18px;background:rgba(var(--accent-rgb),.08)}
+.fixed-score-value strong{font-size:3rem;line-height:1.1;color:#e9fff3;font-variant-numeric:tabular-nums}
+.fixed-score-value span{color:#b9d4ca;font-size:.82rem}
+.fixed-score-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fixed-score-actions button{min-height:58px;border-radius:15px;font-size:.98rem;font-weight:800;cursor:pointer;border:1px solid transparent}
+.fixed-score-success{background:linear-gradient(150deg,#15794d,#0c5a3a);color:#fff;border-color:#55e7a5!important}
+.fixed-score-strike{background:linear-gradient(150deg,#862e42,#5b1d31);color:#fff;border-color:#f28b9c!important}
+.fixed-score-cancel{display:block;margin:16px auto 0;padding:9px 18px;border:0;background:transparent;color:#b8c9d7;cursor:pointer}
+.fixed-score-actions button:focus-visible,.fixed-score-cancel:focus-visible{outline:3px solid white;outline-offset:3px}
+</style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="reveal-ambient" aria-hidden="true"></div><div class="card-flight-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="legendary-finale" aria-hidden="true"><div class="legendary-flash"></div><div class="legendary-shockwave"></div><div class="legendary-shockwave second"></div><div class="legendary-burst"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i><i style="--n:6"></i><i style="--n:7"></i><i style="--n:8"></i><i style="--n:9"></i><i style="--n:10"></i><i style="--n:11"></i><i style="--n:12"></i><i style="--n:13"></i><i style="--n:14"></i><i style="--n:15"></i></div></div><div class="legendary-atmosphere" aria-hidden="true"><span></span><span></span><span></span></div><div class="reveal-stage"><div class="rarity-sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="reveal-rotator"><div class="reveal-face front"><span class="card-sheen"></span>?</div><div class="reveal-face back"><span class="card-sheen"></span><span class="crystal-facets" aria-hidden="true"></span><span id="reveal-event-icon" class="reveal-event-icon">✦</span><span id="reveal-event-name">MYSTERY</span><small id="reveal-event-description">Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><div class="reveal-demo-note" id="reveal-demo-note"></div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><dialog id="fixed-score-dialog" class="fixed-score-dialog" aria-labelledby="fixed-score-title" aria-describedby="fixed-score-subtitle">
+ <div class="fixed-score-content">
+  <div class="fixed-score-eyebrow">FESTE WERTUNG</div>
+  <h2 id="fixed-score-title"></h2>
+  <p id="fixed-score-subtitle"></p>
+  <div class="fixed-score-value"><strong id="fixed-score-points">25</strong><span>Punkte bei Erfolg</span></div>
+  <div class="fixed-score-actions">
+   <button type="button" id="fixed-score-success" class="fixed-score-success">✓ Geschafft</button>
+   <button type="button" id="fixed-score-strike" class="fixed-score-strike">✕ Streichen</button>
+  </div>
+  <button type="button" id="fixed-score-cancel" class="fixed-score-cancel">Abbrechen</button>
+ </div>
+</dialog><main>
 <dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><div class="audio-controls"><label for="sound-volume">Gesamtlautstärke <output id="sound-volume-value">70 %</output></label><input id="sound-volume" type="range" min="0" max="100" step="5" value="70"><label for="sound-intensity">Sound-Intensität</label><select id="sound-intensity"><option value="subtle">Dezent</option><option value="normal" selected>Normal</option><option value="spectacular">Spektakulär</option></select></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><div class="rarity-test-settings"><label class="setting-label" for="rarity-test-select">Karten-Testmodus (nur Vorschau)</label><select id="rarity-test-select"><option value="random">Zufällige Seltenheit (55 / 30 / 11 / 3 / 1 %)</option><option value="base">Basis</option><option value="silver">Silber</option><option value="gold">Gold</option><option value="diamond">Diamant</option><option value="legendary">Legendär</option></select><small>Testet nur die Animation. Keine Auswirkung auf spätere echte Spiele.</small></div><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="fan-tap-flash"></span><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
 <div class="board" id="board" data-active="0"></div></div>
@@ -830,24 +858,39 @@ const FIXED_CATEGORY_POINTS=Object.freeze({
  "10 oder weniger":40,"33 oder mehr":40
 });
 const isFixedCategory=name=>Object.prototype.hasOwnProperty.call(FIXED_CATEGORY_POINTS,name);
+const fixedScoreDialog=document.querySelector("#fixed-score-dialog");
+const fixedScoreTitle=document.querySelector("#fixed-score-title");
+const fixedScoreSubtitle=document.querySelector("#fixed-score-subtitle");
+const fixedScorePoints=document.querySelector("#fixed-score-points");
+let fixedScoreSelection=null;
+function openFixedScoreDialog(playerIndex,name){
+ if(fixedScoreDialog.open)return;
+ fixedScoreSelection={playerIndex,name};
+ fixedScoreTitle.textContent=name;
+ fixedScoreSubtitle.textContent="Wertung für "+players[playerIndex].name;
+ fixedScorePoints.textContent=String(FIXED_CATEGORY_POINTS[name]);
+ fixedScoreDialog.showModal();
+ document.querySelector("#fixed-score-success").focus();
+}
+function commitFixedScore(success){
+ const selection=fixedScoreSelection;
+ if(!selection)return;
+ fixedScoreDialog.close();
+ fixedScoreSelection=null;
+ bookManualScore(selection.playerIndex,selection.name,success?FIXED_CATEGORY_POINTS[selection.name]:0);
+}
+document.querySelector("#fixed-score-success").addEventListener("click",()=>commitFixedScore(true));
+document.querySelector("#fixed-score-strike").addEventListener("click",()=>commitFixedScore(false));
+document.querySelector("#fixed-score-cancel").addEventListener("click",()=>fixedScoreDialog.close());
+fixedScoreDialog.addEventListener("close",()=>{fixedScoreSelection=null;});
+fixedScoreDialog.addEventListener("click",event=>{if(event.target===fixedScoreDialog)fixedScoreDialog.close();});
 function requestScoreEntry(playerIndex,name){
  if(Object.prototype.hasOwnProperty.call(scores[playerIndex],name)){
   actionStatus.textContent="Dieses Feld ist bereits belegt und kann nicht überschrieben werden.";return;
  }
- const fixed=isFixedCategory(name);
- if(fixed){
-  const choice=window.prompt(players[playerIndex].name+" · "+name+"\\nG = geschafft ("+FIXED_CATEGORY_POINTS[name]+" Punkte) · S = streichen (0 Punkte)");
-  if(choice===null)return;
-  const answer=choice.trim().toUpperCase();
-  if(answer==="S"){bookManualScore(playerIndex,name,0);return;}
-  if(answer!=="G"){actionStatus.textContent="Bitte G oder S eingeben.";return;}
-  const points=FIXED_CATEGORY_POINTS[name];
-  if(points===null){
-   actionStatus.textContent="Fester Punktwert für "+name+" noch nicht bestätigt.";
-   window.alert("Für „"+name+"“ fehlt noch der bestätigte feste Punktwert. Sobald er festgelegt ist, genügt hier die Auswahl „G“.");
-   return;
-  }
-  bookManualScore(playerIndex,name,points);return;
+ if(isFixedCategory(name)){
+  openFixedScoreDialog(playerIndex,name);
+  return;
  }
  const isSuper=name==="Super Chance";
  const promptText=players[playerIndex].name+" · "+name+"\\n"+(isSuper?"Gewürfelte Basispunkte eingeben (×2 wird automatisch gerechnet):":"Gewürfelte Basispunkte eingeben:")+"\\n0 = Feld streichen";
