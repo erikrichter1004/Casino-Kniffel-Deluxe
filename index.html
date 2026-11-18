@@ -579,6 +579,21 @@ main{max-width:980px}
 .reveal-overlay.is-closing .legendary-finale{opacity:0;transition:opacity .2s}
 .reveal-overlay[data-rarity="legendary"].is-closing .reveal-rotator{animation:card-unflip-to-fan .85s cubic-bezier(.4,0,.2,1) both!important}
 @media(prefers-reduced-motion:reduce){.legendary-finale{display:none!important}.reveal-overlay[data-rarity="legendary"] .reveal-rotator,.reveal-overlay[data-rarity="legendary"] .reveal-face.back{animation:none!important}}
+
+/* Neutral suspense phase: no tier-specific colour, flash, particles or copy until reveal begins. */
+.reveal-overlay.is-anticipating .card-flight-particles,
+.reveal-overlay.is-anticipating .legendary-finale,
+.reveal-overlay.is-anticipating .legendary-atmosphere,
+.reveal-overlay.is-anticipating .rarity-sparkles{opacity:0!important;visibility:hidden!important}
+.reveal-overlay.is-anticipating .reveal-stage{filter:drop-shadow(0 0 18px rgba(var(--accent-rgb),.32))!important}
+.reveal-overlay.is-anticipating .reveal-face{border:2px solid var(--accent)!important;background:linear-gradient(150deg,rgba(var(--accent-rgb),.22),#080c15 55%,rgba(var(--accent-rgb),.12))!important;box-shadow:inset 0 0 15px rgba(var(--accent-rgb),.2),0 0 18px rgba(var(--accent-rgb),.3)!important;color:var(--accent-soft)!important}
+.reveal-overlay.is-anticipating .reveal-title,
+.reveal-overlay.is-anticipating .reveal-demo-note,
+.reveal-overlay.is-anticipating .reveal-close{opacity:0!important;pointer-events:none}
+.reveal-overlay .card-flight-particles,.reveal-overlay .rarity-sparkles,.reveal-overlay .legendary-atmosphere{transition:opacity .22s ease}
+.reveal-overlay.is-anticipating .reveal-stage::after{content:"";position:absolute;inset:-28px;border:1px solid rgba(var(--accent-rgb),.3);border-radius:28px;pointer-events:none;animation:neutral-suspense 1.05s ease-in-out infinite}
+@keyframes neutral-suspense{0%,100%{opacity:.15;transform:scale(.97)}50%{opacity:.65;transform:scale(1.045)}}
+@media(prefers-reduced-motion:reduce){.reveal-overlay.is-anticipating .reveal-stage::after{animation:none}}
 </style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="card-flight-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="legendary-finale" aria-hidden="true"><div class="legendary-flash"></div><div class="legendary-shockwave"></div><div class="legendary-shockwave second"></div><div class="legendary-burst"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i><i style="--n:6"></i><i style="--n:7"></i><i style="--n:8"></i><i style="--n:9"></i><i style="--n:10"></i><i style="--n:11"></i><i style="--n:12"></i><i style="--n:13"></i><i style="--n:14"></i><i style="--n:15"></i></div></div><div class="legendary-atmosphere" aria-hidden="true"><span></span><span></span><span></span></div><div class="reveal-stage"><div class="rarity-sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="reveal-rotator"><div class="reveal-face front"><span class="card-sheen"></span>?</div><div class="reveal-face back"><span class="card-sheen"></span><span class="crystal-facets" aria-hidden="true"></span><span id="reveal-event-icon" class="reveal-event-icon">✦</span><span id="reveal-event-name">MYSTERY</span><small id="reveal-event-description">Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><div class="reveal-demo-note" id="reveal-demo-note"></div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><main>
 <dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><div class="audio-controls"><label for="sound-volume">Gesamtlautstärke <output id="sound-volume-value">70 %</output></label><input id="sound-volume" type="range" min="0" max="100" step="5" value="70"><label for="sound-intensity">Sound-Intensität</label><select id="sound-intensity"><option value="subtle">Dezent</option><option value="normal" selected>Normal</option><option value="spectacular">Spektakulär</option></select></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><div class="rarity-test-settings"><label class="setting-label" for="rarity-test-select">Karten-Testmodus (nur Vorschau)</label><select id="rarity-test-select"><option value="random">Zufällige Seltenheit (55 / 30 / 11 / 3 / 1 %)</option><option value="base">Basis</option><option value="silver">Silber</option><option value="gold">Gold</option><option value="diamond">Diamant</option><option value="legendary">Legendär</option></select><small>Testet nur die Animation. Keine Auswirkung auf spätere echte Spiele.</small></div><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
@@ -869,6 +884,7 @@ const revealOverlay=document.querySelector("#reveal-overlay");
 const revealClose=document.querySelector("#reveal-close");
 let revealClosing=false;
 let revealCloseTimer=0;
+let anticipationTimer=0;
 let revealOrigin=null;
 const revealStage=revealOverlay.querySelector(".reveal-stage");
 function updateRevealOrigin(){
@@ -884,6 +900,8 @@ function updateRevealOrigin(){
 function closeReveal(){
  if(revealClosing||revealOverlay.hidden)return;
  revealClosing=true;
+ clearTimeout(anticipationTimer);
+ revealOverlay.classList.remove("is-anticipating");
  playCardClose();
  revealOverlay.classList.add("is-closing");
  actionDraw.classList.add("fan-reforming");
@@ -920,6 +938,10 @@ function startMysteryReveal({rare=false,event=revealDemoEvents[0]}={}){
  document.querySelector("#reveal-event-description").textContent=event.description;
  document.querySelector("#reveal-demo-note").textContent=({base:"Basis · Theme-Farbe",silver:"Ungewöhnlich · Silber",gold:"Selten · Gold",diamond:"Extrem selten · Diamant",legendary:"Legendär · Prisma"}[rarity])+" · "+seconds.toLocaleString("de-DE")+" Sekunden · Vorschau";
  revealOverlay.classList.remove("is-closing");
+ clearTimeout(anticipationTimer);
+ revealOverlay.classList.add("is-anticipating");
+ revealOverlay.style.setProperty("--anticipation-duration",Math.min(1.05,seconds*.2)+"s");
+ anticipationTimer=window.setTimeout(()=>revealOverlay.classList.remove("is-anticipating"),Math.round(Math.min(1.05,seconds*.2)*1000));
  revealClosing=false;revealClose.disabled=false;
  revealOverlay.hidden=false;
  // Freeze the fan at its precise source coordinates before the overlay moves.
