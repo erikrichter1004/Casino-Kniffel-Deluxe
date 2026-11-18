@@ -414,6 +414,21 @@ main{max-width:980px}
 @keyframes reveal-close-overlay{0%,55%{opacity:1}100%{opacity:0}}
 /* Keep covered mystery card visible under the overlay while it closes. */
 @media(prefers-reduced-motion:reduce){.reveal-overlay.is-closing,.reveal-overlay.is-closing .reveal-rotator,.reveal-overlay.is-closing .reveal-title,.reveal-overlay.is-closing .reveal-demo-note,.reveal-overlay.is-closing .reveal-close{animation:none!important}}
+
+/* One continuous reverse morph: the center card flips back and splits into the three-card fan. */
+.action-draw.fan-reforming{pointer-events:none}
+.action-draw.fan-reforming .card-fan{animation:fan-reform-rise .85s cubic-bezier(.2,.7,.2,1) both!important}
+.action-draw.fan-reforming .mystery-card{transition:none!important;opacity:1!important}
+.action-draw.fan-reforming .mystery-card.front{animation:fan-reform-center .85s cubic-bezier(.25,.65,.2,1) both!important}
+.action-draw.fan-reforming .mystery-card.back{animation:fan-reform-left .85s cubic-bezier(.25,.65,.2,1) both!important}
+.action-draw.fan-reforming .mystery-card.middle{animation:fan-reform-right .85s cubic-bezier(.25,.65,.2,1) both!important}
+@keyframes fan-reform-rise{0%{transform:translateY(12px) scale(.72);opacity:.4}45%{transform:translateY(-8px) scale(1.06);opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+@keyframes fan-reform-center{0%{transform:translateX(0) rotateY(180deg) scale(1.1);opacity:.5}55%{transform:translateX(0) rotateY(360deg) scale(1.05);opacity:1}100%{transform:translateX(0) rotateY(360deg) scale(1);opacity:1}}
+@keyframes fan-reform-left{0%,35%{transform:translateX(0) rotate(0) scale(.92);opacity:0}65%{transform:translateX(-25px) rotate(-9deg);opacity:1}100%{transform:translateX(-54px) rotate(-19deg);opacity:1}}
+@keyframes fan-reform-right{0%,35%{transform:translateX(0) rotate(0) scale(.92);opacity:0}65%{transform:translateX(25px) rotate(9deg);opacity:1}100%{transform:translateX(54px) rotate(19deg);opacity:1}}
+/* Expose the underlying reforming fan during the last half of the overlay exit. */
+.reveal-overlay.is-closing{animation:reveal-close-overlay .85s cubic-bezier(.45,0,.5,1) forwards}
+@media(prefers-reduced-motion:reduce){.action-draw.fan-reforming .card-fan,.action-draw.fan-reforming .mystery-card{animation:none!important}}
 </style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="legendary-atmosphere" aria-hidden="true"><span></span><span></span><span></span></div><div class="reveal-stage"><div class="rarity-sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="reveal-rotator"><div class="reveal-face front"><span class="card-sheen"></span>?</div><div class="reveal-face back"><span class="card-sheen"></span><span class="crystal-facets" aria-hidden="true"></span><span id="reveal-event-icon" class="reveal-event-icon">✦</span><span id="reveal-event-name">MYSTERY</span><small id="reveal-event-description">Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><div class="reveal-demo-note" id="reveal-demo-note"></div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><main>
 <dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><div class="rarity-test-settings"><label class="setting-label" for="rarity-test-select">Karten-Testmodus (nur Vorschau)</label><select id="rarity-test-select"><option value="random">Zufällige Seltenheit (55 / 30 / 11 / 3 / 1 %)</option><option value="base">Basis</option><option value="silver">Silber</option><option value="gold">Gold</option><option value="diamond">Diamant</option><option value="legendary">Legendär</option></select><small>Testet nur die Animation. Keine Auswirkung auf spätere echte Spiele.</small></div><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
@@ -638,6 +653,7 @@ function closeReveal(){
  if(revealClosing||revealOverlay.hidden)return;
  revealClosing=true;
  revealOverlay.classList.add("is-closing");
+ actionDraw.classList.add("fan-reforming");
  revealClose.disabled=true;
  clearTimeout(revealCloseTimer);
  revealCloseTimer=window.setTimeout(()=>{
@@ -646,6 +662,7 @@ function closeReveal(){
   revealClose.disabled=false;
   revealClosing=false;
   resetActionCards();
+  actionDraw.classList.remove("fan-reforming");
   actionDraw.focus();
  },850);
 }
@@ -694,7 +711,7 @@ function demoEvent(){
 }
 function resetActionCards(){
  cardState="ready";pendingDemoEvent=null;
- actionDraw.classList.remove("is-drawing","single-mystery","draw-flip","draw-shuffle","draw-mystery");
+ actionDraw.classList.remove("is-drawing","single-mystery","draw-flip","draw-shuffle","draw-mystery","fan-reforming");
  actionCaption.textContent="Aktionskarte ziehen";
  actionDraw.setAttribute("aria-label","Aktionskarte ziehen");
  actionStatus.textContent="";
