@@ -820,14 +820,36 @@ function bookManualScore(playerIndex,name,base){
  if(event){pendingRule=null;actionDraw.classList.remove("single-mystery");}
  draw();return true;
 }
+// Fixed-value presets must be confirmed against the user's physical 22-field block.
+// Until then, unknown values are never guessed or silently booked.
+const FIXED_CATEGORY_POINTS=Object.freeze({
+ "Full-House":null,"Großes Full-House":null,"Kleine Straße":null,
+ "Große Straße":null,"Highway":null,"Kniffel":null,"Kniffel Extrem":null
+});
+const isFixedCategory=name=>Object.prototype.hasOwnProperty.call(FIXED_CATEGORY_POINTS,name);
 function requestScoreEntry(playerIndex,name){
  if(Object.prototype.hasOwnProperty.call(scores[playerIndex],name)){
   actionStatus.textContent="Dieses Feld ist bereits belegt und kann nicht überschrieben werden.";return;
  }
- const raw=window.prompt(players[playerIndex].name+" · "+name+"\\nPunkte aus 6 echten Würfeln eingeben (0–999):");
+ const fixed=isFixedCategory(name);
+ if(fixed){
+  const choice=window.confirm(players[playerIndex].name+" · "+name+"\\nOK = geschafft · Abbrechen = nicht werten");
+  if(!choice)return;
+  const points=FIXED_CATEGORY_POINTS[name];
+  if(points===null){
+   actionStatus.textContent="Fester Punktwert für "+name+" noch nicht bestätigt – bitte zuerst die Punktetabelle festlegen.";
+   window.alert("Für „"+name+"“ fehlt noch der bestätigte feste Punktwert. Ich trage keine erfundene Punktzahl ein. Streichen ist bereits möglich: im nächsten Schritt wird dafür ein eigener Dialog ergänzt.");
+   return;
+  }
+  bookManualScore(playerIndex,name,points);return;
+ }
+ const isSuper=name==="Super Chance";
+ const promptText=players[playerIndex].name+" · "+name+"\\n"+(isSuper?"Gewürfelte Basispunkte eingeben (×2 wird automatisch gerechnet):":"Gewürfelte Basispunkte eingeben:")+"\\n0 = Feld streichen";
+ const raw=window.prompt(promptText);
  if(raw===null)return;
- if(!/^(0|[1-9]\\d{0,2})$/.test(raw.trim())){actionStatus.textContent="Ungültige Punktezahl: Bitte eine ganze Zahl von 0 bis 999 eingeben.";return;}
- bookManualScore(playerIndex,name,Number(raw.trim()));
+ if(!/^(0|[1-9]\\d{0,2})$/.test(raw.trim())){actionStatus.textContent="Bitte eine ganze Zahl von 0 bis 999 eingeben.";return;}
+ const base=Number(raw.trim());
+ bookManualScore(playerIndex,name,isSuper?base*2:base);
 }
 function draw(){
  // DOM order is kept stable so CSS grid tracks animate without abrupt column reordering.
