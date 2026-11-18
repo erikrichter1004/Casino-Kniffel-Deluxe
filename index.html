@@ -678,6 +678,17 @@ main{max-width:980px}
 .fixed-score-strike{background:linear-gradient(150deg,#862e42,#5b1d31);color:#fff;border-color:#f28b9c!important}
 .fixed-score-cancel{display:block;margin:16px auto 0;padding:9px 18px;border:0;background:transparent;color:#b8c9d7;cursor:pointer}
 .fixed-score-actions button:focus-visible,.fixed-score-cancel:focus-visible{outline:3px solid white;outline-offset:3px}
+
+.variable-score-label{display:block;text-align:left;margin:20px 0 7px;font-size:.84rem;color:#c9e3dc;font-weight:700}
+#variable-score-input{display:block;width:100%;min-height:68px;border-radius:17px;border:1px solid rgba(var(--accent-rgb),.55);background:#07121f;color:#fff;text-align:center;font-size:2.1rem;font-weight:800;outline:none;font-variant-numeric:tabular-nums}
+#variable-score-input:focus{box-shadow:0 0 0 3px rgba(var(--accent-rgb),.18);border-color:var(--accent-soft)}
+.variable-score-breakdown{margin:16px 0 10px;padding:13px 15px;border:1px solid #ffffff2a;border-radius:17px;background:#ffffff09;text-align:left}
+.variable-score-breakdown>div{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;font-size:.84rem;color:#bac9d8}
+.variable-score-breakdown>div[hidden]{display:none}
+.variable-score-breakdown strong{color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
+.variable-score-breakdown .variable-total{border-top:1px solid #ffffff30;margin-top:5px;padding-top:12px;font-weight:800;color:#f5fff9}
+.variable-score-breakdown .variable-total strong{font-size:1.5rem;color:#a6f9d0}
+.variable-score-dialog .variable-score-note{min-height:2.4em;margin:8px 0 15px;font-size:.75rem;color:#b3c7d0}
 </style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="reveal-ambient" aria-hidden="true"></div><div class="card-flight-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="legendary-finale" aria-hidden="true"><div class="legendary-flash"></div><div class="legendary-shockwave"></div><div class="legendary-shockwave second"></div><div class="legendary-burst"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i><i style="--n:6"></i><i style="--n:7"></i><i style="--n:8"></i><i style="--n:9"></i><i style="--n:10"></i><i style="--n:11"></i><i style="--n:12"></i><i style="--n:13"></i><i style="--n:14"></i><i style="--n:15"></i></div></div><div class="legendary-atmosphere" aria-hidden="true"><span></span><span></span><span></span></div><div class="reveal-stage"><div class="rarity-sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="reveal-rotator"><div class="reveal-face front"><span class="card-sheen"></span>?</div><div class="reveal-face back"><span class="card-sheen"></span><span class="crystal-facets" aria-hidden="true"></span><span id="reveal-event-icon" class="reveal-event-icon">✦</span><span id="reveal-event-name">MYSTERY</span><small id="reveal-event-description">Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><div class="reveal-demo-note" id="reveal-demo-note"></div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><dialog id="fixed-score-dialog" class="fixed-score-dialog" aria-labelledby="fixed-score-title" aria-describedby="fixed-score-subtitle">
  <div class="fixed-score-content">
   <div class="fixed-score-eyebrow">FESTE WERTUNG</div>
@@ -690,6 +701,27 @@ main{max-width:980px}
   </div>
   <button type="button" id="fixed-score-cancel" class="fixed-score-cancel">Abbrechen</button>
  </div>
+</dialog><dialog id="variable-score-dialog" class="fixed-score-dialog variable-score-dialog" aria-labelledby="variable-score-title" aria-describedby="variable-score-subtitle">
+ <form id="variable-score-form" class="fixed-score-content">
+  <div class="fixed-score-eyebrow">BASISPUNKTE EINTRAGEN</div>
+  <h2 id="variable-score-title"></h2>
+  <p id="variable-score-subtitle"></p>
+  <label for="variable-score-input" class="variable-score-label">Gewürfelte Augen</label>
+  <input id="variable-score-input" type="number" inputmode="numeric" min="0" max="999" step="1" required placeholder="0" autocomplete="off">
+  <div class="variable-score-breakdown" aria-live="polite">
+   <div><span>Basispunkte</span><strong id="variable-base-preview">–</strong></div>
+   <div id="variable-multiplier-row" hidden><span>Super Chance ×2</span><strong id="variable-multiplier-preview">–</strong></div>
+   <div id="variable-event-row" hidden><span id="variable-event-label">Casino-Ereignis</span><strong id="variable-event-preview">–</strong></div>
+   <div class="variable-total"><span>Ergebnis im Feld</span><strong id="variable-total-preview">–</strong></div>
+   <div id="variable-adjustment-row" hidden><span>Zusätzliche Gesamtanpassung</span><strong id="variable-adjustment-preview">–</strong></div>
+  </div>
+  <p id="variable-score-note" class="variable-score-note"></p>
+  <div class="fixed-score-actions">
+   <button type="submit" class="fixed-score-success">✓ Eintragen</button>
+   <button type="button" id="variable-score-strike" class="fixed-score-strike">✕ Streichen</button>
+  </div>
+  <button type="button" id="variable-score-cancel" class="fixed-score-cancel">Abbrechen</button>
+ </form>
 </dialog><main>
 <dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><div class="audio-controls"><label for="sound-volume">Gesamtlautstärke <output id="sound-volume-value">70 %</output></label><input id="sound-volume" type="range" min="0" max="100" step="5" value="70"><label for="sound-intensity">Sound-Intensität</label><select id="sound-intensity"><option value="subtle">Dezent</option><option value="normal" selected>Normal</option><option value="spectacular">Spektakulär</option></select></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><div class="rarity-test-settings"><label class="setting-label" for="rarity-test-select">Karten-Testmodus (nur Vorschau)</label><select id="rarity-test-select"><option value="random">Zufällige Seltenheit (55 / 30 / 11 / 3 / 1 %)</option><option value="base">Basis</option><option value="silver">Silber</option><option value="gold">Gold</option><option value="diamond">Diamant</option><option value="legendary">Legendär</option></select><small>Testet nur die Animation. Keine Auswirkung auf spätere echte Spiele.</small></div><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="fan-tap-flash"></span><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
@@ -884,6 +916,63 @@ document.querySelector("#fixed-score-strike").addEventListener("click",()=>commi
 document.querySelector("#fixed-score-cancel").addEventListener("click",()=>fixedScoreDialog.close());
 fixedScoreDialog.addEventListener("close",()=>{fixedScoreSelection=null;});
 fixedScoreDialog.addEventListener("click",event=>{if(event.target===fixedScoreDialog)fixedScoreDialog.close();});
+const variableScoreDialog=document.querySelector("#variable-score-dialog");
+const variableScoreInput=document.querySelector("#variable-score-input");
+let variableScoreSelection=null;
+function openVariableScoreDialog(playerIndex,name){
+ if(variableScoreDialog.open)return;
+ variableScoreSelection={playerIndex,name};
+ document.querySelector("#variable-score-title").textContent=name;
+ document.querySelector("#variable-score-subtitle").textContent="Wertung für "+players[playerIndex].name;
+ variableScoreInput.value="";
+ updateVariableScorePreview();
+ variableScoreDialog.showModal();
+ variableScoreInput.focus();
+}
+function updateVariableScorePreview(){
+ const selection=variableScoreSelection;
+ if(!selection)return;
+ const valid=/^(0|[1-9]\\d{0,2})$/.test(variableScoreInput.value.trim());
+ const base=valid?Number(variableScoreInput.value):null;
+ const isSuper=selection.name==="Super Chance";
+ const original=base===null?null:base*(isSuper?2:1);
+ const event=selection.playerIndex===active?pendingRule:null;
+ const knownEvent=event&&!event.mystery?event:null;
+ const calculated=original===null?null:applyScoreRule(original,knownEvent);
+ const show=n=>n===null?"–":String(n);
+ document.querySelector("#variable-base-preview").textContent=show(base);
+ document.querySelector("#variable-multiplier-row").hidden=!isSuper;
+ document.querySelector("#variable-multiplier-preview").textContent=show(original);
+ document.querySelector("#variable-event-row").hidden=!knownEvent;
+ document.querySelector("#variable-event-label").textContent=knownEvent?.name||"Casino-Ereignis";
+ document.querySelector("#variable-event-preview").textContent=show(calculated?.score??null);
+ document.querySelector("#variable-total-preview").textContent=calculated?calculated.score+" Punkte":"–";
+ document.querySelector("#variable-adjustment-row").hidden=!calculated?.delta;
+ document.querySelector("#variable-adjustment-preview").textContent=calculated?.delta>0?"+"+calculated.delta:String(calculated?.delta??0);
+ document.querySelector("#variable-score-note").textContent=event?.mystery?"Mystery-Karte: Geheimer Effekt wird erst nach verbindlicher Wertung enthüllt.":isSuper?"Super Chance wird vor den Casino-Effekten automatisch verdoppelt.":"Es werden nur gewürfelte Basispunkte eingegeben.";
+}
+variableScoreInput.addEventListener("input",updateVariableScorePreview);
+document.querySelector("#variable-score-form").addEventListener("submit",e=>{
+ e.preventDefault();
+ const selection=variableScoreSelection;
+ if(!selection)return;
+ const raw=variableScoreInput.value.trim();
+ if(!/^(0|[1-9]\\d{0,2})$/.test(raw)){variableScoreInput.setCustomValidity("Bitte eine ganze Zahl zwischen 0 und 999 eingeben.");variableScoreInput.reportValidity();return;}
+ variableScoreInput.setCustomValidity("");
+ const base=Number(raw)*(selection.name==="Super Chance"?2:1);
+ variableScoreDialog.close();
+ variableScoreSelection=null;
+ bookManualScore(selection.playerIndex,selection.name,base);
+});
+document.querySelector("#variable-score-strike").addEventListener("click",()=>{
+ const selection=variableScoreSelection;
+ if(!selection)return;
+ variableScoreDialog.close();variableScoreSelection=null;
+ bookManualScore(selection.playerIndex,selection.name,0);
+});
+document.querySelector("#variable-score-cancel").addEventListener("click",()=>variableScoreDialog.close());
+variableScoreDialog.addEventListener("close",()=>{variableScoreSelection=null;variableScoreInput.setCustomValidity("");});
+variableScoreDialog.addEventListener("click",e=>{if(e.target===variableScoreDialog)variableScoreDialog.close();});
 function requestScoreEntry(playerIndex,name){
  if(Object.prototype.hasOwnProperty.call(scores[playerIndex],name)){
   actionStatus.textContent="Dieses Feld ist bereits belegt und kann nicht überschrieben werden.";return;
@@ -892,13 +981,7 @@ function requestScoreEntry(playerIndex,name){
   openFixedScoreDialog(playerIndex,name);
   return;
  }
- const isSuper=name==="Super Chance";
- const promptText=players[playerIndex].name+" · "+name+"\\n"+(isSuper?"Gewürfelte Basispunkte eingeben (×2 wird automatisch gerechnet):":"Gewürfelte Basispunkte eingeben:")+"\\n0 = Feld streichen";
- const raw=window.prompt(promptText);
- if(raw===null)return;
- if(!/^(0|[1-9]\\d{0,2})$/.test(raw.trim())){actionStatus.textContent="Bitte eine ganze Zahl von 0 bis 999 eingeben.";return;}
- const base=Number(raw.trim());
- bookManualScore(playerIndex,name,isSuper?base*2:base);
+ openVariableScoreDialog(playerIndex,name);
 }
 function draw(){
  // DOM order is kept stable so CSS grid tracks animate without abrupt column reordering.
