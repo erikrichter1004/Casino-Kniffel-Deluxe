@@ -823,8 +823,11 @@ function bookManualScore(playerIndex,name,base){
 // Fixed-value presets must be confirmed against the user's physical 22-field block.
 // Until then, unknown values are never guessed or silently booked.
 const FIXED_CATEGORY_POINTS=Object.freeze({
- "Full-House":null,"Großes Full-House":null,"Kleine Straße":null,
- "Große Straße":null,"Highway":null,"Kniffel":null,"Kniffel Extrem":null
+ "Drei Paare":35,"Zwei Dreier":45,
+ "Full-House":25,"Großes Full-House":45,
+ "Kleine Straße":30,"Große Straße":40,"Highway":50,
+ "Kniffel":50,"Kniffel Extrem":75,
+ "10 oder weniger":40,"33 oder mehr":40
 });
 const isFixedCategory=name=>Object.prototype.hasOwnProperty.call(FIXED_CATEGORY_POINTS,name);
 function requestScoreEntry(playerIndex,name){
@@ -833,7 +836,7 @@ function requestScoreEntry(playerIndex,name){
  }
  const fixed=isFixedCategory(name);
  if(fixed){
-  const choice=window.prompt(players[playerIndex].name+" · "+name+"\\nG = geschafft · S = streichen (0 Punkte)");
+  const choice=window.prompt(players[playerIndex].name+" · "+name+"\\nG = geschafft ("+FIXED_CATEGORY_POINTS[name]+" Punkte) · S = streichen (0 Punkte)");
   if(choice===null)return;
   const answer=choice.trim().toUpperCase();
   if(answer==="S"){bookManualScore(playerIndex,name,0);return;}
