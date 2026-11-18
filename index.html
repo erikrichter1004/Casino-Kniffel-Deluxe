@@ -510,7 +510,50 @@ main{max-width:980px}
 }
 .reveal-overlay.is-closing .card-flight-particles{opacity:0;transition:opacity .2s}
 @media(prefers-reduced-motion:reduce){.card-flight-particles{display:none}.reveal-overlay .reveal-stage{animation:none!important}}
-</style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="card-flight-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="legendary-atmosphere" aria-hidden="true"><span></span><span></span><span></span></div><div class="reveal-stage"><div class="rarity-sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="reveal-rotator"><div class="reveal-face front"><span class="card-sheen"></span>?</div><div class="reveal-face back"><span class="card-sheen"></span><span class="crystal-facets" aria-hidden="true"></span><span id="reveal-event-icon" class="reveal-event-icon">✦</span><span id="reveal-event-name">MYSTERY</span><small id="reveal-event-description">Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><div class="reveal-demo-note" id="reveal-demo-note"></div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><main>
+
+/* Tiered particle intensity: no rare-tier visual clues before the reveal. */
+.reveal-overlay[data-rarity="base"] .card-flight-particles i:nth-child(n+5){display:none}
+.reveal-overlay[data-rarity="silver"] .card-flight-particles i:nth-child(n+9){display:none}
+.reveal-overlay[data-rarity="gold"] .card-flight-particles i:nth-child(n+15){display:none}
+.reveal-overlay[data-rarity="diamond"] .card-flight-particles i:nth-child(n+21){display:none}
+.reveal-overlay[data-rarity="base"] .card-flight-particles{opacity:.45}
+.reveal-overlay[data-rarity="silver"] .card-flight-particles{opacity:.7}
+.reveal-overlay[data-rarity="gold"] .card-flight-particles{opacity:.9}
+.reveal-overlay[data-rarity="diamond"] .card-flight-particles,.reveal-overlay[data-rarity="legendary"] .card-flight-particles{opacity:1}
+.reveal-overlay[data-rarity="silver"] .card-flight-particles i{background:#edf7ff;box-shadow:0 0 9px 2px #c7d9f8}
+.reveal-overlay[data-rarity="gold"] .card-flight-particles i{background:#fff2a6;box-shadow:0 0 11px 3px #ffc453}
+.reveal-overlay[data-rarity="diamond"] .card-flight-particles i{width:7px;height:7px;border-radius:1px;background:linear-gradient(135deg,#fff,#7ce5ff 55%,#b3a5ff);box-shadow:0 0 14px 4px #a3f5ff;animation-name:flight-crystal}
+.reveal-overlay[data-rarity="legendary"] .card-flight-particles i{width:7px;height:7px;background:conic-gradient(#ff7bcf,#ffdf8c,#79eaff,#b28aff,#ff7bcf);box-shadow:0 0 17px 5px #c28dff;animation-name:flight-legendary;filter:hue-rotate(calc(var(--particle-index,0) * 21deg))}
+.card-flight-particles i:nth-child(9){--dx:-140px;--dy:-160px;--particle-index:9}
+.card-flight-particles i:nth-child(10){--dx:150px;--dy:-135px;--particle-index:10}
+.card-flight-particles i:nth-child(11){--dx:-155px;--dy:110px;--particle-index:11}
+.card-flight-particles i:nth-child(12){--dx:155px;--dy:125px;--particle-index:12}
+.card-flight-particles i:nth-child(13){--dx:-55px;--dy:-180px;--particle-index:13}
+.card-flight-particles i:nth-child(14){--dx:65px;--dy:185px;--particle-index:14}
+.card-flight-particles i:nth-child(15){--dx:-190px;--dy:-70px;--particle-index:15}
+.card-flight-particles i:nth-child(16){--dx:195px;--dy:40px;--particle-index:16}
+.card-flight-particles i:nth-child(17){--dx:-125px;--dy:185px;--particle-index:17}
+.card-flight-particles i:nth-child(18){--dx:125px;--dy:-190px;--particle-index:18}
+.card-flight-particles i:nth-child(19){--dx:-180px;--dy:155px;--particle-index:19}
+.card-flight-particles i:nth-child(20){--dx:185px;--dy:-160px;--particle-index:20}
+.card-flight-particles i:nth-child(21){--dx:-220px;--dy:5px;--particle-index:21}
+.card-flight-particles i:nth-child(22){--dx:220px;--dy:-10px;--particle-index:22}
+.card-flight-particles i:nth-child(23){--dx:-35px;--dy:225px;--particle-index:23}
+.card-flight-particles i:nth-child(24){--dx:35px;--dy:-225px;--particle-index:24}
+.card-flight-particles i:nth-child(n+9){animation-delay:calc((var(--particle-index,9) - 8) * 45ms)}
+@keyframes flight-crystal{
+ 0%,9%{opacity:0;transform:translate(0,0) rotate(0deg) scale(.2)}
+ 25%{opacity:1}
+ 58%{opacity:.9;transform:translate(calc(var(--dx) * .62 - var(--origin-x,0px) * .7),calc(var(--dy) * .62 - var(--origin-y,0px) * .7)) rotate(210deg) scale(1.5)}
+ 85%,100%{opacity:0;transform:translate(calc(var(--dx) - var(--origin-x,0px)),calc(var(--dy) - var(--origin-y,0px))) rotate(420deg) scale(.15)}
+}
+@keyframes flight-legendary{
+ 0%,8%{opacity:0;transform:translate(0,0) rotate(0deg) scale(.2)}
+ 23%{opacity:1}
+ 55%{opacity:1;transform:translate(calc(var(--dx) * .5 - var(--origin-x,0px) * .7),calc(var(--dy) * .5 - var(--origin-y,0px) * .7)) rotate(450deg) scale(1.8)}
+ 85%,100%{opacity:0;transform:translate(calc(var(--dx) - var(--origin-x,0px)),calc(var(--dy) - var(--origin-y,0px))) rotate(900deg) scale(.2)}
+}
+</style></head><body><div id="reveal-overlay" class="reveal-overlay" hidden role="dialog" aria-modal="true" aria-label="Mystery-Enthüllung"><div class="card-flight-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="legendary-atmosphere" aria-hidden="true"><span></span><span></span><span></span></div><div class="reveal-stage"><div class="rarity-sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="reveal-rotator"><div class="reveal-face front"><span class="card-sheen"></span>?</div><div class="reveal-face back"><span class="card-sheen"></span><span class="crystal-facets" aria-hidden="true"></span><span id="reveal-event-icon" class="reveal-event-icon">✦</span><span id="reveal-event-name">MYSTERY</span><small id="reveal-event-description">Demonstration der Enthüllungsanimation</small></div></div></div><div class="reveal-title">GEHEIMNIS ENTHÜLLT</div><div class="reveal-demo-note" id="reveal-demo-note"></div><button id="reveal-close" class="reveal-close" type="button">Weiter</button></div><main>
 <dialog id="settings-dialog" aria-labelledby="settings-title"><div class="settings-head"><h2 id="settings-title">Einstellungen</h2><button id="settings-close" type="button" aria-label="Schließen">✕</button></div><p class="settings-note">Einstellungen für dieses Gerät</p><label class="setting-label" for="theme-color">Glas- und Akzentfarbe</label><input id="theme-color" type="color" value="#36e68a" aria-label="Akzentfarbe frei auswählen"><div class="color-presets" id="color-presets" aria-label="Farbvorschläge"></div><label class="setting-label">Farbverläufe</label><div class="gradient-presets" id="gradient-presets" aria-label="Farbverläufe auswählen"></div><div class="setting-line"><label for="sound-toggle">Effekttöne</label><input id="sound-toggle" type="checkbox" checked></div><div class="audio-controls"><label for="sound-volume">Gesamtlautstärke <output id="sound-volume-value">70 %</output></label><input id="sound-volume" type="range" min="0" max="100" step="5" value="70"><label for="sound-intensity">Sound-Intensität</label><select id="sound-intensity"><option value="subtle">Dezent</option><option value="normal" selected>Normal</option><option value="spectacular">Spektakulär</option></select></div><button id="sound-preview" class="sound-preview" type="button">Klang testen ♪</button><div class="rarity-test-settings"><label class="setting-label" for="rarity-test-select">Karten-Testmodus (nur Vorschau)</label><select id="rarity-test-select"><option value="random">Zufällige Seltenheit (55 / 30 / 11 / 3 / 1 %)</option><option value="base">Basis</option><option value="silver">Silber</option><option value="gold">Gold</option><option value="diamond">Diamant</option><option value="legendary">Legendär</option></select><small>Testet nur die Animation. Keine Auswirkung auf spätere echte Spiele.</small></div><p class="settings-foot">Punkte bleiben grün bzw. rot. Farbe und Effekttöne gelten für die gesamte Ansicht auf diesem Gerät.</p></dialog><div class="toolbar" id="controls" aria-label="Aktiven Spieler wählen"></div><section class="action-area" aria-label="Aktionskarte ziehen"><button id="action-draw" class="action-draw" type="button" aria-label="Aktionskarten-Vorschau öffnen"><span class="card-fan" aria-hidden="true"><span class="mystery-card back">?</span><span class="mystery-card middle">?</span><span class="mystery-card front">?</span></span><span class="action-caption">Aktionskarte ziehen</span></button><p id="action-status" class="action-status" role="status" aria-live="polite"></p></section>
 <div class="viewport" id="viewport" tabindex="0" aria-label="Kniffel-Wertungsblock horizontal scrollbar">
 <div class="board" id="board" data-active="0"></div></div>
