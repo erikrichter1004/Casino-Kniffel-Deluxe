@@ -1,0 +1,8 @@
+{
+  "name": "CABO Online",
+  "short_name": "CABO",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#101a2a",
+  "theme_color": "#101a2a"
+}
